@@ -1,0 +1,14 @@
+# Prerequisite: install the C2C package (provides the `rosetta` library + RosettaModel):
+#   git clone https://github.com/thu-nics/C2C
+#   pip install -e C2C --no-deps      # --no-deps keeps your existing torch
+#
+# Then install the deps below. transformers is pinned to match C2C.
+torch>=2.6
+transformers==4.52.4
+datasets
+accelerate
+huggingface_hub
+sentence-transformers
+jinja2>=3.1
+numpy
+scikit-learn
