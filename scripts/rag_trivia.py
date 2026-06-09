@@ -99,14 +99,22 @@ def main():
     ap.add_argument("--method", required=True, choices=["receiver", "text_rag", "c2c", "sharer"])
     ap.add_argument("--fact", default="none", choices=["none", "retrieved", "oracle"])
     ap.add_argument("--fuse", default="doc_only", choices=["doc_only", "doc_q"])
+    ap.add_argument("--distill", default="none", choices=["none", "summary"],
+                    help="text_rag only: feed the offline 4B summary of the passage (cost-matched "
+                         "text-channel baseline for doc_only) instead of the raw passage")
     ap.add_argument("--n_test", type=int, default=500)
     args = ap.parse_args()
+    if args.distill != "none":
+        if args.method != "text_rag":
+            ap.error("--distill applies only to --method text_rag (it is a text-channel baseline)")
+        if args.fact == "none":
+            ap.error("--distill needs --fact retrieved or oracle (there is no passage to distill)")
 
     data = json.load(open(os.path.join(HERE, "trivia_data.json")))
     corpus = data["corpus"]
     qs = data["questions"][:args.n_test]
 
-    facts, retr_hit = None, None
+    fact_ids, retr_hit = None, None
     if args.fact == "retrieved":
         from sentence_transformers import SentenceTransformer
         cemb = np.load(os.path.join(HERE, "trivia_corpus_emb.npy"))
@@ -114,11 +122,23 @@ def main():
         qemb = em.encode(["Represent this sentence for searching relevant passages: " + q["q"]
                           for q in qs], normalize_embeddings=True, batch_size=128)
         top = (qemb @ cemb.T).argmax(1)
-        facts = [corpus[i] for i in top]
-        retr_hit = float(np.mean([int(top[i]) in set(qs[i]["gold_ids"]) for i in range(len(qs))]))
+        fact_ids = [int(i) for i in top]
+        retr_hit = float(np.mean([fact_ids[i] in set(qs[i]["gold_ids"]) for i in range(len(qs))]))
         print(f"retrieval top-1 gold-chunk hit rate: {retr_hit:.3f}", flush=True)
     elif args.fact == "oracle":
-        facts = [corpus[q["gold_ids"][0]] for q in qs]
+        fact_ids = [q["gold_ids"][0] for q in qs]
+
+    # resolve the chosen chunk ids to passage text -- raw, or its offline 4B summary.
+    if fact_ids is None:
+        facts = None
+    elif args.distill == "summary":
+        dpath = os.path.join(HERE, "trivia_distilled.json")
+        if not os.path.exists(dpath):
+            raise SystemExit("run trivia_distill.py first to build trivia_distilled.json")
+        distilled = json.load(open(dpath))      # aligned 1:1 with corpus
+        facts = [distilled[i] for i in fact_ids]
+    else:
+        facts = [corpus[i] for i in fact_ids]
 
     contents = [make_content(q["q"], facts[i] if facts else None) for i, q in enumerate(qs)]
 
@@ -133,9 +153,12 @@ def main():
 
     res = [score(g, qs[i]["norm_aliases"]) for i, g in enumerate(gens)]
     em = np.mean([r[0] for r in res]); contains = np.mean([r[1] for r in res]); f1 = np.mean([r[2] for r in res])
-    tag = f"{args.method}_{args.fact}" + (f"_{args.fuse}" if args.method == "c2c" else "")
+    tag = (f"{args.method}_{args.fact}"
+           + (f"_{args.fuse}" if args.method == "c2c" else "")
+           + ("_distill" if args.distill == "summary" else ""))
     out = {"tag": tag, "method": args.method, "fact": args.fact,
-           "fuse": args.fuse if args.method == "c2c" else None, "n": len(qs),
+           "fuse": args.fuse if args.method == "c2c" else None,
+           "distill": args.distill, "n": len(qs),
            "contains": round(float(contains), 4), "em": round(float(em), 4),
            "f1": round(float(f1), 4), "retr_hit": retr_hit, "seconds": round(dt, 1)}
     os.makedirs(os.path.join(HERE, "trivia_results"), exist_ok=True)

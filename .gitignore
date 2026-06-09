@@ -7,3 +7,4 @@ scripts/obqa_results/
 scripts/trivia_results/
 scripts/trivia_data.json
 scripts/trivia_corpus_emb.npy
+scripts/trivia_distilled.json
