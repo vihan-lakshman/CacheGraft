@@ -20,3 +20,14 @@ def get_fuser_dir(subfolder: str = FUSER_SUBFOLDER) -> str:
     """Download the released C2C fuser projectors and return the '<subfolder>/final' dir."""
     d = snapshot_download(repo_id=FUSER_REPO, allow_patterns=[f"{subfolder}/*"])
     return os.path.join(d, subfolder, "final")
+
+_HERE = os.path.dirname(os.path.abspath(__file__))
+
+def paths(data: str = "trivia") -> dict:
+    """Per-dataset file locations, so the RAG harness is dataset-generic. A dataset just needs a
+    `<data>_data.json` ({questions:[{q,aliases,norm_aliases,gold_ids}], corpus:[...]}) and a
+    `<data>_corpus_emb.npy`; results land in `<data>_results/`, KV caches in `<data>_kvcache/`."""
+    return {"data": os.path.join(_HERE, f"{data}_data.json"),
+            "emb": os.path.join(_HERE, f"{data}_corpus_emb.npy"),
+            "results": os.path.join(_HERE, f"{data}_results"),
+            "kvcache": os.path.join(_HERE, f"{data}_kvcache")}

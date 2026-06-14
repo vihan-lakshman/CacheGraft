@@ -2,9 +2,13 @@ __pycache__/
 *.pyc
 *.log
 .venv/
-# generated artifacts
+# generated artifacts (dataset-generic: trivia, squad, ...)
 scripts/obqa_results/
-scripts/trivia_results/
-scripts/trivia_data.json
-scripts/trivia_corpus_emb.npy
+scripts/*_results/
+scripts/*_data.json
+scripts/*_corpus_emb.npy
 scripts/trivia_distilled.json
+scripts/*_kvcache/
+scripts/*_kvcache_recv/
+# cloned C2C package (install separately; see README)
+C2C/
