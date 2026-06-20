@@ -10,6 +10,174 @@ large sharer model's KV-cache *representation* of retrieved context into a small
 instead of feeding the receiver the retrieved *text*. Receiver = Qwen3-0.6B, Sharer =
 Qwen3-4B-Base (frozen), Fuser = released `nics-efc/C2C_Fuser :: qwen3_0.6b+qwen3_4b_base_Fuser`.
 
+## Train-our-own fuser: Llama-1B-Instruct <- Llama-8B-Instruct (2026-06-19)
+
+First fuser **we trained** (not a released checkpoint), on a **new, larger-gap, different-family
+pair** — tests both "can we train fusers" and "does the RAG-fusion finding generalize."
+
+**Setup.** base/receiver = `meta-llama/Llama-3.2-1B-Instruct` (16 layers, head_dim 64, 8 KV heads),
+teacher/sharer = `meta-llama/Llama-3.1-8B-Instruct` (32 layers, head_dim 128, 8 KV heads). Same
+128256 Llama-3 vocab on both -> `is_do_alignment: false` (no token aligner; the easy case).
+`last_aligned` mapping (target t -> source 16+t), 16 C2CProjectors, 268M trainable (2.82%).
+Recipe: `recipes/llama_1b8b_c2c.json`. Trained on raw OpenHermes-2.5 chat (general, NOT RAG),
+50k samples / 1 epoch on one A100-40GB. Final eval loss 0.879 (0.912 -> 0.879, plateaued early).
+
+**Harness adaptation (minimal):** `common.py` now reads `C2C_RECEIVER` / `C2C_SHARER` /
+`C2C_FUSER_DIR` env vars (Qwen defaults unchanged). The Llama tokenizer accepts the Qwen-only
+`enable_thinking=False` kwarg harmlessly, so NO other code change was needed. Eval runner:
+`scripts/eval_llama.sh {obqa,squad}`.
+
+**Training gotchas (cost time):** `wandb` is an unlisted import in C2C's `SFT_train.py` (pip
+install it; run with `WANDB_MODE=offline`). Single-A100 memory: per_device_batch_size=4 OOMs
+mid-run (~step 68, peak ~39.7GB) even with `expandable_segments`; **batch_size=3 (grad_accum 11,
+effective 33) is the safe config** (~38GB peak, ~10s/it, ~4.3h for 50k). The trainer has NO
+resume-from-checkpoint logic, so a late OOM loses everything back to the last `save_steps`.
+
+**Results (n=500).** OBQA = full-prompt fusion; SQuAD = doc_only (cacheable) fusion + Haiku judge.
+
+| OpenBookQA | acc | | SQuAD (judge) | text | c2c doc_only | delta |
+|---|--:|---|---|--:|--:|--:|
+| receiver/none (1B) | 27.6 | | retrieved | 57.6 | 56.5 | -1.0 (ns) |
+| **c2c/none (fusion)** | **39.8** (+12.2) | | oracle | 82.0 | 79.8 | -2.2 (ns) |
+| sharer/none (8B) | 78.6 | | | | | |
+| text_rag/retrieved | 41.2 | | | | | |
+| **c2c/retrieved** | **45.4** (+4.2) | | | | | |
+
+**Read:** OBQA **reproduces the C2C win** on a self-trained pair (+12.2 pure fusion, +4.2 over
+text) -> training works AND generalizes. SQuAD is **flat/slightly negative** (doc_only, ns) —
+*not* a contradiction: Llama-1B-**Instruct** is already a strong extractive reader (text_rag judge
+57.6 vs Qwen-0.6B's 51.2), so on extractive QA there's little encoding deficit for fusion to fill;
+C2C-RAG helps when **knowledge-bottlenecked** (OBQA), per the original thesis. The lexical/judge
+split also flips here (c2c wins `contains` 55.4>53.0 but loses judge) — wordier, less-precise
+doc_only output, a sign the **feasibility fuser is undertrained for the harder doc_only projection**
+(consistent with the early eval-loss plateau). Absolute gains < released Qwen fuser (+13.8/+16),
+expected at 50k/1-GPU vs 500k/8-GPU.
+
+**Scaling: 50k -> 150k OpenHermes (2026-06-19).** Same pair/recipe, 3x data
+(`recipes/llama_1b8b_c2c_150k.json`, batch 3, ~12.6h, eval loss 0.879 -> **0.717**). The big loss
+drop -> the 50k plateau was **undertraining, not a capacity ceiling**. Re-eval (50k vs 150k, n=500):
+
+| OpenBookQA (acc) | 50k | 150k | | SQuAD judge | text | c2c 50k | c2c 150k |
+|---|--:|--:|---|---|--:|--:|--:|
+| c2c/none vs recv 27.6 | 39.8 (+12.2) | 40.8 (**+13.2**) | | retrieved | 57.3 | 56.5 (-1.0 ns) | **61.2 (+3.9, p=.042)** |
+| c2c/retr vs text 41.2 | 45.4 (+4.2) | 47.8 (**+6.6**) | | oracle | 82.7 | 79.8 (-2.2 ns) | 83.9 (+1.2 ns) |
+
+**Headline: SQuAD doc_only FLIPPED from a loss to a significant win** (retrieved -1.0 -> +3.9,
+p=0.042; oracle sign flip -2.2 -> +1.2). So the 50k SQuAD flatness was mostly **undertraining of
+the harder doc_only (cacheable) projection**, exactly what the eval-loss drop predicted. OBQA
+fusion advantage also widened. **The verbosity-robust judge was essential**: the 150k fuser's
+token-EM *dropped* (wordier) while `contains` AND judge-correctness *rose* — the extra words carry
+correct content; EM/F1 would have hidden the win. Scaling is sub-linear vs loss (loss fell a lot,
+OBQA moved +1-2.4) but **broad, and the deployable doc_only setting benefited most**. Moral:
+these projectors are data-hungry — let them train. 50k eval JSONs backed up to
+`scripts/{obqa,squad}_results_llama50k/`.
+
+**Third benchmark: TriviaQA-RAG (150k fuser, 2026-06-19).** Built the corpus
+(`trivia_prep.py --target 500 --scan 2000` -> 500 Qs, 21,812 ~100-word Wikipedia chunks),
+doc_only + Haiku judge (n=500; judge is SLOW here — TriviaQA's long gold-alias lists make big
+prompts, ~12 min/cell). Results backed up to `scripts/trivia_results_llama150k/`.
+
+| TriviaQA judge | text | c2c doc_only | delta |
+|---|--:|--:|--:|
+| retrieved | 52.0 | 50.2 | -1.8 (53/62, p=0.46, ns) |
+| oracle | 64.8 | 63.6 | -1.2 (46/52, p=0.61, ns) |
+
+**Clear non-win** (loses `contains` too, unlike SQuAD). Completes a clean 3-point picture for the
+**Llama-1B-Instruct <- 8B-Instruct** pair — the fusion advantage tracks the receiver's knowledge
+bottleneck almost monotonically:
+
+| benchmark | 1B floor | retr hit | C2C vs text (150k, judge) |
+|---|--:|--:|---|
+| OpenBookQA (MC, knowledge-bottlenecked) | 27.6 | 48% | **+6.6** retr / **+13.2** no-retr (win) |
+| SQuAD (extractive) | ~0-17 | 61% | **+3.9** p=0.042 (win) |
+| TriviaQA (famous facts) | 44.2 | 53% | **-1.8** ns (no win) |
+
+Throughline: fusing a passage's KV helps where the receiver is **weak on the task** (OBQA) or
+**genuinely needs the retrieved info** (SQuAD), but **not on trivia a competent 1B-Instruct already
+knows** (highest floor, noisier retrieval). Consistent with the original GSM8K/HotpotQA boundary:
+C2C-RAG is knowledge-injection, and only helps when there's a knowledge deficit to inject.
+
+**Next:** RAG-aware training (see "RAG-specialized fuser" directions) — higher signal-per-sample,
+targets the doc_only/cacheable projection; and/or go bigger (we're at 150k/1-GPU vs the released
+Qwen fuser's 500k/8-GPU, likely not the ceiling).
+
+## Why TriviaQA failed + a dataset SCREEN for fusion-amenability (2026-06-20)
+
+Dug into the TriviaQA negative (8B sharer clearly > 1B, so why no fusion win?). Measured the 8B
+ceiling we'd never run: **8B parametric (none) contains 73.6 ~= 8B reading the passage (72.0)** ->
+the 8B's TriviaQA edge is **parametric, not document-derived** (the noisy 100-word chunk doesn't
+help it). And **fusing the question (no retrieval, doc_q) HURT the 1B: 44.2 -> 36.2 contains**
+(vs OBQA where the same move *lifted* 27.6 -> 39.8). Conclusion: **C2C fuses context-token KV
+(encode-side); an open-domain answer materializes at DECODE from the sharer's weights, so KV
+fusion structurally can't transfer it** — same encode/decode boundary as the GSM8K/HotpotQA
+negatives. Headroom existed but was the wrong *kind*. (Where the answer IS in the doc — SQuAD
+oracle — fusion is flat-not-negative and `doc_q`>`doc_only`, i.e. the trainable regime.)
+
+**=> A cheap pre-screen to pick fusion-amenable datasets BEFORE training** (oracle context, 4
+batched cells: 1B-none, 8B-none, 1B-text, 8B-text; no fuser needed). Two preconditions:
+- **encoding headroom** = `8B-text - 1B-text` (does the small model under-encode the context?)
+- **answer-in-doc** = `8B-text - 8B-none` (is the answer in the passage vs the sharer's weights?)
+Fusion needs BOTH large. Scripts: `pubmedqa_prep.py`, `boolq_prep.py`, `narrativeqa_prep.py`
+(NarrativeQA uses the story SUMMARY as context). Screen (F1, oracle, n=500):
+
+| dataset | 1B-none | 8B-none | 1B-text | 8B-text | enc gap | answer-in-doc |
+|---|--:|--:|--:|--:|--:|--:|
+| **NarrativeQA** | .05 | .07 | .53 | .69 | +0.15 | **+0.62** |
+| PubMedQA | .26 | .55 | .44 | .66 | +0.22 | +0.11 |
+| BoolQ | .22 | .66 | .35 | .81 | +0.46* | +0.15 |
+| TriviaQA (ref, lost) | .39 | .72 | .63 | .81 | +0.18 | +0.09 |
+
+**NarrativeQA = the prime target**: answer ~entirely in-doc (8B-none ~= 0; the precondition
+TriviaQA flunked) AND a real encoding gap -> the ideal doc_only/cacheable-fusion profile
+(non-extractive, encode-bottlenecked). PubMedQA solid (dense technical encoding). BoolQ gap is
+real but *inflated by yes/no format + label-prior (the 1B barely emits clean yes/no); treat
+cautiously. NB NarrativeQA collapsed to 17 unique summaries in 500 Qs -> clean for the ORACLE
+encoding test, but needs more documents for a real retrieval eval. Screen only measures
+PRECONDITIONS; whether the fuser captures the headroom still needs a fusion run / RAG-aware
+training (NarrativeQA the natural target).
+
+**Off-the-shelf 150k fuser on NarrativeQA (oracle, F1):** the current fuser captures NONE of the
+headroom -- it's net-NEGATIVE.
+
+| method | F1 | vs 1B-text |
+|---|--:|--:|
+| text_rag (1B reads summary) = bar | 0.534 | — |
+| c2c doc_only (150k fuser) | 0.437 | -0.097 |
+| c2c doc_q (150k fuser) | 0.484 | -0.050 |
+| sharer (8B reads summary) = ceiling | 0.688 | +0.154 |
+
+Fusing the summary KV makes the 1B *worse* than reading it (doc_q>doc_only again -> doc_only is
+the weak link). BUT unlike TriviaQA the headroom is **reachable in principle** (answer is in the
+doc), so this is the RAG-aware-training opportunity, not a structural dead-end. **Falsifiable
+prediction for the RAG-aware run: it should FLIP NarrativeQA to a win (reachable) but NOT fix
+TriviaQA (structural / decode-time).** That contrast is the cleanest test of the encode/decode
+thesis. NarrativeQA datasets/results live under `scripts/narrativeqa_*` + `narrativeqa_results/`.
+(Free-form F1 is rough here; an LLM-judge pass would refine the absolute numbers.)
+
+## HF Hub upload validated + target-application framing (2026-06-20)
+
+The 150k fuser is published at **`vihan29/c2c_llama8b_llama1b_150k`** (16 `projector_*.pt` +
+`projector_*.json` + `projector_config.json` at repo root; no `config.json`/recipe — keep the
+recipe `recipes/llama_1b8b_c2c.json` for provenance). Round-trip validated: `snapshot_download`
+the repo, point `C2C_FUSER_DIR` at the snapshot dir, run `eval_llama.sh squad` -> reproduces the
+local model. SQuAD judge via the HF fuser: retrieved text 57.1 / **c2c 60.8 (+3.7, p=0.047)**,
+oracle 83.1 / 83.3 (ns) — matches local (+3.9 / +1.2) within judge+fp noise. Generations near
+token-identical to the local checkpoint.
+
+**Strategic throughline (where this method should live).** Public RAG benchmarks (TriviaQA/NQ/
+SQuAD) mostly test Wikipedia facts the models already hold parametrically — the *worst* case for
+fusion (no knowledge deficit). The real RAG use case is **non-parametric knowledge** (private/
+enterprise corpora, post-cutoff content, niche domains, fiction/long-tail). Our two preconditions
+ARE that target, operationalized: **answer-in-doc (`8B-none ≈ 0`) = "non-parametric"** (and the
+`8B-none` cell doubles as a pretraining-contamination detector), **plus encoding headroom
+(`8B-text ≫ 1B-text`) = "the doc is hard to encode."** Necessary together — a plainly-stated fact
+in a short non-parametric doc still won't beat 1B-text. Crucially, the **cacheable doc_only
+architecture and this accuracy precondition converge on the same customer: enterprise/private-
+corpus RAG** (non-parametric + high reuse + offline 8B precompute). Reasoning-RAG (GSM8K) is NOT
+the target — reasoning is decode-time like parametric recall; predict it fails the screen
+(`8B-none ≈ 8B-text`). Next-session targets: RAG-aware training on NarrativeQA (reachable headroom,
+verified) + screen 1-2 genuinely non-parametric sets (post-cutoff / synthetic-private-doc QA).
+
 ## Current status (2026-06-13) — the paper
 
 **SOLID WIN (single-hop, knowledge-bottlenecked):** the deployable, cacheable C2C-RAG — precompute
@@ -86,6 +254,44 @@ EM). We agreed `contains` is the win criterion; converting it to an EM win is a 
 3. **Train a GSM8K-format fuser** to test whether the reasoning negative is fixable or fundamental.
 4. Better retriever — OBQA exact-fact hit is only 48% but C2C-RAG already 62.2 (oracle 69.0), so
    retrieval is the bottleneck, not the method.
+
+## RAG-specialized fuser — research directions (2026-06-18)
+
+We've so far used fusers trained on **general OpenHermes chat** (monolithic full-prompt fusion)
+and applied them **zero-shot** to a structured RAG setup (`[doc=fuse, question=no-fuse, answer]`).
+That train/test mismatch is the opening: a fuser *tailored* to retrieval may beat the general one
+on the same eval. Clean scientific framing for any idea below — train a RAG-specialized fuser and
+**ablate it vs the general fuser on the same OBQA/SQuAD harness, same pair** (delta = "did
+specialization help"). All are recipe/projector changes, not rewrites. Ranked by leverage:
+
+**Objective (cheapest, highest near-term quality)**
+1. **Distill the sharer-reading-text behaviour (top pick).** Replace plain next-token LM loss with
+   a KL distillation: teacher = the *8B reading the passage as text in-context*; student =
+   `(1B + fused-doc-KV)`; supervise on the answer span. Trains the fuser to literally make the
+   small model act like the big model on that passage — directly attacks our **encode/decode split**
+   (fusion lifts `contains` ≫ EM) by supervising the *decode* distribution, not just what's readable.
+2. **Answer-span-weighted loss + brevity.** Short answers dominate our tasks; weight loss toward the
+   answer tokens (and/or a small format objective) so the fuser closes the **EM gap natively**
+   instead of via the terse-instruction + copula-extraction scoring hack.
+
+**Architecture (highest impact; ties to a wall we already hit)**
+3. **Query-agnostic fused doc KV.** The deployable path precomputes doc KV offline, then a
+   *different* question attends to it. Train with that structure — augment each doc with several
+   different questions so the fused doc KV is regularized to be query-general (not co-adapted to one
+   prompt). Serves cacheability directly.
+4. **Re-rotatable / position-decoupled fusion (the big architectural bet).** Top-k offline
+   composition stalled because **fused keys aren't RoPE-re-rotatable** (see Multi-doc / HotpotQA).
+   A projector that emits position-canonical keys (re-rotatable like vanilla KV) would unlock
+   multi-chunk cached fusion — a concrete contribution motivated by a documented limitation, not a
+   hypothetical. Opens the whole multi-doc cacheable story.
+
+**Data/recipe**
+5. Mix QA-in-RAG-format (SQuAD / TriviaQA / NQ train splits) into the OpenHermes pretraining so the
+   fuser sees retrieval-passage lengths and the 3-section structure; hold out QA for eval.
+
+Suggested ordering: **#1** for the quickest win, **#4** for the highest ceiling. Both are
+projector/recipe edits in the C2C `SFT_train.py` + recipe JSON pipeline (see the Llama-pair
+training run below / `recipes/llama_1b8b_c2c.json`).
 
 ## Available fuser checkpoints (nics-efc/C2C_Fuser)
 

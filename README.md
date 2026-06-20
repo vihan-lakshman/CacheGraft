@@ -319,6 +319,73 @@ method. CacheBlend's cross-chunk recovery is a validated mechanism but doesn't o
 multi-hop baseline. The store-both-pre-fusion-caches design keeps the 4B offline; storing only the
 fused caches is harder (fused KV isn't RoPE-re-rotatable) and is left as a stretch.
 
+## Training your own fuser — Llama-3.2-1B-Instruct ← Llama-3.1-8B-Instruct
+
+The released `nics-efc/C2C_Fuser` projectors are Qwen-only. To take C2C-RAG to a **new model pair**
+you train your own fuser with C2C's `SFT_train.py` (general chat distillation on OpenHermes; the
+RAG ability is zero-shot afterward, exactly as with the released fusers). Below is the exact recipe
+we used for the Llama-1B-Instruct ← 8B-Instruct pair. (Findings/analysis live in
+[`docs/NOTES.md`](NOTES.md); this is the reproduction.)
+
+**Extra prerequisites** (on top of [Setup](#setup)):
+```bash
+. .venv/bin/activate
+pip install wandb                       # unlisted import in C2C's SFT_train.py; run offline (below)
+# Llama weights are GATED — log in with an HF token that has been granted Llama access:
+huggingface-cli login                   # then accept the meta-llama/Llama-3.* licenses on the Hub
+```
+
+**The recipe** ([`recipes/llama_1b8b_c2c.json`](../recipes/llama_1b8b_c2c.json)) — what matters:
+- `base_model` (receiver) + `teacher_model` (sharer); the projector dims and the `last_aligned`
+  layer mapping are derived automatically from the two model configs.
+- **Same tokenizer ⇒ `is_do_alignment: false`.** Llama-1B and 8B share the Llama-3 vocab, so no
+  token aligner is needed (the easy case). For a pair with *different* tokenizers, set it `true`.
+- `data.num_samples` = 50000 (feasibility) / 150000 (the stronger fuser we shipped); 1 epoch.
+- ⚠️ **`output.output_dir` is an absolute path — edit it for your machine.** Also set
+  `wandb_config.mode: "offline"` (no W&B account needed).
+
+**Train** (single A100-40GB; run `torchrun` from inside the C2C clone):
+```bash
+cd C2C
+PYTHONPATH=$PWD USE_TF=0 WANDB_MODE=offline TOKENIZERS_PARALLELISM=false \
+  PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+  torchrun --nproc_per_node=1 --master_port=29515 script/train/SFT_train.py \
+    --config ../recipes/llama_1b8b_c2c.json
+```
+- **Memory (40 GB):** `per_device_train_batch_size: 3` (grad-accum 11 → eff. batch 33) is the safe
+  config (~38 GB peak, ~10 s/it). **Batch 4 OOMs mid-run** (~39.7 GB peak) even with
+  `expandable_segments`. There is **no resume-from-checkpoint logic** in the trainer, so a late OOM
+  loses progress back to the last `save_steps` (500) checkpoint — don't push the batch size.
+- Wall-clock: ~4.3 h (50k) / ~12.5 h (150k). Output lands in `<output_dir>/final/`:
+  16 `projector_*.pt` + `projector_*.json` + `projector_config.json` (the loadable artifact;
+  intermediate `checkpoint-*` dirs can be deleted).
+
+**Evaluate** the new fuser with the same harness — `common.py` reads `C2C_RECEIVER` / `C2C_SHARER`
+/ `C2C_FUSER_DIR` env vars (Qwen defaults unchanged), and [`scripts/eval_llama.sh`](scripts/eval_llama.sh)
+wires them up:
+```bash
+cd scripts
+C2C_FUSER_DIR=/abs/path/to/<your_run>/final ./eval_llama.sh obqa    # OBQA: no-retrieval + retrieved
+C2C_FUSER_DIR=/abs/path/to/<your_run>/final ./eval_llama.sh squad   # SQuAD-RAG + LLM judge
+C2C_FUSER_DIR=/abs/path/to/<your_run>/final ./eval_llama.sh trivia  # TriviaQA-RAG + LLM judge
+```
+`C2C_FUSER_DIR` can also be a Hugging Face snapshot dir — e.g. our published fuser:
+`C2C_FUSER_DIR=$(python -c "from huggingface_hub import snapshot_download as d; print(d('vihan29/c2c_llama8b_llama1b_150k'))")`.
+
+**Pick a dataset before training — the fusion-amenability screen.** Fusion only helps when the
+answer is **in the document** (not the sharer's parametric memory) *and* the receiver
+**under-encodes** the context. Screen any candidate cheaply (oracle context, 4 batched cells, no
+fuser) before investing in a training run:
+```bash
+cd scripts
+python pubmedqa_prep.py --target 500     # or boolq_prep.py / narrativeqa_prep.py (SQuAD-style schema)
+for m in "receiver none" "sharer none" "text_rag oracle" "sharer oracle"; do
+  python rag_trivia.py --data pubmedqa --method ${m% *} --fact ${m#* }
+done
+# good target: 8B-text ≫ 1B-text (encoding headroom) AND 8B-text ≫ 8B-none (answer is in the doc)
+```
+See `docs/NOTES.md` → "dataset SCREEN for fusion-amenability" for the interpretation and results.
+
 ## Repo layout
 
 ```
@@ -336,6 +403,9 @@ scripts/
   tune_prompt.py       # fast prompt/format sweep on the receiver (verbosity-fix tuning)
   extract_dev.py       # offline answer-extraction tuning over saved raw generations
   smoke_doc_fusion.py  # minimal doc-only fusion mechanism check
+  # --- train-your-own-fuser (new model pair; see "Training your own fuser") ---
+  eval_llama.sh        # eval a trained fuser via C2C_RECEIVER/SHARER/FUSER_DIR env (obqa|squad|trivia)
+  pubmedqa_prep.py boolq_prep.py narrativeqa_prep.py   # dataset-screen sets (SQuAD-style schema)
   # --- multi-doc / multi-hop ---
   hotpot_prep.py       # builds the HotpotQA (distractor, multi-hop) retrieval set
   hotpot_baselines.py  # the fundamental text-RAG baselines: receiver (0.6B) + sharer (4B)
@@ -343,6 +413,12 @@ scripts/
   cacheblend.py        # efficient CacheBlend (selective HKVD recompute) + C2C integration
   spike_cache.py spike_fuse.py spike_rerotate.py        # equivalence/correctness spikes
   spike_cacheblend.py spike_cacheblend_c2c.py           # CacheBlend validation (receiver + C2C)
+```
+
+```
+recipes/
+  llama_1b8b_c2c.json        # 50k fuser training recipe (Llama-1B-Instruct <- 8B-Instruct)
+  llama_1b8b_c2c_150k.json   # 150k recipe (the stronger fuser; published to the HF Hub)
 ```
 
 Results are written to `scripts/<dataset>_results/` (with every generation saved, so metrics can

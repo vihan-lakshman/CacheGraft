@@ -10,14 +10,24 @@ import os
 os.environ.setdefault("USE_TF", "0")  # avoid the system-TensorFlow import path in transformers
 from huggingface_hub import snapshot_download
 
-RECEIVER = "Qwen/Qwen3-0.6B"
-SHARER_BASE = "Qwen/Qwen3-4B-Base"
+# Model pair + fuser are env-overridable so the same harness can run a locally-trained fuser for
+# a different pair (e.g. Llama-1B receiver + Llama-8B sharer) without touching the Qwen defaults:
+#   C2C_RECEIVER   - base/receiver model id          (default Qwen3-0.6B)
+#   C2C_SHARER     - teacher/sharer model id         (default Qwen3-4B-Base)
+#   C2C_FUSER_DIR  - path to a trained projector dir (the '.../final' checkpoint dir). If set,
+#                    get_fuser_dir() returns it directly instead of pulling the released Qwen fuser.
+RECEIVER = os.environ.get("C2C_RECEIVER", "Qwen/Qwen3-0.6B")
+SHARER_BASE = os.environ.get("C2C_SHARER", "Qwen/Qwen3-4B-Base")
 EMBED_MODEL = "BAAI/bge-small-en-v1.5"
 FUSER_REPO = "nics-efc/C2C_Fuser"
 FUSER_SUBFOLDER = "qwen3_0.6b+qwen3_4b_base_Fuser"
 
 def get_fuser_dir(subfolder: str = FUSER_SUBFOLDER) -> str:
-    """Download the released C2C fuser projectors and return the '<subfolder>/final' dir."""
+    """Return the fuser projector dir. A locally-trained checkpoint via C2C_FUSER_DIR takes
+    precedence; otherwise download the released C2C fuser and return its '<subfolder>/final' dir."""
+    local = os.environ.get("C2C_FUSER_DIR")
+    if local:
+        return local
     d = snapshot_download(repo_id=FUSER_REPO, allow_patterns=[f"{subfolder}/*"])
     return os.path.join(d, subfolder, "final")
 

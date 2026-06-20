@@ -5,6 +5,7 @@ __pycache__/
 # generated artifacts (dataset-generic: trivia, squad, ...)
 scripts/obqa_results/
 scripts/*_results/
+scripts/*_results_*/
 scripts/*_data.json
 scripts/*_corpus_emb.npy
 scripts/trivia_distilled.json
