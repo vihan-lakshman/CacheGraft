@@ -10,6 +10,138 @@ large sharer model's KV-cache *representation* of retrieved context into a small
 instead of feeding the receiver the retrieved *text*. Receiver = Qwen3-0.6B, Sharer =
 Qwen3-4B-Base (frozen), Fuser = released `nics-efc/C2C_Fuser :: qwen3_0.6b+qwen3_4b_base_Fuser`.
 
+## Distilled-text baseline CLOSED + paper draft started (2026-08-04)  <- RESUME HERE
+
+**Session goal:** close the one hole that could have sunk the systems claim — the *cost-matched
+offline-sharer text baseline* — and start the workshop paper.
+
+### Naming
+The system is now **CacheGraft** (`turborag-fusion` was a placeholder; TurboRAG-style position
+rearrangement is not used on the headline path, so the old name was misleading). Repo/README
+rename NOT yet done — only the paper draft uses the new name (via a `\sys` macro, so it is a
+one-line change if you want a different one).
+
+### Paper draft
+- `paper/main.tex` — full ~8-page workshop draft (abstract, method incl. the query-independence
+  proposition, TikZ two-phase figure, results, scope/screen section, limitations).
+- ⚠️ **`main.tex` NUMBERS ARE STALE.** It was written *before* this session's run and still
+  carries the old README figures (+7.1/+12.9) with `\todo{}` placeholders where the distilled
+  rows go. **Do the update pass before reading it as truth** — the correct numbers are below.
+- ⚠️ **`paper/refs.bib` does not exist yet**, so the draft does not compile. Citation keys used
+  by `main.tex`: c2c2025, lu2025turborag, yao2025cacheblend, gim2024promptcache, lewis2020rag,
+  jiang2023llmlingua, rajpurkar2016squad, joshi2017triviaqa, mihaylov2018obqa, yang2018hotpotqa,
+  cobbe2021gsm8k, kocisky2018narrativeqa, jin2019pubmedqa, clark2019boolq, xiao2023cpack, qwen3,
+  llama3, zheng2023judge, liu2024kivi, hinton2015distill, huh2024platonic.
+
+### Fresh-machine environment (this worked end-to-end; A100-40GB)
+System python was unusable (transformers 5.x, jinja2 3.0.3, numpy 1.21). Use a venv:
+```bash
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+git clone https://github.com/thu-nics/C2C && .venv/bin/pip install -e C2C --no-deps
+cd scripts && USE_TF=0 ../.venv/bin/python <script>          # run everything this way
+```
+Resulting versions: py 3.10.12, torch 2.13.0+cu130, **transformers 4.52.4** (the pin that
+matters), sentence-transformers 5.6.1, datasets 5.0.1, accelerate 1.14.0, **jinja2 3.1.6**,
+numpy 2.2.6. `pip install -e C2C --no-deps` succeeded (no setuptools problem this time).
+
+### Harness changes (committed)
+- `trivia_distill.py` — now **dataset-generic** (`--data`), and distills only the passages the
+  eval actually reads (`--subset used`, default) instead of the whole corpus: 54 passages for
+  SQuAD instead of 2067, 23 s instead of hours. Also `--style {facts,detailed}`, `--tag`
+  (writes `<data>_distilled<tag>.json`), and a **sentence-boundary trim** in `clean()`.
+  *Why the trim matters:* at the old `max_new=96`, **35 % of summaries ended mid-clause**, which
+  would have handicapped the baseline for a decoding-budget reason rather than a channel reason.
+  With `--max_new 200` + trim it is 0 %. Re-check this if you change the distiller.
+- `rag_trivia.py` — `--distill` now reads `<data>_distilled<--distill_tag>.json` (was hardcoded
+  to `trivia_distilled.json`) and **errors loudly** if a needed passage was not distilled.
+- `judge_stats.py` (NEW) — paired exact McNemar **on judge verdicts** (`rescore_trivia.py` only
+  does lexical), plus a **passage-level cluster bootstrap**. Needed because SQuAD's 500 questions
+  read only **54 distinct paragraphs** (~9 Qs/passage), so question-level p-values are
+  anti-conservative. NB `judge_trivia.py` divides its printed accuracy by `len(samples)` (500)
+  while the verdict dict is keyed by question string (490 unique) → its printout under-reports by
+  ~2 %. **`judge_stats.py` numbers are the correct ones** and are what the README matches.
+
+### RESULT — the distilled baseline does NOT threaten the claim; it supports it
+
+SQuAD, Qwen3-0.6B <- Qwen3-4B-Base, released fuser, top-1 (hit 60.8 %), original (non-terse)
+prompts. **LLM judge (Haiku 4.5), n=490** — the primary metric:
+
+| channel | stored/passage | retrieved | oracle |
+|---|---|--:|--:|
+| **c2c doc_only (fusion)** | ~18 MB fp16 KV | **58.4** | **84.1** |
+| text_rag raw passage | ~0.7 kB | 50.4 | 70.4 |
+| text_rag distilled-**strong** (1.2x) | ~0.6 kB | 48.2 | 66.9 |
+| text_rag distilled (1.7x) | ~0.4 kB | 40.4 | 53.3 |
+
+Paired significance (`judge_stats.py --cluster`; cluster CI resamples the **53 passages**, not
+the questions):
+
+| A vs B | Δ | win/lose | McNemar p | passage-cluster 95 % CI | p_clu |
+|---|--:|--:|--:|---|--:|
+| c2c vs raw, retrieved | +8.0 | 63/24 | <0.0001 | [+2.7, +14.1] | 0.001 |
+| c2c vs distill-strong, retrieved | +10.2 | 74/24 | <0.0001 | [+3.7, +17.8] | 0.001 |
+| c2c vs distill, retrieved | +18.0 | 106/18 | <0.0001 | [+9.9, +27.5] | <0.001 |
+| c2c vs raw, oracle | +13.7 | 94/27 | <0.0001 | [+7.5, +19.9] | <0.001 |
+| c2c vs distill-strong, oracle | +17.1 | 115/31 | <0.0001 | [+10.3, +24.8] | <0.001 |
+| c2c vs distill, oracle | +30.8 | 177/26 | <0.0001 | [+23.8, +38.5] | <0.001 |
+
+Lexical (n=500, uniform copula extraction) — the SQuAD verbosity signature reproduces:
+
+| cell | EM | F1 | contains | words |
+|---|--:|--:|--:|--:|
+| c2c_retrieved_doc_only | 21.0 | 35.4 | **55.6** | 7.3 |
+| text_rag_retrieved | **30.8** | **41.7** | 50.8 | 4.4 |
+| text_rag_retrieved_distill_strong | 29.4 | 39.3 | 47.6 | 4.5 |
+| text_rag_retrieved_distill | 23.4 | 33.1 | 40.2 | 4.6 |
+| c2c_oracle_doc_only | 30.8 | 49.8 | **78.4** | 6.7 |
+| text_rag_oracle | **43.2** | **56.7** | 69.0 | 3.9 |
+| text_rag_oracle_distill_strong | 42.4 | 54.1 | 64.6 | 4.0 |
+| text_rag_oracle_distill | 31.8 | 43.1 | 51.6 | 4.2 |
+
+**Reads:**
+1. **The text rungs order MONOTONICALLY with compression** (raw 1.0x > strong 1.2x > plain 1.7x)
+   on *every* metric in *both* retrieval settings. That is a dose-response, not one baseline row
+   — the information-bottleneck claim measured directly. A query-agnostic summary must serve
+   ~9 different questions per paragraph, so compression provably drops answer-bearing spans.
+2. **Offline sharer preprocessing into TEXT is counterproductive; into KV it is worth +8/+13.7.**
+   Stronger and cleaner than "we also beat summaries." Use this framing in the paper.
+3. **Raw text remains the binding baseline** (the distilled rungs sit below it), so the headline
+   comparison is unchanged.
+4. **The clustering worry does not bite** — resampling 53 passages still excludes 0 everywhere.
+5. **The win does not depend on the judge, only its size does.** On `contains` (no judge at all)
+   c2c leads +6.2 retrieved / +11.2 oracle. EM is the *only* metric where c2c loses (verbosity,
+   7.3 vs 4.4 words).
+6. **Judge-bias bound (useful for the limitations section):** the judge's net correction over
+   `contains` is +1.8 for c2c vs +0.2 for raw text (retrieved), +3.4 vs +1.2 (oracle). Attributing
+   the **entire** differential to length bias still leaves **+6.4 / +11.5**. Cost $3.43 for 8 cells.
+7. **Reproduction check vs the README:** c2c_retrieved 58.4 (exact), text 50.4 vs 51.2, oracle
+   c2c 84.1 vs 83.7, text 70.4 vs 70.8, retr hit 0.608 vs 0.61. The prior record is trustworthy.
+8. Distiller stats: passage 153 tok / 114 words; plain summary 92 tok / 68 words (1.67x); strong
+   95 words (1.2x) — i.e. the text channel only approaches raw text by *not compressing*.
+
+### ⚠️ PROVENANCE GAP — what is NOT on disk anywhere
+Results are gitignored and this was a fresh machine, so **only SQuAD text/c2c/distill exists as
+artifacts.** Everything else (TriviaQA, OBQA, HotpotQA, GSM8K, the `recv_kv` control, the cached
+pipeline + timings, the Llama pair, the amenability screen) exists **only as numbers recorded in
+this file and the README.** Before submitting, re-run so every paper number comes from one
+environment. Priority order: `recv_kv` control (the key ablation) > TriviaQA distilled ladder
+(the `(pending)` row) > cached-pipeline equivalence + timing > OBQA.
+
+### Punch list to a submittable workshop paper (~3 days, ~1 day unattended GPU)
+1. `paper/refs.bib` + make `main.tex` compile; fold in the numbers above. *(blocking)*
+2. Rename repo/README `turborag-fusion` -> CacheGraft. *(blocking)*
+3. TriviaQA distilled ladder + judge, mirroring SQuAD. *(blocking — second complete dataset)*
+4. Re-run `recv_kv` control, cached equivalence + timing, OBQA. *(blocking — provenance)*
+5. Judge validation: second judge family (~$5) and/or ~150 human labels. *(strongly advised)*
+6. KV quantization (int8/int4) — turns the storage limitation into a measured tradeoff. *(high value)*
+Deliberately OUT of scope for the workshop version: 7B receiver, distractor robustness, linear
+answer-probe, RAG-aware fuser, position-decoupled projector. Those are the conference items.
+
+### Standing risk to state in the paper ourselves
+All numbers use 0.6B/1B receivers and small, topically-clean retrieval pools. Our own Llama-pair
+finding (a competent 1B-Instruct reader shows a smaller gain) predicts the effect **shrinks as
+receivers get stronger**. Say it before a reviewer does.
+
 ## Train-our-own fuser: Llama-1B-Instruct <- Llama-8B-Instruct (2026-06-19)
 
 First fuser **we trained** (not a released checkpoint), on a **new, larger-gap, different-family

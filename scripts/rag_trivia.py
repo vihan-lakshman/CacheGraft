@@ -146,6 +146,9 @@ def main():
     ap.add_argument("--distill", default="none", choices=["none", "summary"],
                     help="text_rag only: feed the offline 4B summary of the passage (cost-matched "
                          "text-channel baseline for doc_only) instead of the raw passage")
+    ap.add_argument("--distill_tag", default="",
+                    help="read <data>_distilled<tag>.json (matches trivia_distill.py --tag); "
+                         "also appended to the result tag so variants do not overwrite")
     ap.add_argument("--n_test", type=int, default=500)
     ap.add_argument("--data", default="trivia", help="dataset name (see common.paths): trivia, squad, ...")
     ap.add_argument("--shots", type=int, default=0,
@@ -187,10 +190,16 @@ def main():
     if fact_ids is None:
         facts = None
     elif args.distill == "summary":
-        dpath = os.path.join(HERE, "trivia_distilled.json")
+        dpath = os.path.join(HERE, f"{args.data}_distilled{args.distill_tag}.json")
         if not os.path.exists(dpath):
-            raise SystemExit("run trivia_distill.py first to build trivia_distilled.json")
-        distilled = json.load(open(dpath))      # aligned 1:1 with corpus
+            raise SystemExit(f"run `trivia_distill.py --data {args.data}` first to build "
+                             f"{os.path.basename(dpath)}")
+        distilled = json.load(open(dpath))      # aligned 1:1 with corpus (null = not distilled)
+        missing = [i for i in fact_ids if not distilled[i]]
+        if missing:
+            raise SystemExit(f"{len(missing)} needed passages were not distilled (e.g. id "
+                             f"{missing[0]}); re-run trivia_distill.py with matching --n_test "
+                             f"or --subset all")
         facts = [distilled[i] for i in fact_ids]
     else:
         facts = [corpus[i] for i in fact_ids]
@@ -214,7 +223,7 @@ def main():
     em = np.mean([r[0] for r in res]); contains = np.mean([r[1] for r in res]); f1 = np.mean([r[2] for r in res])
     tag = (f"{args.method}_{args.fact}"
            + (f"_{args.fuse}" if args.method == "c2c" else "")
-           + ("_distill" if args.distill == "summary" else "")
+           + (f"_distill{args.distill_tag}" if args.distill == "summary" else "")
            + (f"_s{args.shots}" if args.shots else "")
            + ("_terse" if args.terse else ""))
     out = {"tag": tag, "method": args.method, "fact": args.fact,
