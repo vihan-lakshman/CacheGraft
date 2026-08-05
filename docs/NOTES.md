@@ -22,16 +22,29 @@ rename NOT yet done — only the paper draft uses the new name (via a `\sys` mac
 one-line change if you want a different one).
 
 ### Paper draft
-- `paper/main.tex` — full ~8-page workshop draft (abstract, method incl. the query-independence
-  proposition, TikZ two-phase figure, results, scope/screen section, limitations).
-- ⚠️ **`main.tex` NUMBERS ARE STALE.** It was written *before* this session's run and still
-  carries the old README figures (+7.1/+12.9) with `\todo{}` placeholders where the distilled
-  rows go. **Do the update pass before reading it as truth** — the correct numbers are below.
-- ⚠️ **`paper/refs.bib` does not exist yet**, so the draft does not compile. Citation keys used
-  by `main.tex`: c2c2025, lu2025turborag, yao2025cacheblend, gim2024promptcache, lewis2020rag,
-  jiang2023llmlingua, rajpurkar2016squad, joshi2017triviaqa, mihaylov2018obqa, yang2018hotpotqa,
-  cobbe2021gsm8k, kocisky2018narrativeqa, jin2019pubmedqa, clark2019boolq, xiao2023cpack, qwen3,
-  llama3, zheng2023judge, liu2024kivi, hinton2015distill, huh2024platonic.
+- `paper/main.tex` (710 lines) — full ~8-page workshop draft: abstract, method incl. the
+  query-independence proposition, TikZ two-phase figure, results, the channel-ladder section
+  (§5.4), scope/screen section, limitations. 6 tables; all `\ref`s resolve.
+- ✅ **Numbers are CURRENT** — updated with this session's run. SQuAD is +8.0 retrieved / +13.7
+  oracle throughout (abstract, contributions, main table, control, Llama section, conclusion),
+  with the channel ladder and its significance table added, a SQuAD lexical table, and two new
+  paragraphs on judge robustness (the `contains`-only lead, and the bias bound). The
+  "missing cost-matched baseline" limitation is deleted — it is now a result. Storage figure
+  corrected to ~2.6e4x text (an earlier draft said 1e5).
+- `paper/refs.bib` — written; 19 entries, all 12 `\citep`'d keys resolve, braces balance.
+  Split into (A) cited and (B) pending. ⚠️ **Author lists on the `% CHECK` entries were written
+  from memory and MUST be verified against the published record before submission** — above all
+  **`c2c2025`, whose author field is an explicit placeholder** (`{NICS-EFC, Tsinghua University}`).
+  It is the foundational citation of the paper; fix it first.
+- ⚠️ **Uncited datasets:** HotpotQA, GSM8K, NarrativeQA, PubMedQA, BoolQ and the LLM-judge
+  methodology are named in the text but have no `\citep` yet. The bib entries already exist
+  (group B: yang2018hotpotqa, cobbe2021gsm8k, kocisky2018narrativeqa, jin2019pubmedqa,
+  clark2019boolq, zheng2023judge, + liu2024kivi for KV quantization) — just add the `\citep`
+  calls at first mention.
+- ⚠️ **Never compile-tested** — no LaTeX toolchain on the machine used. Structure was checked by
+  hand; the **TikZ figure in particular is unvalidated**. Build it before trusting the layout.
+- One intentional `\todo{}` remains (~line 451): the provenance note on the carried-over cells.
+  Leave it until they are re-run (see the provenance gap below).
 
 ### Fresh-machine environment (this worked end-to-end; A100-40GB)
 System python was unusable (transformers 5.x, jinja2 3.0.3, numpy 1.21). Use a venv:
@@ -128,7 +141,8 @@ environment. Priority order: `recv_kv` control (the key ablation) > TriviaQA dis
 (the `(pending)` row) > cached-pipeline equivalence + timing > OBQA.
 
 ### Punch list to a submittable workshop paper (~3 days, ~1 day unattended GPU)
-1. `paper/refs.bib` + make `main.tex` compile; fold in the numbers above. *(blocking)*
+1. `paper/refs.bib` (12 keys) + citations for the uncited datasets; then actually compile
+   `main.tex` and check the TikZ figure. Numbers are already folded in. *(blocking)*
 2. Rename repo/README `turborag-fusion` -> CacheGraft. *(blocking)*
 3. TriviaQA distilled ladder + judge, mirroring SQuAD. *(blocking — second complete dataset)*
 4. Re-run `recv_kv` control, cached equivalence + timing, OBQA. *(blocking — provenance)*
