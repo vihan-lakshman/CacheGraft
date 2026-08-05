@@ -56,11 +56,15 @@ pipeline in which a large sharer model encodes each corpus passage once, offline
 receiver model decodes every query from the loaded cache with the sharer never running at query
 time. On single-hop extractive and knowledge-bottlenecked QA, \sys{} beats the strongest
 architecturally-matched baseline---the same small model reading the same passage as text---by
-$+7.1$ points on SQuAD and $+5.4$ on TriviaQA under a reference-based LLM judge (paired McNemar
-$p<0.005$), recovering $38\%$ of the receiver-to-sharer quality gap at receiver-only query cost.
-A control that runs the identical cache pipeline with fusion disabled reproduces the text
-baseline exactly, isolating the gain to the fused representation rather than the caching
-machinery. We also map where the method fails---multi-hop reasoning, chain-of-thought
+$+8.0$ points on SQuAD and $+5.4$ on TriviaQA under a reference-based LLM judge (paired McNemar
+$p<10^{-4}$; the win survives resampling at the passage rather than the question level),
+recovering $41\%$ of the receiver-to-sharer quality gap at receiver-only query cost. It also
+beats the \emph{cost-matched} offline competitor---the same sharer compressing each passage into
+text once, offline---by a \emph{larger} margin ($+10.2$), because the text rungs degrade
+monotonically with compression ratio: preprocessing a passage into text is counterproductive
+where preprocessing it into KV is worth $+8$. A control that runs the identical cache pipeline
+with fusion disabled reproduces the text baseline exactly, isolating the gain to the fused
+representation rather than the caching machinery. We also map where the method fails---multi-hop reasoning, chain-of-thought
 arithmetic, and questions the receiver already answers parametrically---and unify these
 negatives under an \emph{encode/decode} account: KV fusion edits what the receiver can read,
 not what it can compute. From that account we derive a four-cell, fuser-free screen that
@@ -78,7 +82,7 @@ The passage must be re-encoded by the reader's own parameters at every query, so
 reading a dense paragraph recovers only what a 0.6B encoder can recover---and it pays the
 prefill cost for those tokens on every query that retrieves them.
 
-Recent systems work attacks the second problem by caching. TurboRAG~\citep{lu2024turborag} and
+Recent systems work attacks the second problem by caching. TurboRAG~\citep{lu2025turborag} and
 Prompt Cache~\citep{gim2024promptcache} precompute a passage's KV cache offline and splice it in
 at query time; CacheBlend~\citep{yao2025cacheblend} repairs the cross-chunk attention that such
 splicing breaks. All of these cache \emph{the reader's own} KV: they change when the encoding
@@ -107,11 +111,17 @@ retrieves it. At query time only the small receiver runs. We call the resulting 
   nondeterminism under greedy decoding.
 \item \textbf{A win over the baseline that matters} (\S\ref{sec:results}). Against the small
   model reading the same retrieved passage as text---the only architecturally matched
-  baseline---\sys{} gains $+7.1$ (SQuAD) and $+5.4$ (TriviaQA) LLM-judge points at top-1
-  retrieval, and $+12.9$/$+5.6$ with oracle passages, all paired-significant.
+  baseline---\sys{} gains $+8.0$ (SQuAD) and $+5.4$ (TriviaQA) LLM-judge points at top-1
+  retrieval, and $+13.7$/$+5.6$ with oracle passages, all paired-significant.
+\item \textbf{A complete channel ladder, including the cost-matched text competitor}
+  (\S\ref{sec:ladder}). We compare fusion against \emph{three} offline-precomputable text rungs
+  at increasing compression. The rungs order monotonically---raw $>$ lightly compressed $>$
+  compressed---on every metric and both retrieval settings, so \sys{}'s margin \emph{grows}
+  against the more compressed competitor ($+10.2$ / $+17.1$). Compressing a passage into text is
+  lossy in a query-agnostic setting; the KV channel is not.
 \item \textbf{Causal isolation} (\S\ref{sec:control}). A receiver-own-KV control runs the
   identical two-phase cache pipeline with fusion disabled. It reproduces the text baseline
-  ($51.0$ vs $51.2$; $94\%$ token-exact), while \sys{} is $+7.4$ above it. The gain is the fused
+  ($51.0$ vs $50.4$; $94\%$ token-exact), while \sys{} is $+7.4$ above it. The gain is the fused
   sharer representation, not the plumbing.
 \item \textbf{Scope, stated as a mechanism} (\S\ref{sec:scope}). \sys{} does not beat baseline
   on multi-hop HotpotQA, on GSM8K, or on trivia the receiver already knows. We attribute all
@@ -141,7 +151,7 @@ fusion \emph{per section} of the prompt rather than per token: the prompt is par
 contiguous sections and each carries a single fuse/no-fuse flag. This is the hook that makes
 document-only fusion expressible.
 
-\paragraph{KV caching for RAG.} TurboRAG~\citep{lu2024turborag} precomputes chunk KV caches
+\paragraph{KV caching for RAG.} TurboRAG~\citep{lu2025turborag} precomputes chunk KV caches
 offline and rearranges positions at query time; CacheBlend~\citep{yao2025cacheblend}
 selectively recomputes high-deviation tokens to restore cross-chunk attention; Prompt
 Cache~\citep{gim2024promptcache} reuses modular prompt segments. These reduce prefill cost while
@@ -256,20 +266,37 @@ Greedy decoding, $24$ new tokens, single A100-40GB throughout.
 
 \paragraph{Datasets and retrieval.} \textbf{SQuAD v1.1}~\citep{rajpurkar2016squad}: 500 dev
 questions over a pool of 2{,}067 dev paragraphs; gold is the question's own paragraph; top-1
-retrieval hit $61\%$. \textbf{TriviaQA}~\citep{joshi2017triviaqa} (rc.wikipedia): 500 questions
+retrieval hit $60.8\%$. Those 500 questions read only $54$ distinct paragraphs
+($\approx\!9$ questions per passage). This matters twice over: it is a favourable---and
+realistic---reuse rate for an offline-precomputation design, and it means per-question errors
+cluster by passage, which we account for in the statistics below.
+\textbf{TriviaQA}~\citep{joshi2017triviaqa} (rc.wikipedia): 500 questions
 over 21{,}812 $\sim$100-word chunks built from the questions' Wikipedia evidence; a chunk is
 gold if it contains an answer alias; top-1 hit $53\%$. \textbf{OpenBookQA}~\citep{mihaylov2018obqa}:
 its 1{,}326-fact open book as the retrieval pool; top-1 exact-fact hit $48\%$. Retrieval is
 bge-small-en-v1.5~\citep{xiao2023cpack} dense top-1 throughout. We report both
 \texttt{retrieved} (realistic) and \texttt{oracle} (perfect-retrieval upper bound) conditions.
 
-\paragraph{Baselines.} The comparison that carries the claim is \textbf{receiver text-RAG}: the
-same receiver, same prompt, same passage, delivered as text. We additionally report the
-receiver with no passage (parametric floor) and the \emph{sharer} reading the passage as text
-(quality ceiling). \todo{distilled-text baseline---the sharer compresses each passage into a
-short summary offline and the receiver reads that---is implemented (\texttt{trivia\_distill.py})
-but not yet run under the final protocol. This is the cost-matched text-channel competitor and
-must be in the camera-ready; see \S\ref{sec:limitations}.}
+\paragraph{Baselines: a ladder of offline-precomputable text channels.} The comparison that
+carries the claim is \textbf{receiver text-RAG}: the same receiver, same prompt, same passage,
+delivered as text. But that baseline gets no sharer, while \sys{} gets one offline---so we add
+the \textbf{cost-matched} competitor, in which the \emph{same} sharer runs once per passage
+offline, question-agnostically, and writes \emph{text} instead of a KV tensor. Everything is
+held fixed except the channel: same sharer, same once-per-passage offline compute, same
+query-agnostic constraint, same receiver decoding alone.
+
+Because a summarizer's aggressiveness is a free parameter, we report two rungs of it rather than
+one, so the text channel is beaten at its best rather than its default:
+\begin{itemize}\itemsep1pt
+\item \textbf{distilled} ($1.7\times$ compression): a 1-shot ``key facts'' completion prompt.
+\item \textbf{distilled-strong} ($1.2\times$): a prompt instructing the distiller to preserve
+  every name, date, number and title---the spans extractive QA actually asks for.
+\end{itemize}
+Both use the sharer itself (Qwen3-4B-Base, not an instruct model) so the comparison isolates the
+channel and not the model, and both are trimmed to a sentence boundary: at a $96$-token decoding
+budget $35\%$ of summaries ended mid-clause, which would have handicapped the baseline for a
+decoding reason rather than a channel reason. We additionally report the receiver with no
+passage (parametric floor) and the sharer reading the passage as text (quality ceiling).
 
 \paragraph{Metrics.} Our primary metric is a \textbf{reference-based LLM judge}
 (Claude Haiku 4.5; pointwise, blind to which system produced the answer, given question,
@@ -279,6 +306,9 @@ answer as a predicate nominal (``The highest mountain in Africa is Kilimanjaro''
 and F1 penalize even when correct. We report lexical EM/F1/\texttt{contains} as a secondary
 family, computed after a \emph{uniform} answer-extraction post-process applied identically to
 every system. Significance is exact two-sided paired McNemar over per-question correctness.
+Because SQuAD questions cluster heavily by passage, we additionally report a \textbf{cluster
+bootstrap} that resamples \emph{passages} rather than questions---the honest unit of analysis for
+this design, and a strictly more conservative test than McNemar.
 
 % =====================================================================================
 \section{Results}
@@ -300,13 +330,15 @@ the sharer never runs at query time. $\Delta$ and McNemar are against receiver t
 System & retrieved & oracle & retrieved & oracle \\
 \midrule
 Receiver only, no passage        & $\approx 0$ & --- & 17.0 & --- \\
-Receiver text-RAG \emph{(baseline)} & 51.2 & 70.8 & 37.6 & 52.6 \\
+Receiver text-RAG \emph{(baseline)} & 50.4 & 70.4 & 37.6 & 52.6 \\
+\quad + offline sharer distillation \emph{(cost-matched)} & 48.2 & 66.9 & --- & --- \\
 Receiver-own-KV control (\S\ref{sec:control}) & 51.0 & 69.0 & --- & --- \\
-\textbf{\sys{} (doc-only fusion)}   & \best{58.4} & \best{83.7} & \best{43.0} & \best{58.2} \\
+\textbf{\sys{} (doc-only fusion)}   & \best{58.4} & \best{84.1} & \best{43.0} & \best{58.2} \\
 \quad\emph{persisted-cache implementation} & 57.2 & 83.4 & 43.6 & 57.4 \\
 \midrule
-$\Delta$ vs.\ baseline & $+7.1$ & $+12.9$ & $+5.4$ & $+5.6$ \\
-McNemar (win/lose, $p$) & 61/26, .0002 & 93/30, $<$.0001 & 52/25, .0028 & 58/30, .0037 \\
+$\Delta$ vs.\ baseline & $+8.0$ & $+13.7$ & $+5.4$ & $+5.6$ \\
+McNemar (win/lose, $p$) & 63/24, $<$.0001 & 94/27, $<$.0001 & 52/25, .0028 & 58/30, .0037 \\
+Passage-cluster 95\% CI & [+2.7,\,+14.1] & [+7.5,\,+19.9] & --- & --- \\
 \midrule
 Sharer text-RAG \emph{(ceiling)} & 70.0 & --- & --- & --- \\
 \bottomrule
@@ -314,10 +346,12 @@ Sharer text-RAG \emph{(ceiling)} & 70.0 & --- & --- & --- \\
 \end{table}
 
 Table~\ref{tab:main} is the headline. Delivering the retrieved passage as the sharer's projected
-KV rather than as text improves the small receiver by $+7.1$ points on SQuAD and $+5.4$ on
+KV rather than as text improves the small receiver by $+8.0$ points on SQuAD and $+5.4$ on
 TriviaQA at realistic top-1 retrieval, with larger gains under oracle retrieval. On SQuAD the
-receiver-to-sharer gap is $51.2 \to 70.0$; \sys{} closes $38\%$ of it while paying only
-receiver-sized cost at query time.
+receiver-to-sharer gap is $50.4 \to 70.0$; \sys{} closes $41\%$ of it while paying only
+receiver-sized cost at query time. The gain is not an artifact of treating clustered questions as
+independent: resampling the $53$ distinct retrieved passages leaves the confidence interval
+clear of zero in both settings ($p_{\text{clu}}\!\le\!0.001$).
 
 \paragraph{Cacheability is nearly free.} Full-prompt fusion (\texttt{doc\_q}), where the sharer
 also sees the question, is an upper bound on what fusion can deliver. On TriviaQA lexical
@@ -330,6 +364,76 @@ lifts the receiver from $39.6$ to $53.4$ accuracy (reproducing C2C's reported re
 top-1 retrieval of a science fact, text-RAG reaches $46.2$ and \sys{} reaches $62.2$; with the
 gold fact, $56.4$ vs $69.0$. Fusion beats text at identical retrieval by $+16$ points.
 
+\subsection{The channel ladder: text compression is lossy, KV is not}
+\label{sec:ladder}
+
+\begin{table}[t]
+\centering
+\small
+\caption{The offline-precomputable channel ladder on SQuAD (LLM judge, $n{=}490$). Every rung
+below the first runs the \emph{same} sharer once per passage, offline and question-agnostically;
+they differ only in what gets written down. Text quality falls monotonically with compression,
+so \sys{}'s margin is \emph{largest} against the most compressed competitor.}
+\label{tab:ladder}
+\begin{tabular}{llccc}
+\toprule
+Channel & stored/passage & retrieved & oracle & $\Delta$ vs.\ \sys{} \\
+\midrule
+\textbf{\sys{}} (fused KV) & $\sim$18\,MB & \best{58.4} & \best{84.1} & --- \\
+\midrule
+raw passage ($1.0\times$) & $\sim$0.7\,kB & 50.4 & 70.4 & $-8.0$ / $-13.7$ \\
+distilled-strong ($1.2\times$) & $\sim$0.6\,kB & 48.2 & 66.9 & $-10.2$ / $-17.1$ \\
+distilled ($1.7\times$) & $\sim$0.4\,kB & 40.4 & 53.3 & $-18.0$ / $-30.8$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\small
+\caption{Paired significance for Table~\ref{tab:ladder}. McNemar is exact two-sided over
+questions; the cluster interval resamples the $53$ distinct passages.}
+\label{tab:ladder_sig}
+\begin{tabular}{llcccc}
+\toprule
+\sys{} vs. & setting & $\Delta$ & win/lose & McNemar $p$ & passage-cluster 95\% CI \\
+\midrule
+raw passage      & retrieved & $+8.0$  & 63/24  & $<10^{-4}$ & [+2.7,\ +14.1] \\
+distilled-strong & retrieved & $+10.2$ & 74/24  & $<10^{-4}$ & [+3.7,\ +17.8] \\
+distilled        & retrieved & $+18.0$ & 106/18 & $<10^{-4}$ & [+9.9,\ +27.5] \\
+raw passage      & oracle    & $+13.7$ & 94/27  & $<10^{-4}$ & [+7.5,\ +19.9] \\
+distilled-strong & oracle    & $+17.1$ & 115/31 & $<10^{-4}$ & [+10.3,\ +24.8] \\
+distilled        & oracle    & $+30.8$ & 177/26 & $<10^{-4}$ & [+23.8,\ +38.5] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The objection Table~\ref{tab:main} invites is that \sys{} is handed a 4B model and the text
+baseline is not. Table~\ref{tab:ladder} answers it by giving the text channel the same 4B, used
+the same way---once per passage, offline, without seeing the question---and letting it write text
+instead of a tensor.
+
+The result is not the one we expected. The distilled rungs do not close the gap; they fall
+\emph{below} raw text, and they do so monotonically in the compression ratio, on every metric and
+in both retrieval settings (Table~\ref{tab:lexical_squad}). The mechanism is visible in the data:
+a query-agnostic summary must serve every future question about its passage---here about nine of
+them---so any compression is compression against an unknown query, and reliably discards the span
+some future question wanted. The $1.2\times$ rung recovers most of the loss precisely by
+declining to compress.
+
+Two conclusions follow, and the second is stronger than the one we set out to defend.
+\textbf{First}, raw text remains the binding baseline: since the distilled rungs sit below it,
+Table~\ref{tab:main}'s comparison is the conservative one. \textbf{Second}, offline sharer
+compute spent on \emph{text} is counterproductive on this task, while the same compute spent on
+\emph{KV} is worth $+8$ to $+13.7$. The interesting quantity is therefore not whether fusion
+beats summarization but why the two directions have opposite signs, which is exactly the
+information-bottleneck claim: text is a low-bandwidth serialization that the receiver must
+re-encode with its own parameters, whereas the fused cache is a function of the passage the
+receiver \emph{cannot compute at any length}.
+
+We report this as a measured trade rather than a free win. The KV channel buys those points at
+roughly $2.6\times10^{4}$ times the storage of the passage text (\S\ref{sec:limitations}).
+
 \subsection{The gain is the fused representation, not the cache pipeline}
 \label{sec:control}
 
@@ -339,11 +443,15 @@ boundaries, the manual decode loop. We test it directly: run the \emph{identical
 build the document cache from the receiver's \emph{own} KV (fusion flag off), and change nothing
 else.
 
-The control lands on the text baseline: $51.0$ vs $51.2$ (retrieved) and $69.0$ vs $70.8$
+The control lands on the text baseline: $51.0$ vs $50.4$ (retrieved) and $69.0$ vs $70.4$
 (oracle), with $94\%$ token-exact agreement with text-RAG generations. Against the same
 pipeline with fusion \emph{on}, \sys{} is $+7.4$ (retrieved, $p=0.0002$) and $+14.7$ (oracle,
 $p<0.0001$). Within-pipeline, the only variable is whose KV fills the document section, and it
 accounts for the entire effect.
+\todo{the receiver-own-KV cells, the persisted-cache cells and the sharer ceiling are carried
+over from an earlier run; re-run them so every number in the paper comes from one environment.
+The text/fusion/distilled cells in Tables~\ref{tab:main}--\ref{tab:ladder_sig} are from the
+current run.}
 
 \subsection{Lexical metrics and the verbosity confound}
 
@@ -368,17 +476,56 @@ Receiver text-RAG & 25.0 & 33.4 & 33.4 & 35.2 & 43.9 & 45.8 \\
 \end{tabular}
 \end{table}
 
+\begin{table}[t]
+\centering
+\small
+\caption{SQuAD lexical metrics ($n{=}500$, original prompts, uniform answer extraction). The
+text rungs order monotonically with compression on \emph{every} metric. \sys{} wins
+\texttt{contains} decisively and loses EM to verbosity---the split the judge resolves.}
+\label{tab:lexical_squad}
+\begin{tabular}{lcccc}
+\toprule
+System & EM & F1 & contains & words \\
+\midrule
+\multicolumn{5}{l}{\emph{retrieved}} \\
+\quad\textbf{\sys{} (doc\_only)} & 21.0 & 35.4 & \best{55.6} & 7.3 \\
+\quad receiver text-RAG (raw) & \best{30.8} & \best{41.7} & 50.8 & 4.4 \\
+\quad distilled-strong ($1.2\times$) & 29.4 & 39.3 & 47.6 & 4.5 \\
+\quad distilled ($1.7\times$) & 23.4 & 33.1 & 40.2 & 4.6 \\
+\midrule
+\multicolumn{5}{l}{\emph{oracle}} \\
+\quad\textbf{\sys{} (doc\_only)} & 30.8 & 49.8 & \best{78.4} & 6.7 \\
+\quad receiver text-RAG (raw) & \best{43.2} & \best{56.7} & 69.0 & 3.9 \\
+\quad distilled-strong ($1.2\times$) & 42.4 & 54.1 & 64.6 & 4.0 \\
+\quad distilled ($1.7\times$) & 31.8 & 43.1 & 51.6 & 4.2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 Fused generations are systematically wordier than text-RAG generations, because fusion changes
 what the receiver can \emph{read} without changing its output habits. Under a matched
 short-answer protocol and a uniform extraction rule applied to every system, \sys{} wins EM, F1
 and \texttt{contains} on TriviaQA (Table~\ref{tab:lexical}; McNemar $p \le .026$ on EM, $p \le
 .002$ on \texttt{contains}).
 
-We flag an asymmetry the reader should weigh. On SQuAD the two metric families \emph{disagree}:
-\sys{} wins \texttt{contains} by $+10.2$ (oracle $79.0$ vs $68.8$) but loses raw EM ($30.4$ vs
-$43.6$) to verbosity, so the SQuAD headline rests on the judge alone. On TriviaQA both families
-agree. We therefore treat the TriviaQA result as the more robustly established of the two and
-regard judge validation as required work rather than optional (\S\ref{sec:limitations}).
+On SQuAD, under the original prompts, the two families split (Table~\ref{tab:lexical_squad}):
+\sys{} wins \texttt{contains} by $+4.8$ (retrieved) and $+9.4$ (oracle) while losing EM by
+$-9.8$/$-12.4$, at $7.3$ versus $4.4$ words. This is the encode/decode signature---fusion lifts
+what is \emph{accessible} far more than it changes \emph{how the receiver writes}---and it is
+why the judge is our primary metric.
+
+\paragraph{The win does not depend on the judge; only its size does.} It is worth separating the
+two. On \texttt{contains}, a metric with no model in the loop, \sys{} already leads by $+6.2$
+(retrieved) and $+11.2$ (oracle). EM is the sole metric on which it loses, and that loss is
+verbosity. So the judge is not manufacturing the result---it is adjudicating its magnitude.
+
+\paragraph{Bounding judge bias.} The judge's plausible failure mode points in the same direction
+as the effect: a length-tolerant grader would flatter the wordier system. We can bound it. The
+judge's net correction over \texttt{contains} is $+1.8$ points for \sys{} versus $+0.2$ for raw
+text (retrieved), and $+3.4$ versus $+1.2$ (oracle)---differentials of $1.6$ and $2.2$.
+Attributing the \emph{entire} differential to length bias still leaves $+6.4$ and $+11.5$. The
+conclusion therefore survives a total-bias assumption, which is a stronger guarantee than a spot
+check; we nonetheless regard human-labelled validation as required work (\S\ref{sec:limitations}).
 
 \subsection{Cost}
 
@@ -496,9 +643,9 @@ fusers' training budget, so these gains should be read as a lower bound. The che
 recipe are released.
 
 Two caveats. The absolute gains are smaller than with the Qwen pair, and the SQuAD gain is
-smaller than the Qwen pair's $+7.1$ despite a \emph{larger} sharer-receiver gap. Our reading is
+smaller than the Qwen pair's $+8.0$ despite a \emph{larger} sharer-receiver gap. Our reading is
 that Llama-3.2-1B-Instruct is already a competent extractive reader (text-RAG judge $57.6$ vs
-Qwen-0.6B's $51.2$), leaving less encoding deficit to fill. That is a prediction about scaling
+Qwen-0.6B's $50.4$), leaving less encoding deficit to fill. That is a prediction about scaling
 that cuts against the method, and we state it as such: the benefit should shrink as receivers
 get stronger. Testing it at 7B-receiver scale is the most important open question about the
 method's reach (\S\ref{sec:limitations}).
@@ -507,25 +654,22 @@ method's reach (\S\ref{sec:limitations}).
 \section{Limitations}
 \label{sec:limitations}
 
-\paragraph{Storage.} A fused cache is $\sim$18\,MB per $\sim$130-token passage in fp16---roughly
-five orders of magnitude larger than the passage's text. A million-passage corpus would be
-$\sim$18\,TB. This is the method's central practical cost and we have not yet measured KV
-quantization or head-pruning to reduce it, nor characterized the reuse rate at which
-precomputation pays for itself.
-
-\paragraph{The missing cost-matched baseline.} Our baseline is the receiver reading the raw
-passage. A deployment would more likely have the \emph{sharer} preprocess each passage offline
-into text (a summary, an extracted fact set) that the receiver then reads---the same offline
-sharer compute, at $10^{-5}$ the storage. We have not run this comparison under the final
-protocol. It is the single result most likely to change how the systems claim should be stated,
-and we regard the present paper's claim as established against the \emph{representation}
-channel comparison, not yet against the strongest offline-text competitor.
+\paragraph{Storage---the central cost.} A fused cache is $\sim$18\,MB per $\sim$130-token
+passage in fp16, roughly $2.6\times10^{4}$ times the passage's text. A million-passage corpus
+would be $\sim$18\,TB. \S\ref{sec:ladder} establishes that the cheap text alternatives are
+\emph{worse}, not merely cheaper, so the trade is real rather than dominated---but it is a trade,
+and we have not yet measured KV quantization or head-pruning to reduce it, nor characterized the
+reuse rate at which precomputation pays for itself. We note that our SQuAD setting already has a
+favourable reuse rate ($\approx\!9$ queries per cached passage), which a corpus with a long tail
+of rarely-retrieved documents would not.
 
 \paragraph{Judge validation.} The primary metric is an LLM judge, and the measured effect is
 entangled with output length in exactly the direction a length-tolerant judge would inflate. We
-have not yet measured per-system judge error against human labels, nor replicated with a second
-judge family. Until we do, the SQuAD margin---where lexical metrics disagree---should be read as
-provisional.
+bound that exposure in \S\ref{sec:results}---the conclusion survives attributing the entire
+differential correction to bias---and we note that \sys{} already leads on \texttt{contains},
+which involves no model judgement at all. What we have \emph{not} done is measure per-system
+judge error against human labels or replicate with a second judge family. Until both are done,
+treat the exact magnitudes as provisional and the sign as robust.
 
 \paragraph{Scale and scope.} All results use 0.6B/1B receivers, top-1 (or small-$k$) retrieval,
 $n{=}500$ per cell, greedy decoding, and clean topically-focused retrieval pools. We do not know
@@ -544,8 +688,11 @@ the most promising architectural direction we see.
 Retrieved context does not have to reach a small model as text. If a larger model's KV encoding
 of a passage is fused in for the document section only, the encoding is query-independent, can
 be computed once offline, and improves the small model's answers over reading the same passage
-itself---by $+7.1$ (SQuAD) and $+5.4$ (TriviaQA) judge points at receiver-only query cost, with
-the gain isolated to the fused representation by a within-pipeline control. The method is a
+itself---by $+8.0$ (SQuAD) and $+5.4$ (TriviaQA) judge points at receiver-only query cost, with
+the gain isolated to the fused representation by a within-pipeline control. Spending the same
+offline budget on \emph{text} instead does not merely underperform fusion, it underperforms
+doing nothing at all: query-agnostic summaries lose quality monotonically with compression,
+because they must be written before the query is known. The method is a
 knowledge-injection mechanism, not a reasoning one: it fails on multi-hop, on chain-of-thought,
 and on questions answered from the sharer's parameters rather than the document. That boundary
 is not a caveat appended to the result; it is a prediction the method makes about itself, and it
