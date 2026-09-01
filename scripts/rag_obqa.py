@@ -7,7 +7,9 @@ a knowledge bottleneck that retrieval fills, and the exact task C2C beat the rec
 methods x fact:
   receiver  none|retrieved|oracle : Qwen3-0.6B
   text_rag  retrieved|oracle      : Qwen3-0.6B, fact prepended as TEXT
-  c2c_rag   retrieved|oracle      : RosettaModel, [fact+Q+choices] fused from 4B-Base
+  c2c_rag   retrieved|oracle      : RosettaModel, 4B-Base KV fused in.
+              --fuse all       : [fact+Q+choices] fused (C2C's original; sharer sees the question)
+              --fuse fact_only : ONLY [preamble+fact] fused -> query-independent, precomputable
   sharer    none|retrieved|oracle : Qwen3-4B-Base (upper bound)
 """
 import os, json, argparse, time
@@ -59,7 +61,12 @@ def run_hf(model_name, prompts, batch=64, max_new=16):
     del model; torch.cuda.empty_cache()
     return outs
 
-def run_c2c(prompts, max_new=16):
+def run_c2c(prompts, max_new=16, fuse="all", stems=None):
+    """fuse='all'   : fuse the whole prompt [fact+question+choices] (C2C's original setting;
+                      the sharer sees the question, so the cache is NOT precomputable).
+       fuse='fact_only': fuse only [preamble+fact] and leave [question+choices] un-fused, so the
+                      fused cache depends on the retrieved fact alone and can be built offline
+                      -- the OpenBookQA analogue of doc-only fusion in rag_trivia.py."""
     from rosetta.utils.evaluate import load_rosetta_model
     mc = {"model_name": "Rosetta", "rosetta_config": {
         "base_model": C.RECEIVER, "teacher_model": SHARER_BASE,
@@ -67,16 +74,29 @@ def run_c2c(prompts, max_new=16):
         "checkpoints_dir": C.get_fuser_dir()}}
     model, tok = load_rosetta_model(mc, {}, device=torch.device("cuda"),
                                     generation_config={"do_sample": False, "max_new_tokens": max_new})
+
+    def sec(flag, n):
+        return torch.tensor([[flag, 0]] * n).unsqueeze(0).cuda()
+
     outs = []
-    for p in prompts:
+    for i, p in enumerate(prompts):
         text = tok.apply_chat_template([{"role": "user", "content": p}], tokenize=False,
                 add_generation_prompt=True, enable_thinking=False)
-        enc = tok(text, return_tensors="pt").to("cuda")
+        enc = tok(text, return_tensors="pt", return_offsets_mapping=True)
+        offs = enc.pop("offset_mapping")[0].tolist()
+        enc = {k: v.to("cuda") for k, v in enc.items()}
         L = enc["input_ids"].shape[1]
-        instr = torch.tensor([1, 0]).repeat(L - 1, 1).unsqueeze(0).cuda()
-        lab = torch.tensor([-1, 0]).repeat(1, 1).unsqueeze(0).cuda()
+        if fuse == "fact_only":
+            # Fusion is applied PER SECTION, so fact-only fusion needs three sections:
+            # [preamble+fact = fuse, question+choices = no-fuse, generation].
+            c_q = text.rfind(stems[i])
+            L_doc = sum(1 for k in range(L) if 0 < offs[k][1] <= c_q) if c_q > 0 else L - 1
+            L_doc = max(1, min(L_doc, L - 2))          # leave room for question + generation
+            idx = [sec(1, L_doc), sec(-1, (L - 1) - L_doc), sec(-1, 1)]
+        else:
+            idx = [sec(1, L - 1), sec(-1, 1)]
         with torch.no_grad():
-            o = model.generate(**enc, kv_cache_index=[instr, lab],
+            o = model.generate(**enc, kv_cache_index=idx,
                                do_sample=False, max_new_tokens=max_new)
         outs.append(tok.decode(o[0, L:], skip_special_tokens=True))
     return outs
@@ -85,6 +105,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--method", required=True, choices=["receiver", "text_rag", "c2c_rag", "sharer"])
     ap.add_argument("--fact", default="none", choices=["none", "retrieved", "oracle"])
+    ap.add_argument("--fuse", default="all", choices=["all", "fact_only"],
+                    help="c2c_rag only. 'all' = fuse [fact+question+choices] (C2C's original, "
+                         "NOT precomputable). 'fact_only' = fuse [preamble+fact] alone, leaving "
+                         "the question un-fused, so the fused cache is query-independent and can "
+                         "be built offline (the cacheable configuration this paper claims).")
     ap.add_argument("--n_test", type=int, default=500)
     args = ap.parse_args()
 
@@ -117,7 +142,7 @@ def main():
 
     t0 = time.time()
     if args.method == "c2c_rag":
-        gens = run_c2c(prompts)
+        gens = run_c2c(prompts, fuse=args.fuse, stems=stems)
     elif args.method == "sharer":
         gens = run_hf(SHARER_BASE, prompts)
     else:  # receiver, text_rag
@@ -127,8 +152,10 @@ def main():
     preds = [parse_letter(g, all_labels[i]) for i, g in enumerate(gens)]
     cors = [p == g for p, g in zip(preds, golds)]
     acc = sum(cors) / len(cors)
-    tag = f"{args.method}_{args.fact}"
-    out = {"tag": tag, "method": args.method, "fact": args.fact, "n_test": len(test),
+    tag = f"{args.method}_{args.fact}" + ("_fact_only" if args.method == "c2c_rag"
+                                           and args.fuse == "fact_only" else "")
+    out = {"tag": tag, "method": args.method, "fact": args.fact,
+           "fuse": args.fuse if args.method == "c2c_rag" else None, "n_test": len(test),
            "accuracy": acc, "n_correct": int(sum(cors)), "retr_hit": retr_hit, "seconds": round(dt, 1)}
     os.makedirs(os.path.join(HERE, "obqa_results"), exist_ok=True)
     with open(os.path.join(HERE, "obqa_results", f"{tag}.json"), "w") as f:

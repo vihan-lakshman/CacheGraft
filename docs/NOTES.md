@@ -1,5 +1,82 @@
 # Project notes / session handoff
 
+## Mechanism / interpretability probe of C2C fusion — CLOSED (2026-08-31)
+
+**Outcome: no second paper. Line of inquiry closed.** The mechanism claim and the
+lightweight-method claim both failed under their own confirmation runs. What survived is a set
+of corrections and strengthenings for the main paper, recorded below. All code lives in
+`payload/` (results are gitignored; re-runnable).
+
+### The instrument (reusable)
+`payload/harness.py` — a **splice harness**. `C2CProjector.forward` is FULLY POSITION-WISE
+(every op is a channel-wise Linear/MLP over `(B,N,.)`), so mixing fused and receiver-own KV per
+token is EXACTLY equivalent to a per-token fusion flag. Build the pre-fusion receiver+sharer
+caches once, run the projector once, then decode any token mask off the same tensors.
+Both anchors are degenerate cases of one code path, each **validated at 94% token-exact**
+(`mask=all` == inline `doc_only`; `mask={}` == text-RAG). Tighter isolation than the
+cross-pipeline `recv_kv` control.
+
+### Structural facts about the released fuser (verified, novel)
+- Fusion is a **residual gated delta**, not a replacement:
+  `out = target + gate * sigmoid(scalar) * projected`. The receiver's own KV is always present.
+  → the paper's "attends over keys and values it could not have computed itself" OVERSTATES it.
+- **Gates are essentially untrained**: logits ~0.03 (init 0.0), hard-on at eval in 27/28 layers
+  (keys) and 28/28 (values). Trained with annealed Gumbel at ~64% on; eval uses 100% → a
+  train/eval magnitude mismatch of ~1.55x.
+- **Edit magnitude is uniform across tokens.** Gold-answer spans: saliency 1259.6 vs 1293.3
+  elsewhere, mean normalized rank 0.465 (median). The fuser does not know where the answer is.
+- Delta is **89% shared across 400 unrelated passages** (base KV: 0.828), effective rank ~17-30
+  of 1024, magnitude ~32% of the KV it perturbs.
+
+### What FAILED (do not revive without new ideas)
+- **"The sharer's content doesn't matter."** True in format-controlled likelihood (`wrong`
+  passage recovers 92%, `self` 89%) but FALSE at generation: `wrong` -3.6 vs `all` (p=0.024),
+  `self` -6.2 (p=0.003). The generation gain does require the actual passage.
+- **"A constant KV bias replaces fusion."** A 57k-param bias fitted on SQuAD beats C2C
+  in-domain (judge 91.2 vs 86.9) — but that is task-trained vs zero-shot, not a fair comparison.
+  Fitted OUT of domain (PubMedQA+BoolQ) and evaluated zero-shot on SQuAD it scores judge **78.1
+  vs baseline 81.9** — worse than doing nothing. Dead on every metric that matters.
+- **Extracted mean delta** reproduces C2C in likelihood (dB +0.460 vs +0.387) but costs -8.8
+  contains in generation.
+
+### The one transferable methodological finding
+**Likelihood and generation dissociate under the same KV intervention**, and which component
+looks responsible flips with the metric: likelihood says VALUES carry it and a constant
+reproduces it; generation says KEYS carry it (`kall` +3.7 ~ `all` +3.5) and the same constant
+hurts. Three-way metric inversion on one task: C2C wins `contains`/judge, the task-fitted bias
+wins EM/F1 by +34.5, the untouched receiver is competitive. Not enough for a paper on its own;
+a real caution for probing activation-space interventions with likelihood proxies.
+
+### CORRECTIONS THE MAIN PAPER NEEDS (highest value salvage)
+1. **Effect size is ~1/3 of published.** The SQuAD oracle setting rests on **29 gold paragraphs**
+   (500 questions, median 16/paragraph). Reproduced the published cells within 0.6 pts
+   (judge 70.2->84.7 = +14.5 vs published +13.7). On **800 questions over 800 distinct
+   paragraphs**: judge 81.9->86.9 = **+5.0** [+2.1,+7.9] p=0.0008; contains 74.9->79.5 = +4.6
+   [+1.2,+8.0]. The +13.7 in the abstract/contributions/conclusion needs replacing.
+2. **The judge-bias bound is too generous.** Draft bounds the differential at +1.6/+2.2;
+   measured on the draft's own sample it is **+3.7** (`all` +6.1, `none` +2.4). Note
+   +14.5 - 3.7 = +10.8 = exactly the `contains` effect. On the broad sample it is +0.4.
+3. **The gain requires length.** `contains` at matched word budget: fusion LOSES at every budget
+   below ~12 words (at 4 words: 30.1 vs 52.9) and only wins when allowed to run long.
+4. **Off-regime harm, with numbers.** Not merely unhelpful: PubMedQA -10.6, BoolQ -26.0
+   (both p<0.05), EM exactly 0.0 on both (13-15 words of restatement where a one-word label is
+   wanted).
+5. **Something that SUPPORTS the paper.** `wrong`/`self` sitting significantly below `all` at
+   generation level is direct evidence the benefit needs the sharer's encoding of the actual
+   passage — pre-empts the obvious reviewer attack, with data the draft did not have.
+
+### Reproduce
+```bash
+cd payload
+python prep.py --target 800 --max_per_para 1 --data squadpx      # 800 independent paragraphs
+python prep.py --target 500 --max_per_para 99 --data squadpx_c   # the draft's clustered sampling
+python run.py --data squadpx --n 800 --conds all,none --out anchors
+python stats.py --out anchors --ref none --top all
+python probe.py --data squadpx --n 800 --conds none,all,wrong,self,kall,vall   # likelihood
+python deltas.py --data squadpx --n 400 && python delta_analysis.py            # shared fraction
+python lengthctl.py --out anchors --data squadpx                               # length budget
+```
+
 Context to resume this work on a fresh machine. (The README has the polished reproduction
 instructions; this file is the "what we did, why, and what's next" log.)
 

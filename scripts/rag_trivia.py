@@ -28,7 +28,7 @@ def first_line(t):
 # tend to restate the question as a copular sentence with the answer as the predicate nominal
 # ("<long restatement> is <ANSWER>"); we keep the tail after the last copula when the
 # restatement is long and the tail is short. This recovers F1/EM from high-`contains` verbose
-# output without forcing the model terse. See extract_dev.py for how it was tuned.
+# output without forcing the model terse.
 COPULA = re.compile(r"^(.*\b(?:is|was|are|were|been|be|known as|called|named|refers to|"
                     r"stands for|meaning)\b)\s+(.+)$", re.I)
 
@@ -208,7 +208,7 @@ def main():
                 for i, q in enumerate(qs)]
 
     # NB: generations are saved RAW. Answer extraction (copula/clause) is a uniform scoring-time
-    # post-process (see extract_answer / rescore_trivia) applied to every method, so it can be
+    # post-process (see extract_answer, and report_table.py for scoring) applied to every
     # tuned offline and never advantages one channel over another.
     t0 = time.time()
     if args.method == "c2c":

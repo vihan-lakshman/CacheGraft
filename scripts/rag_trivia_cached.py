@@ -4,7 +4,7 @@ Phase 1 (offline): build a fused doc KV for every retrieved/oracle passage and p
 disk -- the 4B sharer + fuser run ONLY here, once per passage, query-agnostic.
 Phase 2 (online): for each question, load its doc cache from disk and decode with the base
 0.6B receiver alone (no 4B, no fuser). Generations are saved in the same schema as run_c2c, so
-judge_trivia.py / rescore_trivia.py work unchanged.
+judge_trivia.py / judge_open.py / report_table.py work unchanged.
 
   python rag_trivia_cached.py --fact retrieved            # or --fact oracle [--terse]
   python judge_trivia.py c2c_retrieved_doc_only_cached    # then score

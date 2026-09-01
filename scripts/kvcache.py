@@ -9,7 +9,7 @@ offline (the 4B sharer + fuser run here) and reused at query time by the base re
   decode_with_cache : inject a cached doc KV into the base receiver and decode the question
 
 Validated to reproduce the inline doc_only path up to greedy floating-point nondeterminism
-(see spike_cache.py / rag_trivia_cached.py).
+(see rag_trivia_cached.py).
 """
 import os, hashlib
 os.environ.setdefault("USE_TF", "0")
