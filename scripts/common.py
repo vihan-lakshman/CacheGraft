@@ -41,3 +41,42 @@ def paths(data: str = "trivia") -> dict:
             "emb": os.path.join(_HERE, f"{data}_corpus_emb.npy"),
             "results": os.path.join(_HERE, f"{data}_results"),
             "kvcache": os.path.join(_HERE, f"{data}_kvcache")}
+
+
+# ------------------------------------------------------------------------------------------
+# Determinism. Decoding is greedy everywhere, so there is no sampling seed to set; the
+# observed run-to-run drift (up to ~2.6 points on a TriviaQA cell) comes from nondeterministic
+# CUDA kernels when batch composition differs between processes. This pins the kernels as far
+# as PyTorch allows. It does NOT make the LLM judge deterministic -- judge verdicts are cached
+# on disk as <tag>.judge*.json and should never be recomputed for a cell that already has them.
+# ------------------------------------------------------------------------------------------
+SEED = 0
+os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")   # read at cuBLAS init
+
+
+def set_determinism(seed: int = SEED):
+    import random
+    import numpy as np
+    import torch
+    random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.benchmark = False
+    # warn_only: a few fused attention kernels have no deterministic implementation; we prefer
+    # running with a warning over refusing to run.
+    torch.use_deterministic_algorithms(True, warn_only=True)
+
+
+def top1(qemb, cemb, questions):
+    """Top-1 retrieval. If a question carries `pool_ids` (built by prep.py --scope document),
+    retrieval is restricted to the chunks of its own source document -- the realistic setting
+    for question-answering over a known paper, and the one that makes paragraph-level retrieval
+    tractable at all on QASPER/CovidQA. Otherwise it is argmax over the whole corpus."""
+    import numpy as np
+    if not questions or "pool_ids" not in questions[0]:
+        return [int(i) for i in (qemb @ cemb.T).argmax(1)]
+    out = []
+    for i, q in enumerate(questions):
+        pool = q["pool_ids"] or list(range(len(cemb)))
+        sims = qemb[i] @ cemb[np.asarray(pool)].T
+        out.append(int(pool[int(sims.argmax())]))
+    return out

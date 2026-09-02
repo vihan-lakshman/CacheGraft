@@ -26,6 +26,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--target", type=int, default=500, help="answerable questions to keep")
     ap.add_argument("--scan", type=int, default=1500, help="max stream examples to scan")
+    ap.add_argument("--out", default="trivia",
+                    help="dataset name to write (see common.paths). Use a distinct name to build "
+                         "a second TriviaQA setting side by side, e.g. --out trivia500")
     args = ap.parse_args()
 
     ds = load_dataset("mandarjoshi/trivia_qa", "rc.wikipedia", split="validation", streaming=True)
@@ -51,14 +54,14 @@ def main():
         questions.append({"q": ex["question"], "aliases": aliases,
                           "norm_aliases": norm_aliases, "gold_ids": gold_ids})
 
+    P = C.paths(args.out)
     print(f"scanned={seen}  kept_questions={len(questions)}  corpus_chunks={len(corpus)}")
-    json.dump({"questions": questions, "corpus": corpus},
-              open(os.path.join(HERE, "trivia_data.json"), "w"))
+    json.dump({"questions": questions, "corpus": corpus}, open(P["data"], "w"))
 
     from sentence_transformers import SentenceTransformer
     em = SentenceTransformer(C.EMBED_MODEL, device="cuda")
     emb = em.encode(corpus, normalize_embeddings=True, batch_size=256, show_progress_bar=False)
-    np.save(os.path.join(HERE, "trivia_corpus_emb.npy"), emb)
+    np.save(P["emb"], emb)
     print("saved corpus embeddings", emb.shape)
 
 if __name__ == "__main__":

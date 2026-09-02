@@ -159,6 +159,7 @@ def main():
                          "model emits the bare entity instead of restating the question. Applied "
                          "to every method for a fair comparison (helps the wordier C2C most)")
     args = ap.parse_args()
+    C.set_determinism()
     if args.shots > len(FEWSHOT):
         ap.error(f"--shots max is {len(FEWSHOT)}")
     if args.distill != "none":
@@ -179,8 +180,7 @@ def main():
         em = SentenceTransformer(C.EMBED_MODEL, device="cuda")
         qemb = em.encode(["Represent this sentence for searching relevant passages: " + q["q"]
                           for q in qs], normalize_embeddings=True, batch_size=128)
-        top = (qemb @ cemb.T).argmax(1)
-        fact_ids = [int(i) for i in top]
+        fact_ids = C.top1(qemb, cemb, qs)
         retr_hit = float(np.mean([fact_ids[i] in set(qs[i]["gold_ids"]) for i in range(len(qs))]))
         print(f"retrieval top-1 gold-chunk hit rate: {retr_hit:.3f}", flush=True)
     elif args.fact == "oracle":

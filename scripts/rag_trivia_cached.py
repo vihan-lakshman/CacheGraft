@@ -30,8 +30,7 @@ def resolve_facts(qs, fact, emb_path):
     em = SentenceTransformer(C.EMBED_MODEL, device="cuda")
     qemb = em.encode(["Represent this sentence for searching relevant passages: " + q["q"]
                       for q in qs], normalize_embeddings=True, batch_size=128)
-    top = (qemb @ cemb.T).argmax(1)
-    fact_ids = [int(i) for i in top]
+    fact_ids = C.top1(qemb, cemb, qs)
     hit = float(np.mean([fact_ids[i] in set(qs[i]["gold_ids"]) for i in range(len(qs))]))
     del em; torch.cuda.empty_cache()
     return fact_ids, hit
@@ -49,6 +48,7 @@ def main():
                          "the win comes from fusion vs the doc-only-cache machinery)")
     ap.add_argument("--cache_dir", default=None)
     args = ap.parse_args()
+    C.set_determinism()
     PATHS = C.paths(args.data)
     args.cache_dir = args.cache_dir or PATHS["kvcache"] + ("_recv" if args.recv_kv else "")
     os.makedirs(args.cache_dir, exist_ok=True)

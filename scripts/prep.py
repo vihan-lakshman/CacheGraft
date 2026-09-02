@@ -42,10 +42,11 @@ def normalize(s):
 # de-clustering, chunking, gold marking, embedding -- is shared.
 # ---------------------------------------------------------------------------------------------
 
-def _squad_like(repo, split, config=None):
+def _squad_like(repo, split, config=None, header=None):
     ds = load_dataset(repo, config, split=split) if config else load_dataset(repo, split=split)
     for ex in ds:
-        yield ex["question"], list(ex["answers"]["text"]), ex["context"]
+        h = header(ex["context"]) if header else ""
+        yield ex["question"], list(ex["answers"]["text"]), ex["context"], h
 
 
 def load_squad():
@@ -61,8 +62,11 @@ def load_adversarialqa():
 
 def load_covidqa():
     """CovidQA (deepset): SQuAD-format extractive QA over CORD-19 papers. Contexts are full
-    papers, so chunking matters here; answers are outside a small model's parametric memory."""
-    return _squad_like("deepset/covid_qa_deepset", "train")
+    papers, so chunking matters here; answers are outside a small model's parametric memory.
+    CovidQA has no title field, but every context begins with the paper title, so the first
+    line serves as the header."""
+    return _squad_like("deepset/covid_qa_deepset", "train",
+                       header=lambda c: c.strip().split("\n")[0].strip())
 
 
 def load_qasper():
@@ -83,7 +87,7 @@ def load_qasper():
                 if not a.get("unanswerable"):
                     spans += [s for s in (a.get("extractive_spans") or []) if s.strip()]
             if spans:
-                yield q, sorted(set(spans)), context
+                yield q, sorted(set(spans)), context, f"{paper['title']}. {paper['abstract']}"
 
 
 LOADERS = {"squad": load_squad, "adversarialqa": load_adversarialqa,
@@ -110,20 +114,32 @@ def main():
                          "a larger value reproduces clustered SQuAD-style sampling")
     ap.add_argument("--pick", default="random", choices=["first", "random"],
                     help="which question to keep per passage; 'random' avoids annotation-order bias")
-    ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--header", action="store_true",
+                    help="prepend the document's title (CovidQA) or title+abstract (QASPER) to "
+                         "every chunk of it, so a paragraph-level chunk is self-describing to "
+                         "both the retriever and the reader")
+    ap.add_argument("--header_words", type=int, default=40,
+                    help="truncate the header to this many words; a full QASPER abstract would "
+                         "otherwise dwarf a 140-word chunk")
+    ap.add_argument("--scope", default="corpus", choices=["corpus", "document"],
+                    help="'corpus' = retrieve over every chunk in the split. 'document' = "
+                         "restrict retrieval to the question's own source document (records "
+                         "pool_ids per question); the realistic setting for QA over a known "
+                         "paper, and what makes paragraph-level retrieval tractable there")
+    ap.add_argument("--seed", type=int, default=C.SEED)
     ap.add_argument("--scan", type=int, default=100000, help="max source examples to read")
     args = ap.parse_args()
 
     # group source examples by their context, so we can keep at most N questions per passage
-    by_ctx, order = {}, []
-    for i, (q, answers, ctx) in enumerate(LOADERS[args.data]()):
+    by_ctx, order, headers = {}, [], {}
+    for i, (q, answers, ctx, header) in enumerate(LOADERS[args.data]()):
         if i >= args.scan:
             break
         answers = [a for a in answers if a and a.strip()]
         if not answers:
             continue
         if ctx not in by_ctx:
-            by_ctx[ctx] = []; order.append(ctx)
+            by_ctx[ctx] = []; order.append(ctx); headers[ctx] = header
         by_ctx[ctx].append((q, answers))
 
     # The corpus is EVERY passage in the source split, not only the ones we ask questions about.
@@ -131,16 +147,25 @@ def main():
     # retrieval is made artificially easy.
     corpus, chunk_id, ctx_chunks = [], {}, {}
     for ctx in order:
+        prefix = ""
+        if args.header and headers.get(ctx):
+            prefix = " ".join(headers[ctx].split()[:args.header_words]).strip()
+            prefix = prefix + ("" if prefix.endswith((".", "?", "!")) else ".") + "\n\n"
         ids = []
         for ch in chunk(ctx, args.chunk_words):
+            ch = prefix + ch
             if ch not in chunk_id:
                 chunk_id[ch] = len(corpus); corpus.append(ch)
             ids.append(chunk_id[ch])
         ctx_chunks[ctx] = ids
 
+    # De-cluster on the GOLD CHUNK, not the source context. For un-chunked corpora (SQuAD,
+    # AdversarialQA) a context is one chunk, so this is exactly "one question per paragraph".
+    # For chunked long-document corpora (CovidQA, QASPER) a single paper supplies many
+    # independent passages, and capping per paper would throw most of the dataset away --
+    # CovidQA has only ~147 documents but thousands of distinct answer-bearing passages.
     rng = random.Random(args.seed)
-    questions = []
-    n_ctx_used = 0
+    questions, per_gold = [], {}
     for ctx in order:
         if len(questions) >= args.target:
             break
@@ -148,30 +173,36 @@ def main():
         cands = by_ctx[ctx][:]
         if args.pick == "random":
             rng.shuffle(cands)
-        kept = 0
         for q, answers in cands:
-            if kept >= args.max_per_para or len(questions) >= args.target:
+            if len(questions) >= args.target:
                 break
             norm_aliases = sorted({normalize(a) for a in answers if normalize(a)})
             if not norm_aliases:
                 continue
             # gold = the chunk that actually contains an answer alias
             gold = [i for i in ids if any(a in normalize(corpus[i]) for a in norm_aliases)]
-            if not gold:
+            if not gold or per_gold.get(gold[0], 0) >= args.max_per_para:
                 continue
-            questions.append({"q": q, "aliases": sorted(set(answers)),
-                              "norm_aliases": norm_aliases, "gold_ids": gold[:1]})
-            kept += 1
-        if kept:
-            n_ctx_used += 1
+            # ALL answer-bearing chunks are gold (as in trivia_prep.py): retrieval that
+            # returns a different chunk containing the answer is a hit, not a miss. The oracle
+            # condition and the de-clustering key both use gold_ids[0] as the canonical passage.
+            rec = {"q": q, "aliases": sorted(set(answers)),
+                   "norm_aliases": norm_aliases, "gold_ids": gold}
+            if args.scope == "document":
+                rec["pool_ids"] = ids
+            questions.append(rec)
+            per_gold[gold[0]] = per_gold.get(gold[0], 0) + 1
+    n_ctx_used = len(per_gold)
 
     if not questions:
         raise SystemExit(f"no usable questions for {args.data}")
     P = C.paths(args.data)
     json.dump({"questions": questions, "corpus": corpus}, open(P["data"], "w"))
     words = np.mean([len(corpus[q["gold_ids"][0]].split()) for q in questions])
-    print(f"{args.data}: questions={len(questions)}  source_passages={n_ctx_used}  "
-          f"corpus_chunks={len(corpus)}  mean_gold_words={words:.0f}")
+    pool = np.mean([len(q.get("pool_ids", corpus)) for q in questions])
+    print(f"{args.data}: questions={len(questions)}  distinct_gold_passages={n_ctx_used}  "
+          f"corpus_chunks={len(corpus)}  mean_gold_words={words:.0f}  "
+          f"mean_retrieval_pool={pool:.0f}")
 
     from sentence_transformers import SentenceTransformer
     em = SentenceTransformer(C.EMBED_MODEL, device="cuda")

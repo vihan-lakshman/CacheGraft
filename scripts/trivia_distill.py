@@ -82,7 +82,7 @@ def used_ids(data, paths, n_test):
     em = SentenceTransformer(C.EMBED_MODEL, device="cuda")
     qemb = em.encode(["Represent this sentence for searching relevant passages: " + q["q"]
                       for q in qs], normalize_embeddings=True, batch_size=128)
-    ids |= {int(i) for i in (qemb @ cemb.T).argmax(1)}
+    ids |= set(C.top1(qemb, cemb, qs))
     del em; torch.cuda.empty_cache()
     return sorted(ids)
 

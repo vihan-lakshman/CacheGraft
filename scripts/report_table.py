@@ -6,9 +6,16 @@ prints (a) one row per cell with every metric and (b) paired significance agains
 baseline, for each metric family.
 
 Metric definitions, applied identically to every cell:
-  <judge>   fraction the judge marked correct, on the raw unmodified generation
+  phi-4     primary judge: microsoft/phi-4, run locally and greedily (deterministic)
+  gemma2    second judge, a different model family (google/gemma-2-9b-it), same prompt
   contains  a gold alias appears in the raw generation (verbosity-tolerant, no model in the loop)
   EM / F1   against the uniform answer extraction saved as `pred` by the runner
+
+Two metrics were tested and rejected, and the scripts are kept so the checks are reproducible:
+an API judge (judge_trivia.py) flips 8-9%% of verdicts when re-run on identical generations,
+enough to move a paired delta by 2.5 points; and BERTScore (score_bertscore.py), the CAG
+protocol, ranks the 4B sharer BELOW the 0.6B receiver in every variant and correlates more
+strongly with output length than with correctness, so it scores brevity on short-answer QA.
 All of them use the dataset's FULL alias list from `<data>_data.json` -- the per-sample
 `aliases` field is truncated for judge-prompt size and must not be used for scoring.
 
@@ -87,6 +94,9 @@ def load_cells(data, results, tags):
                            for s in S}
         rec["em"] = {s["q"]: s["pred"] in q2al.get(s["q"], []) for s in S}
         rec["f1"] = float(np.mean([f1(s["pred"], q2al.get(s["q"], [])) for s in S]))
+        bs = os.path.join(results, f"{tag}.bertscore.json")
+        if os.path.exists(bs):
+            rec["bertscore"] = {k: float(v) for k, v in json.load(open(bs)).items()}
         for jf in glob.glob(os.path.join(results, f"{tag}.judge*.json")):
             name = os.path.basename(jf)[len(tag) + 1:-5]        # judge | judge_<short>
             name = "haiku" if name == "judge" else name.replace("judge_", "")
@@ -100,7 +110,11 @@ def main():
     ap.add_argument("--data", default="squad")
     ap.add_argument("--cells", nargs="+", required=True)
     ap.add_argument("--baseline", default=None, help="cell to test every other cell against")
-    ap.add_argument("--judges", nargs="+", default=["haiku", "phi-4"])
+    ap.add_argument("--judges", nargs="+", default=["phi-4", "gemma2"],
+                    help="primary first. Both defaults are local open-weights models run greedily, "
+                         "so every reported number is reproducible from this repo with no API in "
+                         "the loop. Pass 'haiku' explicitly to include the API judge, whose "
+                         "verdicts flip 8-9%% when re-run on identical generations.")
     args = ap.parse_args()
     results = C.paths(args.data)["results"]
     cells = load_cells(args.data, results, args.cells)
@@ -109,8 +123,9 @@ def main():
     def pct(m):
         return 100 * sum(m.values()) / len(m)
 
+    has_bs = any("bertscore" in c for c in cells.values())
     head = f"{'cell':<40}{'n':>5}" + "".join(f"{j:>10}" for j in judges) + \
-           f"{'contains':>10}{'EM':>8}{'F1':>8}{'words':>7}"
+           (f"{'BERTSc':>9}" if has_bs else "") + f"{'contains':>10}{'EM':>8}{'F1':>8}{'words':>7}"
     print(head); print("-" * len(head))
     for tag in args.cells:
         if tag not in cells: continue
@@ -119,6 +134,9 @@ def main():
         for j in judges:
             v = c["judges"].get(j)
             row += f"{pct(v):>9.1f}%" if v else f"{'--':>10}"
+        if has_bs:
+            bsv = c.get("bertscore")
+            row += f"{np.mean(list(bsv.values())):>9.4f}" if bsv else f"{'--':>9}"
         row += f"{pct(c['contains']):>9.1f}%{pct(c['em']):>8.1f}{100*c['f1']:>8.1f}{c['words']:>7.1f}"
         print(row)
 
@@ -130,11 +148,28 @@ def main():
         print(head); print("-" * len(head))
         for tag in args.cells:
             if tag == args.baseline or tag not in cells: continue
-            for metric in judges + ["contains", "em"]:
-                a = cells[tag]["judges"].get(metric) if metric in judges else cells[tag][metric]
-                b = base["judges"].get(metric) if metric in judges else base[metric]
+            for metric in judges + ["contains", "em", "bertscore"]:
+                if metric in judges:
+                    a, b = cells[tag]["judges"].get(metric), base["judges"].get(metric)
+                else:
+                    a, b = cells[tag].get(metric), base.get(metric)
                 if not a or not b: continue
                 keys = sorted(set(a) & set(b))
+                if metric == "bertscore":
+                    # continuous: paired bootstrap on the mean difference + Wilcoxon signed-rank
+                    d = np.array([a[k] - b[k] for k in keys])
+                    rng = np.random.default_rng(0)
+                    di = d[rng.integers(0, len(d), (10000, len(d)))].mean(1)
+                    try:
+                        from scipy.stats import wilcoxon
+                        p = float(wilcoxon(d, zero_method="wilcox").pvalue)
+                    except Exception:
+                        p = float(2 * min((di <= 0).mean(), (di >= 0).mean()))
+                    win = int((d > 0).sum()); lose = int((d < 0).sum())
+                    ci = f"[{100*np.percentile(di,2.5):+.2f}, {100*np.percentile(di,97.5):+.2f}]"
+                    wl = f"{win}/{lose}"
+                    print(f"{tag:<40}{metric:<10}{100*d.mean():>+8.2f}{wl:>12}{p:>11.2}{ci:>18}")
+                    continue
                 na, nb, p = mcnemar(a, b, keys)
                 d, lo, hi = boot_ci(a, b, keys)
                 print(f"{tag:<40}{metric:<10}{d:>+8.1f}{f'{na}/{nb}':>12}{p:>11.2}"

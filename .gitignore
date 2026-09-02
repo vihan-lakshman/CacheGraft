@@ -14,3 +14,9 @@ scripts/*_kvcache/
 scripts/*_kvcache_recv/
 # cloned C2C package (install separately; see README)
 C2C/
+paper/main.pdf
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.out
+paper/*.log
