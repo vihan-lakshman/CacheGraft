@@ -162,8 +162,15 @@ persist the receiver-space KV, keyed by a content hash. Online, we load that cac
 \emph{base} receiver and decode the question: no sharer, no projector, and no sharer-sized memory
 on the query path. Cost: $0.05$--$0.19$\,s and ${\sim}18$\,MB (fp16) per ${\sim}130$-token
 passage, once; $0.58$\,s per query, receiver-only. The persisted and single-pass paths agree to
-$91$--$94\%$ token-exact generations, the residual being floating-point nondeterminism under
-greedy decoding.
+$93$--$94\%$ token-exact generations, the residual being floating-point nondeterminism between
+two different code paths under greedy decoding.
+
+\paragraph{Reproducibility.} Re-running every experiment in this paper from a clean slate
+reproduces all six eval sets byte-identically and \emph{every} generation in all 68 cells
+byte-identically, leaving all lexical metrics unchanged to $0.0$ points. Both judges are local
+and greedy, so their verdicts reproduce exactly ($0$ disagreements in $10{,}400$ re-judgements);
+an API judge, by contrast, flips $8$--$9\%$ of verdicts on identical input. Code, eval-set
+builders and a re-run checker are released.
 
 % =====================================================================================
 \section{Experimental setup}

@@ -212,9 +212,21 @@ retrieved (no sharer/oracle cell).
 ## Setup
 
 ```bash
+# 1. a virtualenv is required -- the system Python will not have these deps, and every
+#    command below assumes this environment is active
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 2. the C2C package supplies the `rosetta` library and RosettaModel
 git clone https://github.com/thu-nics/C2C
-pip install -e C2C --no-deps          # or: export PYTHONPATH=$PWD/C2C  (rosetta is pure Python)
+pip install -e C2C --no-deps          # --no-deps keeps your existing torch
+# if the editable install fails (older setuptools), put C2C on the path instead:
+#   export PYTHONPATH=$PWD/C2C        # rosetta is pure Python
 pip install -r requirements.txt
+
+# 3. every command in this README is run from scripts/ with the venv active
+cd scripts
+export PYTHONPATH=$(cd .. && pwd)/C2C USE_TF=0
 ```
 
 * Set `USE_TF=0` (scripts do it internally; export it if importing them elsewhere).
@@ -274,7 +286,7 @@ CacheGraft doc-only fusion, the receiver-own-KV control and the sharer ceiling, 
 ./run_matrix.sh trivia500     500
 ```
 
-Roughly 40 min per dataset on an A100; the fusion cells decode one example at a time.
+Roughly 40 min per dataset on an A100; the fusion cells decode one example at a time. Budget ~4 h for step 2 across all six datasets, ~45 min for step 3, and ~3 h per judge for step 4 (both judges over all six datasets), so a full reproduction is roughly a 10-hour unattended run on a single A100-40GB.
 
 ### 3. Add the two SQuAD-only baselines
 
@@ -296,24 +308,77 @@ The persisted path reproduces the inline one to 91–94% token-exact generations
 being floating-point nondeterminism under greedy decoding. It writes ~18 MB per passage, so
 budget ~15 GB per condition and delete `squad_kvcache/` afterwards.
 
-For the matched short-answer protocol, add `--terse` to *both* channels — it must be applied to
-every method or the comparison is not fair.
+The matched short-answer protocol (the length-controlled, judge-free comparison) adds `--terse`.
+It must be applied to *every* method or the comparison is not fair:
+
+```bash
+python rag_trivia.py --data squad --method text_rag --fact retrieved --terse --n_test 800
+python rag_trivia.py --data squad --method text_rag --fact oracle    --terse --n_test 800
+python rag_trivia.py --data squad --method c2c --fact retrieved --fuse doc_only --terse --n_test 800
+python rag_trivia.py --data squad --method c2c --fact oracle    --fuse doc_only --terse --n_test 800
+```
+
+These cells are scored lexically (EM / F1 / contains) and need no judge.
 
 ### 4. Judge and report
 
+SQuAD carries the full ladder, so it has more judged cells than the others. Both lists below
+cover every judged number reported in the paper.
+
 ```bash
-CELLS="text_rag_retrieved text_rag_oracle c2c_retrieved_doc_only c2c_oracle_doc_only \
-       recvkv_retrieved_doc_only recvkv_oracle_doc_only sharer_oracle receiver_none"
+SQUAD_CELLS="receiver_none text_rag_retrieved text_rag_retrieved_distill_strong \
+recvkv_retrieved_doc_only c2c_retrieved_doc_only c2c_retrieved_doc_only_cached sharer_retrieved \
+text_rag_oracle text_rag_oracle_distill_strong recvkv_oracle_doc_only c2c_oracle_doc_only \
+c2c_oracle_doc_only_cached sharer_oracle"
 
-python judge_open.py --data squad --model microsoft/phi-4        --short phi-4  --batch 8 $CELLS
-python judge_open.py --data squad --model google/gemma-2-9b-it   --short gemma2 --batch 8 $CELLS
+OTHER_CELLS="receiver_none text_rag_retrieved recvkv_retrieved_doc_only c2c_retrieved_doc_only \
+sharer_retrieved text_rag_oracle recvkv_oracle_doc_only c2c_oracle_doc_only sharer_oracle"
 
-python report_table.py --data squad --baseline text_rag_retrieved --cells $CELLS
+for M in "microsoft/phi-4 phi-4" "google/gemma-2-9b-it gemma2"; do
+  set -- $M
+  python judge_open.py --data squad --model "$1" --short "$2" --batch 8 $SQUAD_CELLS
+  for D in adversarialqa covidqa qasper trivia trivia500; do
+    python judge_open.py --data $D --model "$1" --short "$2" --batch 8 $OTHER_CELLS
+  done
+done
+
+python report_table.py --data squad --baseline text_rag_retrieved --cells $SQUAD_CELLS
+python report_table.py --data squad --baseline text_rag_oracle    --cells $SQUAD_CELLS
 ```
 
 `report_table.py` prints per-cell metrics, paired exact McNemar, question-level bootstrap CIs and
 inter-judge Cohen's κ. Use `--batch 8` on TriviaQA, whose long alias lists will otherwise OOM at
 40 GB.
+
+### 5. Verify a re-run against a reference run
+
+Every number above should survive a clean re-run of the commands in this section. To check that,
+keep the previous results directory and compare:
+
+```bash
+mv squad_results squad_results.v1        # before re-running
+# ... re-run steps 1-4 ...
+python check_repro.py --data squad --ref squad_results.v1
+```
+
+`check_repro.py` compares cell by cell at three levels: byte-identity of the generations, the
+metrics computed from them, and per-judge verdict agreement. Both judges decode greedily, so an
+identical generation must yield an identical verdict — drift there is a bug, not noise.
+
+**Measured result of a full clean-slate re-run** (5.5 h, all six datasets, both judges):
+
+| level | result |
+|---|---|
+| eval sets | all six rebuild **byte-identically**, including the two that stream TriviaQA |
+| generations | **100.0% byte-identical** across all 68 cells |
+| contains / EM / F1 | identical to **0.0 points** |
+| judge verdicts | **0 flips / 10,400** with `set_determinism()`; 19 / 67,554 without it |
+
+Exact reproduction depends on `common.set_determinism()`, which is called by both runners *and*
+by `judge_open.py`. Without it in the judge, greedy judging still drifts on ~0.03% of verdicts
+because CUDA reductions are not bitwise-stable across processes. Note this is reproduction of the
+*same* configuration; the two different implementations of doc-only fusion (inline vs persisted
+cache) agree to 93–94% token-exact, which is expected and correctness-preserving.
 
 ### Reading the screen
 
@@ -371,6 +436,7 @@ scripts/
   kvcache.py            # KV primitives: build / save / load / decode
   trivia_distill.py     # offline sharer summaries (cost-matched text channel)
   judge_open.py         # the two judges: any local open-weights model (phi-4, gemma-2)
+  check_repro.py        # compare a re-run against a reference results dir (generations/metrics/judges)
   judge_trivia.py       # rejected: Claude Haiku via CLI (8-9% verdict instability)
   score_bertscore.py    # rejected: BERTScore (length-dominated on short-answer QA)
   report_table.py       # metrics + paired McNemar + bootstrap CIs + inter-judge kappa

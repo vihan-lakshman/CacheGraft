@@ -20,3 +20,8 @@ paper/*.bbl
 paper/*.blg
 paper/*.out
 paper/*.log
+scripts/*.v1
+scripts/*_results.v1/
+scripts/*.json.v1
+scripts/*.npy.v1
+scripts/*_results_corpusscope/

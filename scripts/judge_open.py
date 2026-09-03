@@ -53,6 +53,10 @@ def main():
     ap.add_argument("--batch", type=int, default=32)
     args = ap.parse_args()
     short = args.short or args.model.split("/")[-1].replace(".", "").lower()
+    # Pin the judge's kernels too. Without this, greedy judging still drifts on ~0.03% of
+    # verdicts between runs on byte-identical generations (18/10400 on SQuAD), because CUDA
+    # reductions are not bitwise-stable across processes.
+    C.set_determinism()
     RESULTS = C.paths(args.data)["results"]
 
     tok = AutoTokenizer.from_pretrained(args.model); tok.padding_side = "left"
