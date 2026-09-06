@@ -33,14 +33,24 @@ def get_fuser_dir(subfolder: str = FUSER_SUBFOLDER) -> str:
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 
+# Model-pair tag. The eval sets (<data>_data.json / _corpus_emb.npy) are built by bge-small and
+# are model-independent, so every pair SHARES them. Everything a model pair produces -- results,
+# KV caches, distilled summaries -- is suffixed with this tag, so a second pair (e.g. the Llama
+# receiver/sharer via C2C_RECEIVER/C2C_SHARER/C2C_FUSER_DIR) can be evaluated side by side
+# without overwriting the first. Empty by default => the documented Qwen paths are unchanged.
+RUN_TAG = os.environ.get("C2C_RUN_TAG", "")
+
+
 def paths(data: str = "trivia") -> dict:
     """Per-dataset file locations, so the RAG harness is dataset-generic. A dataset just needs a
     `<data>_data.json` ({questions:[{q,aliases,norm_aliases,gold_ids}], corpus:[...]}) and a
-    `<data>_corpus_emb.npy`; results land in `<data>_results/`, KV caches in `<data>_kvcache/`."""
+    `<data>_corpus_emb.npy`; results land in `<data>_results<tag>/`, KV caches in
+    `<data>_kvcache<tag>/`, offline summaries in `<data>_distilled<tag>*.json` (see RUN_TAG)."""
     return {"data": os.path.join(_HERE, f"{data}_data.json"),
             "emb": os.path.join(_HERE, f"{data}_corpus_emb.npy"),
-            "results": os.path.join(_HERE, f"{data}_results"),
-            "kvcache": os.path.join(_HERE, f"{data}_kvcache")}
+            "results": os.path.join(_HERE, f"{data}_results{RUN_TAG}"),
+            "kvcache": os.path.join(_HERE, f"{data}_kvcache{RUN_TAG}"),
+            "distill_prefix": os.path.join(_HERE, f"{data}_distilled{RUN_TAG}")}
 
 
 # ------------------------------------------------------------------------------------------

@@ -39,6 +39,6 @@ run $PY rag_trivia.py --data $D --method c2c --fact retrieved --fuse doc_only --
 run $PY rag_trivia.py --data $D --method c2c --fact oracle    --fuse doc_only --n_test $N
 run $PY rag_trivia_cached.py --data $D --fact retrieved --recv_kv --n_test $N
 run $PY rag_trivia_cached.py --data $D --fact oracle    --recv_kv --n_test $N
-rm -rf ${D}_kvcache_recv        # control caches are single-use and ~18 MB/passage
+rm -rf ${D}_kvcache${C2C_RUN_TAG:-}_recv   # control caches are single-use
 
 echo "### $D done $(date +%H:%M:%S)"

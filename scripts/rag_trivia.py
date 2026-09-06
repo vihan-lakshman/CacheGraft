@@ -190,7 +190,7 @@ def main():
     if fact_ids is None:
         facts = None
     elif args.distill == "summary":
-        dpath = os.path.join(HERE, f"{args.data}_distilled{args.distill_tag}.json")
+        dpath = f"{P['distill_prefix']}{args.distill_tag}.json"
         if not os.path.exists(dpath):
             raise SystemExit(f"run `trivia_distill.py --data {args.data}` first to build "
                              f"{os.path.basename(dpath)}")

@@ -135,7 +135,7 @@ def main():
         if (i // args.batch) % 5 == 0:
             print(f"  {done}/{len(targets)}  ({time.time() - t0:.0f}s)", flush=True)
 
-    path = os.path.join(HERE, f"{args.data}_distilled{args.tag or ''}.json")
+    path = f"{P['distill_prefix']}{args.tag or ''}.json"
     json.dump(out, open(path, "w"))
     n_words = [len(s.split()) for s in out if s]
     print(f"saved {os.path.basename(path)}  ({done} summaries, {time.time() - t0:.0f}s, "

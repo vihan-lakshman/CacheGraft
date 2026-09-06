@@ -25,3 +25,7 @@ scripts/*_results.v1/
 scripts/*.json.v1
 scripts/*.npy.v1
 scripts/*_results_corpusscope/
+
+# per-model-pair artifacts (C2C_RUN_TAG suffix, e.g. squad_kvcache_llama/)
+scripts/*_kvcache_*/
+.llama_fuser_dir
