@@ -55,10 +55,8 @@ benchmarks and two independent locally-run judges, \sys{} improves the small rea
 strongest architecturally-matched baseline---the same reader given the same passage as
 text---by $+3$ to $+8$ points, recovering $42$--$70\%$ of the receiver-to-sharer quality gap at
 receiver-only query cost. A control that runs the identical cache pipeline with fusion disabled
-reproduces the text baseline exactly, isolating the gain to the fused representation. Spending
-the same offline budget on \emph{text} instead---the same sharer summarising each passage once,
-question-agnostically---is worse than spending nothing. We also map where the method does not
-help, and derive a fuser-free screen, computable in four batched inference cells, that predicts
+reproduces the text baseline exactly, isolating the gain to the fused representation. We also
+map where the method does not help, and derive a fuser-free screen, computable in four batched inference cells, that predicts
 dataset amenability in advance.
 \end{abstract}
 
@@ -105,9 +103,7 @@ time only the small receiver runs. We call this \sys{} (Figure~\ref{fig:pipeline
 (\S\ref{sec:method}).
 (ii) A consistent gain over the architecturally-matched text baseline across five benchmarks and
 two judges, with a null control (\S\ref{sec:results}).
-(iii) The finding that the cost-matched \emph{text} channel---the same sharer, the same offline
-budget, writing text---is worse than no offline compute at all.
-(iv) A fuser-free amenability screen that predicts where the method helps, validated on the two
+(iii) A fuser-free amenability screen that predicts where the method helps, validated on the two
 datasets where it does not (\S\ref{sec:scope}).
 
 % =====================================================================================
@@ -223,14 +219,12 @@ Receiver only, no passage & 7.1 & 16.9 & 5.1 \\
 \midrule
 \multicolumn{4}{l}{\emph{top-1 retrieved}} \\
 Receiver text-RAG \emph{(baseline)} & 51.8 & 59.2 & 48.6 \\
-\quad + offline sharer distillation & 37.8 & 46.4 & 36.8 \\
 Receiver-own-KV control & 52.1 & 59.8 & 48.8 \\
 \textbf{\sys{}} & \best{60.0} & \best{63.1} & \best{56.2} \\
 Sharer text-RAG \emph{(ceiling)} & 66.4 & 70.8 & 61.1 \\
 \midrule
 \multicolumn{4}{l}{\emph{oracle}} \\
 Receiver text-RAG \emph{(baseline)} & 73.0 & 78.6 & 69.9 \\
-\quad + offline sharer distillation & 52.4 & 59.8 & 50.9 \\
 Receiver-own-KV control & 72.5 & 77.9 & 69.5 \\
 \textbf{\sys{}} & \best{79.6} & \best{82.1} & \best{77.4} \\
 Sharer text-RAG \emph{(ceiling)} & 86.5 & 89.4 & 81.2 \\
@@ -297,14 +291,6 @@ the \emph{identical} pipeline with the document cache built from the receiver's 
 (fusion off). It lands on the text baseline in every dataset and both settings
 (Table~\ref{tab:squad}: $52.1$ vs $51.8$, $72.5$ vs $73.0$), while \sys{} is $+7.9$ above it.
 Within-pipeline, the only variable is whose KV fills the document section.
-
-\paragraph{Offline text is worse than no offline compute.} \sys{} is handed a 4B model the text
-baseline does not get, so we give the text channel the same 4B under the same constraints: run
-once per passage, offline, question-agnostically, writing a summary instead of a tensor. It does
-not close the gap---it falls \emph{below} raw text, by $14.0$ (retrieved) and $20.6$ (oracle)
-phi-4 points. A query-agnostic summary must be written before the query is known, so it reliably
-discards the span some future question wanted. Offline sharer compute spent on text is
-counterproductive; the same compute spent on KV is worth $+8$.
 
 \paragraph{Verbosity is not the explanation.} Fused generations run ${\sim}2\times$ longer, which
 costs EM. Under a matched short-answer protocol applied identically to both channels, \sys{} wins
@@ -374,8 +360,7 @@ separate failure: fusion supplies per-passage knowledge, not cross-passage reaso
 Retrieved context does not have to reach a small model as text. Fusing a larger model's KV
 encoding of the document only makes that encoding query-independent, computable once offline, and
 worth $+3$ to $+8$ points over the same model reading the same passage itself---at receiver-only
-query cost, with the gain isolated to the fused representation by a null control. Spending the
-same offline budget on text instead underperforms doing nothing. The method is a
+query cost, with the gain isolated to the fused representation by a null control. The method is a
 knowledge-injection mechanism, not a reasoning one, and a four-cell screen says in advance which
 corpora it will help.
 

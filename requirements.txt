@@ -12,3 +12,5 @@ sentence-transformers
 jinja2>=3.1
 numpy
 scikit-learn
+scipy                 # report_table.py: Wilcoxon for the BERTScore column
+bert_score            # score_bertscore.py (the rejected metric; kept so the check re-runs)

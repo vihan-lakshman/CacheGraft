@@ -54,14 +54,12 @@ bge-small top-1.
 | sharer only, no passage | — | — | 12.2 | 1.8 | 9.1 |
 | *retrieved* | | | | | |
 | receiver text-RAG *(the baseline that matters)* | 51.8 | 59.2 | 48.6 | 25.8 | 6.9 |
-| + offline sharer distillation *(cost-matched text)* | 37.8 | 46.4 | 36.8 | 22.5 | 6.8 |
 | receiver-own-KV control *(same pipeline, fusion off)* | 52.1 | 59.8 | 48.8 | 26.2 | 6.9 |
 | CacheGraft, inline | 59.6 | 62.5 | 55.5 | 16.9 | 12.4 |
 | **CacheGraft, persisted cache (4B fully offline)** | **60.0** | **63.1** | **56.2** | 17.1 | 12.4 |
 | sharer text-RAG *(ceiling)* | 66.4 | 70.8 | 61.1 | 4.5 | 10.9 |
 | *oracle* | | | | | |
 | receiver text-RAG | 73.0 | 78.6 | 69.9 | 38.8 | 6.4 |
-| + offline sharer distillation | 52.4 | 59.8 | 50.9 | 31.9 | 6.5 |
 | receiver-own-KV control | 72.5 | 77.9 | 69.5 | 39.0 | 6.3 |
 | CacheGraft, inline | 79.4 | 81.8 | 76.9 | 24.9 | 11.8 |
 | **CacheGraft, persisted cache** | **79.6** | **82.1** | **77.4** | 25.4 | 11.7 |
@@ -172,15 +170,11 @@ How much of the receiver→sharer headroom CacheGraft captures at receiver-only 
 QASPER has essentially no headroom to recover (sharer 37.4 vs receiver 34.7, a 2.7-point
 ceiling), which is why it is flat there rather than negative — CacheGraft reaches the ceiling.
 
-### Three robustness results
+### Two robustness results
 
 * **The receiver-own-KV control is null everywhere.** The identical two-phase cache pipeline with
   fusion switched off lands on the text baseline in every dataset and setting. The gain is
   attributable to *whose* KV fills the document section, not to the caching machinery.
-* **Spending the sharer's offline budget on text is worse than not spending it.** The same 4B, run
-  once per passage offline and question-agnostically, writing text instead of KV: 37.8 vs 51.8
-  (retrieved) and 52.4 vs 73.0 (oracle) on SQuAD. A query-agnostic summary must be written before
-  the query is known, so it discards the span some future question wanted.
 * **Verbosity is not the explanation.** Fused output runs ~2× longer, which costs EM. Under a
   matched short-answer protocol applied identically to both channels, CacheGraft wins EM (28.1 vs
   23.1), F1 (43.5 vs 36.7) and contains (+13.2, p=7e-15) on SQuAD — and still beats the text
@@ -240,6 +234,27 @@ export PYTHONPATH=$(cd .. && pwd)/C2C USE_TF=0
 
 ## Reproducing the results
 
+Five steps, run **in order**, from `scripts/` with the virtualenv active (see Setup). Measured
+end-to-end on one A100-40GB: **~5.5 hours**, unattended.
+
+| step | what it produces | time |
+|---|---|---|
+| 1 | the six eval sets (shared by every model pair) | ~5 min |
+| 2 | the screen + full matrix, all six datasets | ~3 h 45 min |
+| 3 | the SQuAD-only persisted-cache cells | ~50 min |
+| 4 | both judges, then the tables | ~1 h |
+| 5 | a check of the run against the numbers published above | seconds |
+
+Before starting, make sure of three things:
+
+* **~80 GB free disk** — roughly 60 GB of model weights, 1 GB of eval sets, and 16 GB of
+  persisted KV caches from step 3 (deletable afterwards).
+* **A Hugging Face login that has accepted the `google/gemma-2-9b-it` licence.** It is gated, and
+  step 4 fails without it. `microsoft/phi-4` and the Qwen models are not gated.
+* **One free CUDA GPU.** Steps 2-4 assume they have it to themselves.
+
+Every number in the tables above comes from exactly these commands; step 5 checks that mechanically.
+
 ### 1. Build the eval sets
 
 Two design choices are enforced because they change the statistics:
@@ -286,27 +301,22 @@ CacheGraft doc-only fusion, the receiver-own-KV control and the sharer ceiling, 
 ./run_matrix.sh trivia500     500
 ```
 
-Roughly 40 min per dataset on an A100; the fusion cells decode one example at a time. Budget ~4 h for step 2 across all six datasets, ~45 min for step 3, and ~3 h per judge for step 4 (both judges over all six datasets), so a full reproduction is roughly a 10-hour unattended run on a single A100-40GB.
+Roughly 40 min per dataset on an A100; the fusion cells decode one example at a time. Measured on a clean A100-40GB: **3 h 45 min** for step 2 across all six datasets, **50 min** for step 3, and **25-35 min per judge** for step 4 (both judges over all six datasets), so a full reproduction is a **~5.5-hour** unattended run. The fusion cells dominate, and their cost scales with the *receiver's* layer count (28 projectors for Qwen3-0.6B), not the sharer's.
 
-### 3. Add the two SQuAD-only baselines
+### 3. Add the SQuAD-only baseline
 
-The cost-matched offline **text** channel, and the persisted two-phase cache that keeps the 4B
-off the query path entirely:
+The persisted two-phase cache, which keeps the 4B off the query path entirely:
 
 ```bash
-python trivia_distill.py --data squad --style detailed --tag _strong --n_test 800
-python rag_trivia.py --data squad --method text_rag --fact retrieved \
-                     --distill summary --distill_tag _strong --n_test 800
-python rag_trivia.py --data squad --method text_rag --fact oracle    \
-                     --distill summary --distill_tag _strong --n_test 800
-
 python rag_trivia_cached.py --data squad --fact retrieved --n_test 800
 python rag_trivia_cached.py --data squad --fact oracle    --n_test 800
 ```
 
 The persisted path reproduces the inline one to 91–94% token-exact generations, the residual
-being floating-point nondeterminism under greedy decoding. It writes ~18 MB per passage, so
-budget ~15 GB per condition and delete `squad_kvcache/` afterwards.
+being floating-point nondeterminism under greedy decoding. Both conditions share one
+content-hashed cache directory and overlap heavily (on a retrieval hit the oracle passage *is*
+the retrieved one), so the two together cost less than twice one: measured, **16 GB** for 841
+unique passages at ~19 MB each. Delete `squad_kvcache/` afterwards.
 
 The matched short-answer protocol (the length-controlled, judge-free comparison) adds `--terse`.
 It must be applied to *every* method or the comparison is not fair:
@@ -326,9 +336,9 @@ SQuAD carries the full ladder, so it has more judged cells than the others. Both
 cover every judged number reported in the paper.
 
 ```bash
-SQUAD_CELLS="receiver_none text_rag_retrieved text_rag_retrieved_distill_strong \
-recvkv_retrieved_doc_only c2c_retrieved_doc_only c2c_retrieved_doc_only_cached sharer_retrieved \
-text_rag_oracle text_rag_oracle_distill_strong recvkv_oracle_doc_only c2c_oracle_doc_only \
+SQUAD_CELLS="receiver_none text_rag_retrieved recvkv_retrieved_doc_only \
+c2c_retrieved_doc_only c2c_retrieved_doc_only_cached sharer_retrieved \
+text_rag_oracle recvkv_oracle_doc_only c2c_oracle_doc_only \
 c2c_oracle_doc_only_cached sharer_oracle"
 
 OTHER_CELLS="receiver_none text_rag_retrieved recvkv_retrieved_doc_only c2c_retrieved_doc_only \
@@ -361,6 +371,13 @@ mv squad_results squad_results.v1        # before re-running
 python check_repro.py --data squad --ref squad_results.v1
 ```
 
+To check a run against the numbers **published above** rather than against a previous local run
+— the check a reader actually wants — run this after steps 1–4:
+
+```bash
+python check_readme.py           # every cell of every table; TOL=1.0 points by default
+```
+
 `check_repro.py` compares cell by cell at three levels: byte-identity of the generations, the
 metrics computed from them, and per-judge verdict agreement. Both judges decode greedily, so an
 identical generation must yield an identical verdict — drift there is a bug, not noise.
@@ -370,15 +387,35 @@ identical generation must yield an identical verdict — drift there is a bug, n
 | level | result |
 |---|---|
 | eval sets | all six rebuild **byte-identically**, including the two that stream TriviaQA |
-| generations | **100.0% byte-identical** across all 68 cells |
+| generations | **100.0% byte-identical** across all 68 cells<sup>†</sup> |
 | contains / EM / F1 | identical to **0.0 points** |
 | judge verdicts | **0 flips / 10,400** with `set_determinism()`; 19 / 67,554 without it |
+
+<sup>†</sup> That run also carried two offline-summary cells that have since been dropped; the
+pipeline documented above produces 66.
 
 Exact reproduction depends on `common.set_determinism()`, which is called by both runners *and*
 by `judge_open.py`. Without it in the judge, greedy judging still drifts on ~0.03% of verdicts
 because CUDA reductions are not bitwise-stable across processes. Note this is reproduction of the
 *same* configuration; the two different implementations of doc-only fusion (inline vs persisted
 cache) agree to 93–94% token-exact, which is expected and correctness-preserving.
+
+**Independent re-run on a different machine** (2026-09-07). The table above is a same-machine
+re-run, which tests determinism. This is the stronger check: a fresh host, a fresh virtualenv,
+freshly downloaded weights, and eval sets rebuilt from scratch, compared against **the numbers
+published in this README** rather than against a local reference directory.
+
+| level | result |
+|---|---|
+| eval sets | all six rebuild to the documented counts exactly (800/2067, 416/416, 800/4295, 583/6460, 800/34064, 500/21812) |
+| retrieval hit rates | identical on all six (68.1 / 59.4 / 53.2 / 36.2 / 54.3 / 53.0%) |
+| published numbers checked | **207** (phi-4, Gemma, contains, EM across every cell of every table) |
+| outside ±1.0 points | **0** |
+| largest deviation | **0.30 points** |
+
+Generations are *not* byte-identical across hosts — CUDA reductions differ with driver and GPU
+— so this is reproduction to within decode noise rather than bit-exactness, which is the property
+a reader actually needs. Wall clock was 5 h 29 min on one A100-40GB.
 
 ### Reading the screen
 
@@ -434,9 +471,10 @@ scripts/
   rag_trivia.py         # core runner (--data, text_rag/c2c/receiver/sharer, doc_only/doc_q, --terse)
   rag_trivia_cached.py  # persisted two-phase pipeline + the receiver-own-KV control
   kvcache.py            # KV primitives: build / save / load / decode
-  trivia_distill.py     # offline sharer summaries (cost-matched text channel)
+  trivia_distill.py     # optional: offline sharer summaries (not part of the reported results)
   judge_open.py         # the two judges: any local open-weights model (phi-4, gemma-2)
   check_repro.py        # compare a re-run against a reference results dir (generations/metrics/judges)
+  check_readme.py       # compare a re-run against the numbers PUBLISHED in this README
   judge_trivia.py       # rejected: Claude Haiku via CLI (8-9% verdict instability)
   score_bertscore.py    # rejected: BERTScore (length-dominated on short-answer QA)
   report_table.py       # metrics + paired McNemar + bootstrap CIs + inter-judge kappa
