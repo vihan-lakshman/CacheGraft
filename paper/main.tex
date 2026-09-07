@@ -126,19 +126,19 @@ reference implementation applies fusion \emph{per section} of the prompt, so we 
 \node[font=\bfseries\scriptsize] (t1) {Phase 1 --- offline, once per passage};
 \node[box, below=2mm of t1.west, anchor=north west] (psg) {passage $d$};
 \node[big, right=of psg] (sharer) {sharer (4B)};
-\node[small, below=4mm of sharer] (recvA) {receiver (0.6B)};
+\node[small, below=5mm of sharer] (recvA) {receiver (0.6B)};
 \node[box, right=of sharer, fill=green!10] (fuser) {fuser};
 \node[box, right=of fuser, fill=black!5] (disk) {fused KV\\on disk};
 \draw[arr] (psg) -- (sharer); \draw[arr] (psg.south) |- (recvA.west);
 \draw[arr] (sharer) -- (fuser); \draw[arr] (recvA.east) -| (fuser.south);
 \draw[arr] (fuser) -- (disk);
-\node[font=\bfseries\scriptsize, below=9mm of psg.west, anchor=west] (t2) {Phase 2 --- online, per query};
+\node[font=\bfseries\scriptsize, below=17mm of psg.west, anchor=west] (t2) {Phase 2 --- online, per query};
 \node[box, below=2mm of t2.west, anchor=north west] (q) {question $q$};
 \node[small, right=of q] (recvB) {receiver alone};
 \node[box, right=of recvB] (ans) {answer};
 \draw[arr] (q) -- (recvB); \draw[arr] (recvB) -- (ans);
-\draw[arr] (disk.south) .. controls +(0,-9mm) and +(0,9mm) ..
-   node[right, font=\tiny, pos=0.5] {load} (recvB.north);
+\draw[arr] (disk.south) .. controls +(0,-10mm) and +(7mm,7mm) ..
+   node[above right, font=\tiny, pos=0.55, inner sep=1pt] {load} (recvB.north east);
 \end{tikzpicture}
 \caption{The sharer and fuser run only offline, once per corpus passage, with no knowledge of any
 query. At query time the receiver loads the passage's fused cache and decodes alone.}
@@ -339,9 +339,9 @@ inference cells and it is computable before committing to any fuser.
 \section{Limitations}
 
 \paragraph{Storage.} A fused cache is ${\sim}18$\,MB per ${\sim}130$-token passage, roughly
-$2.6\times10^{4}$ times the passage text. Our results establish that the cheap text alternative is
-\emph{worse}, not merely cheaper, so the trade is real---but it is a trade, and we have not yet
-measured KV quantization~\cite{liu2024kivi} or head pruning.
+$2.6\times10^{4}$ times the passage text, and the footprint scales with the receiver's layer count
+and head dimension rather than with the sharer. This is the method's real cost, and we have not
+yet measured KV quantization~\cite{liu2024kivi} or head pruning.
 
 \paragraph{Effect size depends on grader and sample.} Gemma reports roughly half of phi-4's delta
 on SQuAD, and re-sampling the same TriviaQA corpus at $n{=}500$ moves the effect by $2.5$ points.
@@ -364,7 +364,7 @@ query cost, with the gain isolated to the fused representation by a null control
 knowledge-injection mechanism, not a reasoning one, and a four-cell screen says in advance which
 corpora it will help.
 
-\bibliographystyle{ACM-Reference-Format}
-\bibliography{refs}
+% Bibliography intentionally omitted -- citations are handled separately.
+% The \cite{...} keys below mark where references belong.
 
 \end{document}
