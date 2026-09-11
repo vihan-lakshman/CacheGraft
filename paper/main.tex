@@ -156,10 +156,39 @@ position range, so no RoPE re-rotation is needed.
 \paragraph{Two phases.} Offline, for each passage, we prefill $[p,d]$ with fusion enabled and
 persist the receiver-space KV, keyed by a content hash. Online, we load that cache into the
 \emph{base} receiver and decode the question: no sharer, no projector, and no sharer-sized memory
-on the query path. Cost: $0.05$--$0.19$\,s and ${\sim}18$\,MB (fp16) per ${\sim}130$-token
-passage, once; $0.58$\,s per query, receiver-only. The persisted and single-pass paths agree to
-$93$--$94\%$ token-exact generations, the residual being floating-point nondeterminism between
-two different code paths under greedy decoding.
+on the query path. The persisted and single-pass paths agree to $93$--$94\%$ token-exact
+generations, the residual being floating-point nondeterminism between two different code paths
+under greedy decoding.
+
+\paragraph{Cost.} Building and persisting one passage's cache costs $0.18$--$0.23$\,s and
+${\sim}18$\,MB (fp16) for a ${\sim}170$-token $[p\,d]$ section, once per passage, amortised over
+every future query that retrieves it. Table~\ref{tab:cost} gives the query-time cost: batch size
+$1$, greedy, $24$ maximum new tokens, warm, over 100 SQuAD questions on one A100-40GB.
+
+\begin{table}[t]
+\centering\small
+\caption{Query-time cost. \sys{}'s cache read from disk is included. Memory is the robust result;
+latency is closer than the $6.7\times$ parameter ratio because decode dominates at this scale and
+\sys{} emits ${\sim}2\times$ more tokens than the text baseline.}
+\label{tab:cost}
+\begin{tabular}{lccc}
+\toprule
+System & latency & peak GPU & tokens \\
+\midrule
+Receiver text-RAG (0.6B) & $334$\,ms & $1.22$\,GB & $8.2$ \\
+\textbf{\sys{}} (0.6B + cache) & $574$\,ms & \best{$1.27$\,GB} & $14.3$ \\
+Sharer text-RAG (4B) & $652$\,ms & $7.62$\,GB & $12.6$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\sys{} uses $6.0\times$ less GPU memory than the sharer at query time, because neither the 4B nor
+the projector is resident. Latency is a weaker result and we report it as measured: \sys{} is only
+$1.14\times$ faster than the sharer, and $1.7\times$ \emph{slower} than the receiver text-RAG
+baseline it outscores. Per generated token the three run at $41$, $40$ and $52$\,ms, so total
+latency here tracks output length more than model size. \sys{}'s structural advantages---it never
+prefills the document and never runs the sharer---grow with passage length and batch size, and are
+largely hidden at $170$-token passages with a $24$-token decode budget.
 
 \paragraph{Reproducibility.} Re-running every experiment in this paper from a clean slate
 reproduces all six eval sets byte-identically and \emph{every} generation in all 68 cells
@@ -338,7 +367,7 @@ inference cells and it is computable before committing to any fuser.
 % =====================================================================================
 \section{Limitations}
 
-\paragraph{Storage.} A fused cache is ${\sim}18$\,MB per ${\sim}130$-token passage, roughly
+\paragraph{Storage.} A fused cache is ${\sim}18$\,MB per ${\sim}170$-token passage, roughly
 $2.6\times10^{4}$ times the passage text, and the footprint scales with the receiver's layer count
 and head dimension rather than with the sharer. This is the method's real cost, and we have not
 yet measured KV quantization~\cite{liu2024kivi} or head pruning.
