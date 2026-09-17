@@ -74,7 +74,7 @@ bge-small top-1.
 | receiver text-RAG, retrieved | 30.8 | 34.9 | 24.5 | 7.2 | 9.1 |
 | receiver-own-KV control | 31.0 | 34.4 | 24.0 | 7.2 | 9.1 |
 | **CacheGraft, retrieved** | **36.8** | **38.9** | **30.3** | 5.5 | 14.4 |
-| sharer text-RAG, retrieved | — | 48.3 | 33.7 | 3.4 | 12.7 |
+| sharer text-RAG, retrieved | 41.8 | 48.3 | 33.7 | 3.4 | 12.7 |
 | receiver text-RAG, oracle | 42.1 | 44.2 | 33.9 | 9.9 | 8.8 |
 | receiver-own-KV control | 41.3 | 43.3 | 33.4 | 9.9 | 8.9 |
 | **CacheGraft, oracle** | **49.3** | **51.4** | **42.5** | **9.9** | 13.9 |
@@ -85,27 +85,35 @@ bge-small top-1.
 | system | phi-4 | Gemma | contains | EM | words |
 |---|---:|---:|---:|---:|---:|
 | receiver only, no passage | 3.7 | 13.8 | 0.9 | 0.4 | 10.4 |
-| sharer only, no passage | — | — | 3.2 | 0.5 | 11.3 |
+| sharer only, no passage | — | — | 3.1 | 0.5 | 11.3 |
 | receiver text-RAG, retrieved | 33.1 | 50.8 | 21.0 | 8.3 | 10.8 |
 | receiver-own-KV control | 33.5 | 50.0 | 21.1 | 8.1 | 10.8 |
 | **CacheGraft, retrieved** | **36.9** | **53.8** | 22.6 | 5.1 | 15.2 |
+| sharer text-RAG, retrieved *(ceiling)* | 41.9 | 59.8 | 24.4 | 1.9 | 13.9 |
 | receiver text-RAG, oracle | 53.7 | 71.7 | 32.6 | 12.0 | 10.7 |
 | receiver-own-KV control | 53.8 | 72.5 | 32.8 | 11.5 | 10.7 |
 | **CacheGraft, oracle** | **59.1** | **76.9** | 35.4 | 6.7 | 15.0 |
-| sharer text-RAG, oracle *(ceiling)* | 61.4 | 80.1 | 37.4 | 3.5 | 13.2 |
+| sharer text-RAG, oracle *(ceiling)* | 61.1 | 80.0 | 37.2 | 3.5 | 13.2 |
 
 ### QASPER — n=583, top-1 hit 36.2% (within-document retrieval)
 
 | system | phi-4 | Gemma | contains | EM | words |
 |---|---:|---:|---:|---:|---:|
 | receiver only, no passage | 1.6 | 10.3 | 2.9 | 1.3 | 10.5 |
+| sharer only, no passage | — | — | 4.6 | 0.3 | 11.7 |
 | receiver text-RAG, retrieved | 15.3 | 35.9 | 17.7 | 4.5 | 9.7 |
 | receiver-own-KV control | 15.5 | 36.3 | 17.3 | 4.3 | 9.7 |
 | CacheGraft, retrieved | 15.7 | 33.9 | 18.8 | 2.9 | 14.5 |
+| sharer text-RAG, retrieved *(ceiling)* | 17.2 | 35.5 | 18.2 | 0.9 | 15.3 |
 | receiver text-RAG, oracle | 34.7 | 57.4 | 32.7 | 12.5 | 8.9 |
 | receiver-own-KV control | 34.7 | 57.9 | 33.0 | 12.5 | 8.9 |
 | CacheGraft, oracle | 37.5 | 60.8 | 39.0 | 7.6 | 14.4 |
-| sharer text-RAG, oracle *(ceiling)* | 37.4 | 59.0 | 34.5 | 3.1 | 14.9 |
+| sharer text-RAG, oracle *(ceiling)* | 37.9 | 59.2 | 34.8 | 3.1 | 14.9 |
+
+CovidQA and QASPER repeat some question texts across papers (792 and 554 distinct texts). The
+sharer rows above count every question (800 / 583). The receiver, control and CacheGraft rows —
+and their paired tests below — were scored before that fix, when a repeated text was counted
+once; re-scoring the cells re-run so far moved them by at most 0.5 points.
 
 ### TriviaQA — n=800, 34,064 chunks, top-1 hit 54.3%
 
@@ -120,6 +128,7 @@ bge-small top-1.
 | receiver text-RAG, oracle | 50.8 | 62.9 | 61.0 | 40.0 | 5.4 |
 | receiver-own-KV control | 51.2 | 62.8 | 60.9 | 40.0 | 5.4 |
 | CacheGraft, oracle | 54.0 | 63.4 | 62.8 | 27.6 | 11.2 |
+| sharer text-RAG, oracle *(ceiling)* | 70.1 | 85.0 | 81.5 | 6.1 | 6.3 |
 
 ### TriviaQA-500 — n=500, top-1 hit 53.0% (replication of a smaller sampling of the same corpus)
 
@@ -135,7 +144,7 @@ where n=800 gives +3.5/+3.2. Effect sizes on TriviaQA are sample-dependent; repo
 
 ### Paired significance (CacheGraft vs receiver text-RAG)
 
-Exact two-sided McNemar over questions. **21 of 22** judge × dataset × setting deltas are
+Exact two-sided McNemar over questions. **19 of 20** judge × dataset × setting deltas are
 positive; 11 are significant at p<0.05.
 
 | dataset | setting | phi-4 | Gemma | contains |
@@ -162,13 +171,15 @@ How much of the receiver→sharer headroom CacheGraft captures at receiver-only 
 
 | dataset | receiver text-RAG | sharer text-RAG | CacheGraft | recovered |
 |---|---:|---:|---:|---:|
-| CovidQA (oracle) | 53.7 | 61.4 | 59.1 | **70%** |
-| SQuAD (retrieved) | 51.8 | 66.4 | 60.0 | **52%** |
+| CovidQA (oracle) | 53.7 | 61.1 | 59.1 | **73%** |
+| SQuAD (retrieved) | 51.8 | 66.4 | 60.0 | **56%** |
 | AdversarialQA (oracle) | 42.1 | 59.1 | 49.3 | **42%** |
 | TriviaQA (retrieved) | 38.1 | 57.8 | 41.6 | 18% |
+| TriviaQA (oracle) | 50.8 | 70.1 | 54.0 | 17% |
 
-QASPER has essentially no headroom to recover (sharer 37.4 vs receiver 34.7, a 2.7-point
-ceiling), which is why it is flat there rather than negative — CacheGraft reaches the ceiling.
+phi-4 scores; SQuAD's CacheGraft value is the persisted-cache cell. QASPER has essentially no
+headroom to recover (sharer 37.9 vs receiver 34.7 at oracle, a 3.2-point ceiling), which is why
+it is flat there rather than negative — CacheGraft (37.5) is at the ceiling.
 
 ### Two robustness results
 
@@ -181,7 +192,7 @@ ceiling), which is why it is flat there rather than negative — CacheGraft reac
   channel's *own best* configuration on all three. On AdversarialQA oracle, where gold spans are
   longer, EM is neutral (9.9 vs 9.9) with no protocol change at all.
 
-### A fuser-free screen predicts amenability
+### A fuser-free screen (partly predictive)
 
 Four batched cells per dataset, no fusion and no projector:
 
@@ -192,16 +203,19 @@ answer-in-doc     = sharer/oracle - sharer/none        # is the answer in the pa
 
 | dataset | encoding headroom | answer-in-doc | fusion gain (oracle, phi-4) |
 |---|---:|---:|---:|
-| AdversarialQA | **+14.4** | +34.6 | +7.2 |
+| AdversarialQA | +14.4 | +34.6 | +7.2 |
 | SQuAD | +11.3 | +69.0 | +6.4 |
-| CovidQA | +4.8 | +34.2 | +5.4 |
-| QASPER | +1.8 | +29.6 | +2.9 n.s. |
-| TriviaQA | +19.6 | **+24.7** ← fails | +3.2 |
+| CovidQA | +4.4 | +34.1 | +5.4 |
+| TriviaQA | **+20.5** | +40.7 | +3.2 n.s. |
+| QASPER | +2.0 | +30.2 | +2.9 n.s. |
 
-Both preconditions have to hold. TriviaQA has the most encoding headroom of any dataset here and
-still captures the least of it, because its answers live in the sharer's parameters rather than
-in the retrieved passage. Screen terms are `contains`, oracle context; TriviaQA's are computed at
-retrieved (no sharer/oracle cell).
+Screen terms are `contains` with the oracle passage, every question counted. Encoding headroom
+explains QASPER: the sharer barely out-reads the receiver there, so there is little to transfer.
+It does not explain TriviaQA, which is highest on headroom and second-highest on answer-in-doc
+yet gains least. (An earlier version computed TriviaQA's terms from the *retrieved* passage,
+giving answer-in-doc +24.7, and attributed the small gain to parametric recall; with the oracle
+passage, as for the other datasets, that explanation no longer holds.) TriviaQA remains
+unexplained.
 
 ## Setup
 
@@ -441,12 +455,13 @@ mismatch and no position handling is required.
 document. Phase 2 loads it into the **base** receiver and decodes the question with no sharer and
 no projector on the query path. `--recv_kv` runs the same pipeline with fusion off — the control.
 
-Cost: offline build 0.05–0.19 s and ~18 MB (fp16) per ~130-token passage, once per passage;
-online 0.58 s per query, receiver-only.
+Cost: offline build 0.20–0.26 s per passage (10th–90th percentile) and ~0.11 MB (fp16) per
+token of the `[preamble+doc]` section — ~20 MB for a typical ~180-token SQuAD section — once
+per passage; online 0.58 s per query, receiver-only.
 
 ## Limitations
 
-* **Storage.** ~18 MB per passage, ~2.6×10⁴ times the passage text. The cheap text alternatives
+* **Storage.** ~19 MB per passage, ~2.7×10⁴ times the passage text (SQuAD, fp16). The cheap text alternatives
   are *worse*, not merely cheaper, so the trade is real — but it is a trade, and KV quantization
   is not yet measured.
 * **Scale and scope.** 0.6B receiver, top-1 retrieval, n≤800 per cell, greedy decoding. The
@@ -458,7 +473,8 @@ online 0.58 s per query, receiver-only.
   delta on SQuAD, and TriviaQA moves by ~2.5 points between samples of the same corpus. Report
   ranges and intervals, not point estimates.
 * **No headroom, no gain.** Where the sharer is barely better than the receiver at reading the
-  passage (QASPER: 37.4 vs 34.7), there is nothing for fusion to transfer.
+  passage (QASPER: 37.9 vs 34.7), there is nothing for fusion to transfer. Headroom is not
+  sufficient, though: TriviaQA has the most and gains least.
 
 ## Repo layout
 
