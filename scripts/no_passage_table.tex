@@ -1,0 +1,22 @@
+% Closed-book baseline: each model answering from its own weights, no passage.
+% Numbers from scripts/readme_reference.json (receiver_none, sharer_none).
+\begin{table}[t]
+\centering\small
+\caption{Closed-book accuracy: each model answers from its own weights, with no passage. The
+sharer was scored only with \texttt{contains}, since it enters the paper only through the
+answer-in-document screen (Table~\ref{tab:screen}).}
+\label{tab:closedbook}
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{3}{c}{Receiver (0.6B)} & Sharer (4B) \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-5}
+Dataset & phi-4 & Gemma & contains & contains \\
+\midrule
+AdversarialQA & 10.6 & 18.5 & 7.7 & 13.7 \\
+SQuAD & 7.1 & 16.9 & 5.1 & 12.2 \\
+CovidQA & 3.7 & 13.8 & 0.9 & 3.2 \\
+TriviaQA & 15.0 & 24.6 & 18.8 & 40.8 \\
+QASPER & 1.6 & 10.3 & 2.9 & 4.6 \\
+\bottomrule
+\end{tabular}
+\end{table}

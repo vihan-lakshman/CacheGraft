@@ -1,0 +1,24 @@
+% Three-row, single-column version of demo_table.tex. Outputs verbatim from scripts/demo_squad.py.
+\begin{table}[t]
+\centering\scriptsize
+\caption{SQuAD examples: same receiver, same prompt tokens; only the document-section KV differs.
+\sys{} decodes from the persisted cache. The receiver-own-KV control reproduces the text-RAG
+output verbatim in all three. The last row is a failure: a wrong entity taken from the passage.
+Over all $800$ questions, \sys{} is correct where text-RAG is not on $100$, and the reverse on
+$39$ (gold-alias containment).}
+\label{tab:examples}
+\begin{tabular}{@{}p{0.34\linewidth}p{0.26\linewidth}p{0.34\linewidth}@{}}
+\toprule
+Question \emph{(gold)} & Receiver text-RAG & \sys{} \\
+\midrule
+Over how many species of trees can be found in the Saxon Garden? \emph{(100)}
+  & 15.5 \hfill $\times$ & 100 \hfill $\checkmark$ \\
+Where was the Continental Edison Company located? \emph{(France)}
+  & New York City. \hfill $\times$
+  & The Continental Edison Company was located in France. \hfill $\checkmark$ \\
+Whose writings were widely quoted by the Third Reich? \emph{(Luther)}
+  & Luther's writings were widely quoted by the Third Reich. \hfill $\checkmark$
+  & The writings of Heinrich Himmler were widely quoted by the Third Reich. \hfill $\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}

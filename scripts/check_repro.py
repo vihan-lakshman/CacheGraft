@@ -25,20 +25,23 @@ def normalize(s):
     s = re.sub(r"[^a-z0-9 ]", " ", s); return re.sub(r"\s+", " ", s).strip()
 
 
-def load(d, tag):
+def load(d, tag, data_qs):
+    """{item_key: sample}, each sample carrying its full gold alias list as `gold`."""
     f = os.path.join(d, f"{tag}.json")
     if not os.path.exists(f):
-        return None
+        return None, None
     S = json.load(open(f))["samples"]
-    return {s["q"]: s for s in S}
+    for s, al in zip(S, C.gold_aliases(data_qs, S)):
+        s["gold"] = al
+    return {C.item_key(i, s["q"]): s for i, s in enumerate(S)}, S
 
 
-def judges(d, tag):
+def judges(d, tag, S):
     out = {}
     for jf in glob.glob(os.path.join(d, f"{tag}.judge*.json")):
         name = os.path.basename(jf)[len(tag) + 1:-5]
         name = "haiku" if name == "judge" else name.replace("judge_", "")
-        out[name] = {k: bool(v) for k, v in json.load(open(jf)).items()}
+        out[name] = {k: bool(v) for k, v in C.load_scores(jf, S).items()}
     return out
 
 
@@ -51,8 +54,7 @@ def main():
     args = ap.parse_args()
     new_dir = C.paths(args.data)["results"]
     ref_dir = args.ref if os.path.isdir(args.ref) else os.path.join(os.path.dirname(new_dir), args.ref)
-    q2al = {q["q"]: [a for a in q["norm_aliases"] if a]
-            for q in json.load(open(C.paths(args.data)["data"]))["questions"]}
+    data_qs = json.load(open(C.paths(args.data)["data"]))["questions"]
 
     tags = sorted({os.path.basename(f)[:-5] for f in glob.glob(os.path.join(ref_dir, "*.json"))
                    if ".judge" not in f and ".bertscore" not in f})
@@ -60,7 +62,7 @@ def main():
     print(f"{'cell':<40}{'gen==':>8}{'contains':>20}{'EM':>16}{'judges':>26}")
     worst = 0.0
     for tag in tags:
-        a, b = load(new_dir, tag), load(ref_dir, tag)
+        (a, Sa), (b, Sb) = load(new_dir, tag, data_qs), load(ref_dir, tag, data_qs)
         if a is None:
             print(f"{tag:<40}{'MISSING in new run':>8}"); continue
         keys = sorted(set(a) & set(b))
@@ -70,11 +72,11 @@ def main():
 
         def met(rec, fn):
             return 100 * np.mean([fn(rec[k]) for k in keys])
-        cont = lambda s: any(x in normalize(s["gen"]) for x in q2al.get(s["q"], []))
-        em = lambda s: s["pred"] in q2al.get(s["q"], [])
+        cont = lambda s: any(x in normalize(s["gen"]) for x in s["gold"])
+        em = lambda s: s["pred"] in s["gold"]
         ca, cb = met(a, cont), met(b, cont)
         ea, eb = met(a, em), met(b, em)
-        ja, jb = judges(new_dir, tag), judges(ref_dir, tag)
+        ja, jb = judges(new_dir, tag, Sa), judges(ref_dir, tag, Sb)
         jtxt = []
         for name in sorted(set(ja) & set(jb)):
             ks = [k for k in keys if k in ja[name] and k in jb[name]]

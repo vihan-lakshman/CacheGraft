@@ -1,0 +1,2823 @@
+{
+  "data": "squad",
+  "fact": "retrieved",
+  "terse": false,
+  "counts": {
+    "cached_only": 7,
+    "text_only": 6,
+    "both": 48,
+    "neither": 39
+  },
+  "examples": [
+    {
+      "idx": 0,
+      "q": "Which NFL team won Super Bowl 50?",
+      "aliases": [
+        "Denver Broncos"
+      ],
+      "fact_id": 0,
+      "hit": true,
+      "passage": "Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24\u201310 to earn their third Super Bowl title. The game was played on February 7, 2016, at Levi's Stadium in the San Francisco Bay Area at Santa Clara, California. As this was the 50th Super Bowl, the league emphasized the \"golden anniversary\" with various gold-themed initiatives, as well as temporarily suspending the tradition of naming each Super Bowl game with Roman numerals (under which the game would have been known as \"Super Bowl L\"), so that the logo could prominently feature the Arabic numerals 50.",
+      "snippet": "... The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24\u201310 to earn their third Super Bowl title. ...",
+      "systems": {
+        "text": {
+          "gen": "The NFL team that won Super Bowl 50 was the Denver Broncos.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The NFL team that won Super Bowl 50 was the Denver Broncos.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 194,
+            "cache_mb": 21.234902381896973,
+            "build_s": 0.28124356269836426,
+            "decode_ms": 677.4804592132568
+          }
+        }
+      }
+    },
+    {
+      "idx": 1,
+      "q": "Who did the Broncos prevent from going to the Super Bowl?",
+      "aliases": [
+        "New England Patriots",
+        "the New England Patriots"
+      ],
+      "fact_id": 1,
+      "hit": true,
+      "passage": "The Panthers finished the regular season with a 15\u20131 record, and quarterback Cam Newton was named the NFL Most Valuable Player (MVP). They defeated the Arizona Cardinals 49\u201315 in the NFC Championship Game and advanced to their second Super Bowl appearance since the franchise was founded in 1995. The Broncos finished the regular season with a 12\u20134 record, and denied the New England Patriots a chance to defend their title from Super Bowl XLIX by defeating them 20\u201318 in the AFC Championship Game. They joined the Patriots, Dallas Cowboys, and Pittsburgh Steelers as one of four teams that have made eight appearances in the Super Bowl.",
+      "snippet": "... The Broncos finished the regular season with a 12\u20134 record, and denied the New England Patriots a chance to defend their title from Super Bowl XLIX by defeating them 20\u201318 in the AFC Championship Game. ...",
+      "systems": {
+        "text": {
+          "gen": "The Broncos prevented the New England Patriots from going to the Super Bowl.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Broncos prevented the New England Patriots from going to the Super Bowl.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 162,
+            "cache_mb": 17.734902381896973,
+            "build_s": 0.22413420677185059,
+            "decode_ms": 542.3445701599121
+          }
+        }
+      }
+    },
+    {
+      "idx": 2,
+      "q": "Who was the Super Bowl 50 MVP?",
+      "aliases": [
+        "Miller",
+        "Von Miller"
+      ],
+      "fact_id": 42,
+      "hit": false,
+      "passage": "In honor of the 50th Super Bowl, the pregame ceremony featured the on-field introduction of 39 of the 43 previous Super Bowl Most Valuable Players. Bart Starr (MVP of Super Bowls I and II) and Chuck Howley (MVP of Super Bowl V) appeared via video, while Peyton Manning (MVP of Super Bowl XLI and current Broncos quarterback) was shown in the locker room preparing for the game. No plans were announced regarding the recognition of Harvey Martin, co-MVP of Super Bowl XII, who died in 2001.",
+      "snippet": "In honor of the 50th Super Bowl, the pregame ceremony featured the on-field introduction of 39 of the 43 previous Super Bowl Most Valuable Players. Bart Starr (MVP of Super Bowls I and II) and Chuck Howley (MVP of Super Bowl V) appeared via video, ...",
+      "systems": {
+        "text": {
+          "gen": "Bart Starr.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Super Bowl 50 MVP was Bart Starr.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 143,
+            "cache_mb": 15.656777381896973,
+            "build_s": 0.22101712226867676,
+            "decode_ms": 435.64891815185547
+          }
+        }
+      }
+    },
+    {
+      "idx": 3,
+      "q": "What was the average cost for a TV ad lasting 30 seconds during Super Bowl 50?",
+      "aliases": [
+        "$5 million"
+      ],
+      "fact_id": 36,
+      "hit": false,
+      "passage": "CBS set the base rate for a 30-second advertisement at $5,000,000, a record high price for a Super Bowl ad. As of January 26, the advertisements had not yet sold out. CBS mandated that all advertisers purchase a package covering time on both the television and digital broadcasts of the game, meaning that for the first time, digital streams of the game would carry all national advertising in pattern with the television broadcast. This would be the final year in a multi-year contract with Anheuser-Busch InBev that allowed the beer manufacturer to air multiple advertisements during the game at a steep discount. It was also the final year that Doritos, a longtime sponsor of the game, held its \"Crash the Super Bowl\" contest that allowed viewers to create their own Doritos ads for a chance to have it aired during the game. Nintendo and The Pok\u00e9mon Company also made their Super Bowl debut, promoting the 20th anniversary of the Pok\u00e9mon video game and media franchise.",
+      "snippet": "CBS set the base rate for a 30-second advertisement at $5,000,000, a record high price for a Super Bowl ad. As of January 26, the advertisements had not yet sold out. CBS mandated that all advertisers purchase a package covering time on both the television ...",
+      "systems": {
+        "text": {
+          "gen": "$5,000,000.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The average cost for a TV ad lasting 30 seconds during Super Bowl 50 was $5,00",
+          "ok": false,
+          "info": {
+            "doc_tokens": 229,
+            "cache_mb": 25.063027381896973,
+            "build_s": 0.2776906490325928,
+            "decode_ms": 994.027853012085
+          }
+        }
+      }
+    },
+    {
+      "idx": 4,
+      "q": "Who was the NFL Commissioner in early 2012?",
+      "aliases": [
+        "Goodell",
+        "Roger Goodell"
+      ],
+      "fact_id": 4,
+      "hit": true,
+      "passage": "In early 2012, NFL Commissioner Roger Goodell stated that the league planned to make the 50th Super Bowl \"spectacular\" and that it would be \"an important game for us as a league\".",
+      "snippet": "In early 2012, NFL Commissioner Roger Goodell stated that the league planned to make the 50th Super Bowl \"spectacular\" and that it would be \"an important game for us as a league\".",
+      "systems": {
+        "text": {
+          "gen": "The NFL Commissioner in early 2012 was Roger Goodell.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The NFL Commissioner in early 2012 was Roger Goodell.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 68,
+            "cache_mb": 7.453652381896973,
+            "build_s": 0.2049388885498047,
+            "decode_ms": 571.256160736084
+          }
+        }
+      }
+    },
+    {
+      "idx": 5,
+      "q": "What is the name of the stadium in San Francisco Bay Area?",
+      "aliases": [
+        "Levi's Stadium",
+        "Levi's Stadium."
+      ],
+      "fact_id": 6,
+      "hit": false,
+      "passage": "The league announced on October 16, 2012, that the two finalists were Sun Life Stadium and Levi's Stadium. The South Florida/Miami area has previously hosted the event 10 times (tied for most with New Orleans), with the most recent one being Super Bowl XLIV in 2010. The San Francisco Bay Area last hosted in 1985 (Super Bowl XIX), held at Stanford Stadium in Stanford, California, won by the home team 49ers. The Miami bid depended on whether the stadium underwent renovations. However, on May 3, 2013, the Florida legislature refused to approve the funding plan to pay for the renovations, dealing a significant blow to Miami's chances.",
+      "snippet": "The league announced on October 16, 2012, that the two finalists were Sun Life Stadium and Levi's Stadium. ...",
+      "systems": {
+        "text": {
+          "gen": "Levi's Stadium.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Stanford Stadium.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 177,
+            "cache_mb": 19.375527381896973,
+            "build_s": 0.21181297302246094,
+            "decode_ms": 184.50641632080078
+          }
+        },
+        "control": {
+          "gen": "Levi's Stadium.",
+          "ok": true
+        },
+        "sharer": {
+          "gen": "Assistant: Levi's Stadium",
+          "ok": true
+        }
+      }
+    },
+    {
+      "idx": 6,
+      "q": "How many times prios has the Sun Life Stadium had Super Bowls?",
+      "aliases": [
+        "10",
+        "10 times",
+        "10."
+      ],
+      "fact_id": 6,
+      "hit": true,
+      "passage": "The league announced on October 16, 2012, that the two finalists were Sun Life Stadium and Levi's Stadium. The South Florida/Miami area has previously hosted the event 10 times (tied for most with New Orleans), with the most recent one being Super Bowl XLIV in 2010. The San Francisco Bay Area last hosted in 1985 (Super Bowl XIX), held at Stanford Stadium in Stanford, California, won by the home team 49ers. The Miami bid depended on whether the stadium underwent renovations. However, on May 3, 2013, the Florida legislature refused to approve the funding plan to pay for the renovations, dealing a significant blow to Miami's chances.",
+      "snippet": "... The South Florida/Miami area has previously hosted the event 10 times (tied for most with New Orleans), with the most recent one being Super Bowl XLIV in 2010. ...",
+      "systems": {
+        "text": {
+          "gen": "1",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Sun Life Stadium has hosted Super Bowls 10 times, tied for most with New Orleans.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 177,
+            "cache_mb": 19.375527381896973,
+            "build_s": null,
+            "decode_ms": 797.0242500305176
+          }
+        },
+        "control": {
+          "gen": "1",
+          "ok": false
+        },
+        "sharer": {
+          "gen": "Assistant: The Sun Life Stadium has hosted Super Bowls 10 times.",
+          "ok": true
+        }
+      }
+    },
+    {
+      "idx": 7,
+      "q": "When did Levi's Stadium open?",
+      "aliases": [
+        "2014",
+        "2014.",
+        "in 2014"
+      ],
+      "fact_id": 7,
+      "hit": true,
+      "passage": "On May 21, 2013, NFL owners at their spring meetings in Boston voted and awarded the game to Levi's Stadium. The $1.2 billion stadium opened in 2014. It is the first Super Bowl held in the San Francisco Bay Area since Super Bowl XIX in 1985, and the first in California since Super Bowl XXXVII took place in San Diego in 2003.",
+      "snippet": "... The $1.2 billion stadium opened in 2014. ...",
+      "systems": {
+        "text": {
+          "gen": "May 21, 2014.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "2014",
+          "ok": true,
+          "info": {
+            "doc_tokens": 115,
+            "cache_mb": 12.594277381896973,
+            "build_s": 0.2137918472290039,
+            "decode_ms": 184.9837303161621
+          }
+        }
+      }
+    },
+    {
+      "idx": 8,
+      "q": "How many teams up to Super Bowl 50 have been to the championship game eight times?",
+      "aliases": [
+        "four"
+      ],
+      "fact_id": 0,
+      "hit": false,
+      "passage": "Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24\u201310 to earn their third Super Bowl title. The game was played on February 7, 2016, at Levi's Stadium in the San Francisco Bay Area at Santa Clara, California. As this was the 50th Super Bowl, the league emphasized the \"golden anniversary\" with various gold-themed initiatives, as well as temporarily suspending the tradition of naming each Super Bowl game with Roman numerals (under which the game would have been known as \"Super Bowl L\"), so that the logo could prominently feature the Arabic numerals 50.",
+      "snippet": "Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24\u201310 to earn their third Super ...",
+      "systems": {
+        "text": {
+          "gen": "50 teams.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The context states that the American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC)",
+          "ok": false,
+          "info": {
+            "doc_tokens": 194,
+            "cache_mb": 21.234902381896973,
+            "build_s": null,
+            "decode_ms": 905.1895141601562
+          }
+        }
+      }
+    },
+    {
+      "idx": 9,
+      "q": "When did the NFL start their 16 game seasons?",
+      "aliases": [
+        "1978"
+      ],
+      "fact_id": 9,
+      "hit": true,
+      "passage": "Despite waiving longtime running back DeAngelo Williams and losing top wide receiver Kelvin Benjamin to a torn ACL in the preseason, the Carolina Panthers had their best regular season in franchise history, becoming the seventh team to win at least 15 regular season games since the league expanded to a 16-game schedule in 1978. Carolina started the season 14\u20130, not only setting franchise records for the best start and the longest single-season winning streak, but also posting the best start to a season by an NFC team in NFL history, breaking the 13\u20130 record previously shared with the 2009 New Orleans Saints and the 2011 Green Bay Packers. With their NFC-best 15\u20131 regular season record, the Panthers clinched home-field advantage throughout the NFC playoffs for the first time in franchise history. Ten players were selected to the Pro Bowl (the most in franchise history) along with eight All-Pro selections.",
+      "snippet": "Despite waiving longtime running back DeAngelo Williams and losing top wide receiver Kelvin Benjamin to a torn ACL in the preseason, the Carolina Panthers had their best regular season in franchise history, becoming the seventh team to win at least 15 regular season games since ... ...",
+      "systems": {
+        "text": {
+          "gen": "1978",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The NFL started their 16 game seasons in 1978.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 220,
+            "cache_mb": 24.078652381896973,
+            "build_s": 0.22568035125732422,
+            "decode_ms": 617.5882816314697
+          }
+        }
+      }
+    },
+    {
+      "idx": 10,
+      "q": "How many Offensive players from the Panthers were selected to play in the Pro Bowl?",
+      "aliases": [
+        "six"
+      ],
+      "fact_id": 10,
+      "hit": true,
+      "passage": "The Panthers offense, which led the NFL in scoring (500 points), was loaded with talent, boasting six Pro Bowl selections. Pro Bowl quarterback Cam Newton had one of his best seasons, throwing for 3,837 yards and rushing for 636, while recording a career-high and league-leading 45 total touchdowns (35 passing, 10 rushing), a career-low 10 interceptions, and a career-best quarterback rating of 99.4. Newton's leading receivers were tight end Greg Olsen, who caught a career-high 77 passes for 1,104 yards and seven touchdowns, and wide receiver Ted Ginn, Jr., who caught 44 passes for 739 yards and 10 touchdowns; Ginn also rushed for 60 yards and returned 27 punts for 277 yards. Other key receivers included veteran Jerricho Cotchery (39 receptions for 485 yards), rookie Devin Funchess (31 receptions for 473 yards and five touchdowns), and second-year receiver Corey Brown (31 receptions for 447 yards). The Panthers backfield featured Pro Bowl running back Jonathan Stewart, who led the team with 989 rushing yards and six touchdowns in 13 games, along with Pro Bowl fullback Mike Tolbert, who rushed for 256 yards and caught 18 passes for another 154 yards. Carolina's offensive line also featured two Pro Bowl selections: center Ryan Kalil and guard Trai Turner.",
+      "snippet": "The Panthers offense, which led the NFL in scoring (500 points), was loaded with talent, boasting six Pro Bowl selections. ...",
+      "systems": {
+        "text": {
+          "gen": "5",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Panthers offense had six Pro Bowl selections, including Cam Newton, Greg Olsen, Ted Ginn, Jr., Jerr",
+          "ok": true,
+          "info": {
+            "doc_tokens": 346,
+            "cache_mb": 37.85996341705322,
+            "build_s": 0.25279736518859863,
+            "decode_ms": 902.7354717254639
+          }
+        },
+        "control": {
+          "gen": "5",
+          "ok": false
+        },
+        "sharer": {
+          "gen": "Assistant: 6",
+          "ok": false
+        }
+      }
+    },
+    {
+      "idx": 11,
+      "q": "How many career sacks did Jared Allen have?",
+      "aliases": [
+        "136"
+      ],
+      "fact_id": 11,
+      "hit": true,
+      "passage": "The Panthers defense gave up just 308 points, ranking sixth in the league, while also leading the NFL in interceptions with 24 and boasting four Pro Bowl selections. Pro Bowl defensive tackle Kawann Short led the team in sacks with 11, while also forcing three fumbles and recovering two. Fellow lineman Mario Addison added 6\u00bd sacks. The Panthers line also featured veteran defensive end Jared Allen, a 5-time pro bowler who was the NFL's active career sack leader with 136, along with defensive end Kony Ealy, who had 5 sacks in just 9 starts. Behind them, two of the Panthers three starting linebackers were also selected to play in the Pro Bowl: Thomas Davis and Luke Kuechly. Davis compiled 5\u00bd sacks, four forced fumbles, and four interceptions, while Kuechly led the team in tackles (118) forced two fumbles, and intercepted four passes of his own. Carolina's secondary featured Pro Bowl safety Kurt Coleman, who led the team with a career high seven interceptions, while also racking up 88 tackles and Pro Bowl cornerback Josh Norman, who developed into a shutdown corner during the season and had four interceptions, two of which were returned for touchdowns.",
+      "snippet": "... The Panthers line also featured veteran defensive end Jared Allen, a 5-time pro bowler who was the NFL's active career sack leader with 136, along with defensive end Kony Ealy, who had 5 sacks in just 9 starts. ...",
+      "systems": {
+        "text": {
+          "gen": "136",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Jared Allen had 136 career sacks.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 281,
+            "cache_mb": 30.750588417053223,
+            "build_s": 0.23387932777404785,
+            "decode_ms": 437.18719482421875
+          }
+        }
+      }
+    },
+    {
+      "idx": 12,
+      "q": "Who did Peyton Manning play for as a rookie?",
+      "aliases": [
+        "Colts",
+        "Indianapolis Colts",
+        "the Indianapolis Colts"
+      ],
+      "fact_id": 16,
+      "hit": false,
+      "passage": "The Broncos defeated the Pittsburgh Steelers in the divisional round, 23\u201316, by scoring 11 points in the final three minutes of the game. They then beat the defending Super Bowl XLIX champion New England Patriots in the AFC Championship Game, 20\u201318, by intercepting a pass on New England's 2-point conversion attempt with 17 seconds left on the clock. Despite Manning's problems with interceptions during the season, he didn't throw any in their two playoff games.",
+      "snippet": "The Broncos defeated the Pittsburgh Steelers in the divisional round, 23\u201316, by scoring 11 points in the final three minutes of the game. They then beat the defending Super Bowl XLIX champion New England Patriots in the AFC Championship Game, 20\u201318, by intercepting a pass ...",
+      "systems": {
+        "text": {
+          "gen": "The Broncos.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Peyton Manning played for the Denver Broncos as a rookie.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 127,
+            "cache_mb": 13.906777381896973,
+            "build_s": 0.20401382446289062,
+            "decode_ms": 510.1492404937744
+          }
+        }
+      }
+    },
+    {
+      "idx": 13,
+      "q": "How many picks did Peyton Manning throw in the season?",
+      "aliases": [
+        "17"
+      ],
+      "fact_id": 16,
+      "hit": false,
+      "passage": "The Broncos defeated the Pittsburgh Steelers in the divisional round, 23\u201316, by scoring 11 points in the final three minutes of the game. They then beat the defending Super Bowl XLIX champion New England Patriots in the AFC Championship Game, 20\u201318, by intercepting a pass on New England's 2-point conversion attempt with 17 seconds left on the clock. Despite Manning's problems with interceptions during the season, he didn't throw any in their two playoff games.",
+      "snippet": "... They then beat the defending Super Bowl XLIX champion New England Patriots in the AFC Championship Game, 20\u201318, by intercepting a pass on New England's 2-point conversion attempt with 17 seconds left on the clock. ...",
+      "systems": {
+        "text": {
+          "gen": "2",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Peyton Manning threw 10 picks in the season.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 127,
+            "cache_mb": 13.906777381896973,
+            "build_s": null,
+            "decode_ms": 508.8207721710205
+          }
+        }
+      }
+    },
+    {
+      "idx": 14,
+      "q": "How many points did the Broncos defense allow their opponents to get?",
+      "aliases": [
+        "296"
+      ],
+      "fact_id": 16,
+      "hit": false,
+      "passage": "The Broncos defeated the Pittsburgh Steelers in the divisional round, 23\u201316, by scoring 11 points in the final three minutes of the game. They then beat the defending Super Bowl XLIX champion New England Patriots in the AFC Championship Game, 20\u201318, by intercepting a pass on New England's 2-point conversion attempt with 17 seconds left on the clock. Despite Manning's problems with interceptions during the season, he didn't throw any in their two playoff games.",
+      "snippet": "The Broncos defeated the Pittsburgh Steelers in the divisional round, 23\u201316, by scoring 11 points in the final three minutes of the game. They then beat the defending Super Bowl XLIX champion New England Patriots in the AFC Championship Game, 20\u201318, by intercepting a pass ...",
+      "systems": {
+        "text": {
+          "gen": "11",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Broncos defense allowed their opponents to get 11 points.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 127,
+            "cache_mb": 13.906777381896973,
+            "build_s": null,
+            "decode_ms": 509.3235969543457
+          }
+        }
+      }
+    },
+    {
+      "idx": 15,
+      "q": "How many yards did the Carolina Panthers gain in the 487 in the NFC Championship Game?",
+      "aliases": [
+        "487"
+      ],
+      "fact_id": 15,
+      "hit": true,
+      "passage": "The Panthers beat the Seattle Seahawks in the divisional round, running up a 31\u20130 halftime lead and then holding off a furious second half comeback attempt to win 31\u201324, avenging their elimination from a year earlier. The Panthers then blew out the Arizona Cardinals in the NFC Championship Game, 49\u201315, racking up 487 yards and forcing seven turnovers.",
+      "snippet": "... The Panthers then blew out the Arizona Cardinals in the NFC Championship Game, 49\u201315, racking up 487 yards and forcing seven turnovers.",
+      "systems": {
+        "text": {
+          "gen": "487",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Carolina Panthers gained 487 yards in the NFC Championship Game.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 107,
+            "cache_mb": 11.719277381896973,
+            "build_s": 0.21329569816589355,
+            "decode_ms": 583.2245349884033
+          }
+        }
+      }
+    },
+    {
+      "idx": 16,
+      "q": "During the Bronco's playoff games, who did not throw at all?",
+      "aliases": [
+        "Manning"
+      ],
+      "fact_id": 16,
+      "hit": true,
+      "passage": "The Broncos defeated the Pittsburgh Steelers in the divisional round, 23\u201316, by scoring 11 points in the final three minutes of the game. They then beat the defending Super Bowl XLIX champion New England Patriots in the AFC Championship Game, 20\u201318, by intercepting a pass on New England's 2-point conversion attempt with 17 seconds left on the clock. Despite Manning's problems with interceptions during the season, he didn't throw any in their two playoff games.",
+      "snippet": "... Despite Manning's problems with interceptions during the season, he didn't throw any in their two playoff games.",
+      "systems": {
+        "text": {
+          "gen": "The Broncos did not throw at all during their playoff games.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "During the Bronco's playoff games, Manning did not throw at all.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 127,
+            "cache_mb": 13.906777381896973,
+            "build_s": null,
+            "decode_ms": 582.0369720458984
+          }
+        },
+        "control": {
+          "gen": "The Broncos did not throw at all during their playoff games.",
+          "ok": false
+        },
+        "sharer": {
+          "gen": "Assistant: Manning",
+          "ok": true
+        }
+      }
+    },
+    {
+      "idx": 17,
+      "q": "What game did Thomas Davis say he would play in, despite breaking a bone earlier on?",
+      "aliases": [
+        "Super Bowl",
+        "the Super Bowl"
+      ],
+      "fact_id": 17,
+      "hit": true,
+      "passage": "Carolina suffered a major setback when Thomas Davis, an 11-year veteran who had already overcome three ACL tears in his career, went down with a broken arm in the NFC Championship Game. Despite this, he insisted he would still find a way to play in the Super Bowl. His prediction turned out to be accurate.",
+      "snippet": "... Despite this, he insisted he would still find a way to play in the Super Bowl. ...",
+      "systems": {
+        "text": {
+          "gen": "NFC Championship Game.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The game in question was the NFC Championship Game.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 87,
+            "cache_mb": 9.531777381896973,
+            "build_s": 0.20337724685668945,
+            "decode_ms": 395.51854133605957
+          }
+        }
+      }
+    },
+    {
+      "idx": 18,
+      "q": "How old was Elway during his Super Bowl XXXIII win?",
+      "aliases": [
+        "38"
+      ],
+      "fact_id": 18,
+      "hit": true,
+      "passage": "Peyton Manning became the first quarterback ever to lead two different teams to multiple Super Bowls. He is also the oldest quarterback ever to play in a Super Bowl at age 39. The past record was held by John Elway, who led the Broncos to victory in Super Bowl XXXIII at age 38 and is currently Denver's Executive Vice President of Football Operations and General Manager.",
+      "snippet": "... The past record was held by John Elway, who led the Broncos to victory in Super Bowl XXXIII at age 38 and is currently Denver's Executive Vice President of Football Operations and General Manager.",
+      "systems": {
+        "text": {
+          "gen": "38",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Elway was 38 years old during his Super Bowl XXXIII win.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 102,
+            "cache_mb": 11.172402381896973,
+            "build_s": 0.2008957862854004,
+            "decode_ms": 617.9990768432617
+          }
+        }
+      }
+    },
+    {
+      "idx": 19,
+      "q": "How much older was Manning than Newton during Super Bowl 50?",
+      "aliases": [
+        "13 years",
+        "13 years and 48 days"
+      ],
+      "fact_id": 19,
+      "hit": true,
+      "passage": "This was the first Super Bowl to feature a quarterback on both teams who was the #1 pick in their draft classes. Manning was the #1 selection of the 1998 NFL draft, while Newton was picked first in 2011. The matchup also pits the top two picks of the 2011 draft against each other: Newton for Carolina and Von Miller for Denver. Manning and Newton also set the record for the largest age difference between opposing Super Bowl quarterbacks at 13 years and 48 days (Manning was 39, Newton was 26).",
+      "snippet": "... Manning and Newton also set the record for the largest age difference between opposing Super Bowl quarterbacks at 13 years and 48 days (Manning was 39, Newton was 26).",
+      "systems": {
+        "text": {
+          "gen": "13 years and 48 days.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "During Super Bowl 50, Manning was 39 years old while Newton was 26 years old.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 144,
+            "cache_mb": 15.766152381896973,
+            "build_s": 0.21044468879699707,
+            "decode_ms": 873.889684677124
+          }
+        },
+        "control": {
+          "gen": "13 years and 48 days.",
+          "ok": true
+        },
+        "sharer": {
+          "gen": "Assistant: 13 years and 48 days",
+          "ok": true
+        }
+      }
+    },
+    {
+      "idx": 20,
+      "q": "What position did Rivera play in Super Bowl XX?",
+      "aliases": [
+        "linebacker"
+      ],
+      "fact_id": 20,
+      "hit": true,
+      "passage": "With Rivera having been a linebacker with the Chicago Bears in Super Bowl XX, and Kubiak replacing Elway at the end of the Broncos' defeats in Super Bowls XXI and XXIV, this will be the first Super Bowl in which both head coaches played in the game themselves.",
+      "snippet": "With Rivera having been a linebacker with the Chicago Bears in Super Bowl XX, and Kubiak replacing Elway at the end of the Broncos' defeats in Super Bowls XXI and XXIV, this will be the first Super Bowl in which both head coaches played in ...",
+      "systems": {
+        "text": {
+          "gen": " linebacker",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Rivera played as a linebacker in Super Bowl XX.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 80,
+            "cache_mb": 8.766152381896973,
+            "build_s": 0.27234864234924316,
+            "decode_ms": 431.11348152160645
+          }
+        }
+      }
+    },
+    {
+      "idx": 21,
+      "q": "What was used to sod the Levi's Stadium for Super Bowl 50? ",
+      "aliases": [
+        "Bermuda 419 turf",
+        "hybrid Bermuda 419",
+        "hybrid Bermuda 419 turf"
+      ],
+      "fact_id": 7,
+      "hit": false,
+      "passage": "On May 21, 2013, NFL owners at their spring meetings in Boston voted and awarded the game to Levi's Stadium. The $1.2 billion stadium opened in 2014. It is the first Super Bowl held in the San Francisco Bay Area since Super Bowl XIX in 1985, and the first in California since Super Bowl XXXVII took place in San Diego in 2003.",
+      "snippet": "On May 21, 2013, NFL owners at their spring meetings in Boston voted and awarded the game to Levi's Stadium. The $1.2 billion stadium opened in 2014. It is the first Super Bowl held in the San Francisco Bay Area since Super Bowl XIX in ...",
+      "systems": {
+        "text": {
+          "gen": "Levi's Stadium was used for Super Bowl 50.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The context does not provide any information about the material used to sod the Levi's Stadium for Super Bowl 50.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 115,
+            "cache_mb": 12.594277381896973,
+            "build_s": null,
+            "decode_ms": 906.9771766662598
+          }
+        }
+      }
+    },
+    {
+      "idx": 22,
+      "q": "What color were the Bronco's uniforms in Super Bowl 50?",
+      "aliases": [
+        "matching white jerseys",
+        "white"
+      ],
+      "fact_id": 22,
+      "hit": true,
+      "passage": "As the designated home team in the annual rotation between AFC and NFC teams, the Broncos elected to wear their road white jerseys with matching white pants. Elway stated, \"We've had Super Bowl success in our white uniforms.\" The Broncos last wore matching white jerseys and pants in the Super Bowl in Super Bowl XXXIII, Elway's last game as Denver QB, when they defeated the Atlanta Falcons 34\u201319. In their only other Super Bowl win in Super Bowl XXXII, Denver wore blue jerseys, which was their primary color at the time. They also lost Super Bowl XXI when they wore white jerseys, but they are 0-4 in Super Bowls when wearing orange jerseys, losing in Super Bowl XII, XXII, XXIV, and XLVIII. The only other AFC champion team to have worn white as the designated home team in the Super Bowl was the Pittsburgh Steelers; they defeated the Seattle Seahawks 21\u201310 in Super Bowl XL 10 seasons prior. The Broncos' decision to wear white meant the Panthers would wear their standard home uniform: black jerseys with silver pants.",
+      "snippet": "As the designated home team in the annual rotation between AFC and NFC teams, the Broncos elected to wear their road white jerseys with matching white pants. ...",
+      "systems": {
+        "text": {
+          "gen": "white",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Broncos' uniforms in Super Bowl 50 were white.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 249,
+            "cache_mb": 27.250527381896973,
+            "build_s": 0.2429046630859375,
+            "decode_ms": 514.0180587768555
+          }
+        }
+      }
+    },
+    {
+      "idx": 23,
+      "q": "Where was the practice place the Panthers used for the Super Bowl?",
+      "aliases": [
+        "San Jose",
+        "San Jose State",
+        "the San Jose State practice facility"
+      ],
+      "fact_id": 23,
+      "hit": true,
+      "passage": "The Panthers used the San Jose State practice facility and stayed at the San Jose Marriott. The Broncos practiced at Stanford University and stayed at the Santa Clara Marriott.",
+      "snippet": "The Panthers used the San Jose State practice facility and stayed at the San Jose Marriott. ...",
+      "systems": {
+        "text": {
+          "gen": "San Jose State.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Panthers used the San Jose State practice facility for the Super Bowl.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 53,
+            "cache_mb": 5.812783241271973,
+            "build_s": 0.3261127471923828,
+            "decode_ms": 539.2787456512451
+          }
+        }
+      }
+    },
+    {
+      "idx": 24,
+      "q": "What is the Roman numeral going to be for Super Bowl 51?",
+      "aliases": [
+        "LI",
+        "LI."
+      ],
+      "fact_id": 24,
+      "hit": true,
+      "passage": "On June 4, 2014, the NFL announced that the practice of branding Super Bowl games with Roman numerals, a practice established at Super Bowl V, would be temporarily suspended, and that the game would be named using Arabic numerals as Super Bowl 50 as opposed to Super Bowl L. The use of Roman numerals will be reinstated for Super Bowl LI. Jaime Weston, the league's vice president of brand and creative, explained that a primary reason for the change was the difficulty of designing an aesthetically pleasing logo with the letter \"L\" using the standardized logo template introduced at Super Bowl XLV. The logo also deviates from the template by featuring large numerals, colored in gold, behind the Vince Lombardi Trophy, instead of underneath and in silver as in the standard logo.",
+      "snippet": "On June 4, 2014, the NFL announced that the practice of branding Super Bowl games with Roman numerals, a practice established at Super Bowl V, would be temporarily suspended, and that the game would be named using Arabic numerals as Super Bowl 50 as opposed ... ...",
+      "systems": {
+        "text": {
+          "gen": "Super Bowl 51 will use Arabic numerals.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Roman numeral for Super Bowl 51 will be reinstated for Super Bowl LI.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 188,
+            "cache_mb": 20.578652381896973,
+            "build_s": 0.21358799934387207,
+            "decode_ms": 688.6801719665527
+          }
+        }
+      }
+    },
+    {
+      "idx": 25,
+      "q": "What yard line was a gold color for all teams during the season?",
+      "aliases": [
+        "50",
+        "the 50",
+        "the 50-yard line"
+      ],
+      "fact_id": 25,
+      "hit": true,
+      "passage": "Various gold-themed promotions and initiatives were held throughout the 2015 NFL season to tie into the \"Golden Super Bowl\"; gold-tinted logos were implemented across the NFL's properties and painted on fields, the numbering of the 50-yard line on fields was colored gold, and beginning on week 7, all sideline jackets and hats featured gold-trimmed logos. Gold footballs were given to each high school that has had a player or coach appear in the Super Bowl, and \"homecoming\" events were also held by Super Bowl-winning teams at games.",
+      "snippet": "Various gold-themed promotions and initiatives were held throughout the 2015 NFL season to tie into the \"Golden Super Bowl\"; gold-tinted logos were implemented across the NFL's properties and painted on fields, the numbering of the 50-yard line on fields was colored gold, and beginning on ... ...",
+      "systems": {
+        "text": {
+          "gen": "The 50-yard line was colored gold during the 2015 NFL season.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The 50-yard line on fields was colored gold throughout the 2015 NFL season.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 138,
+            "cache_mb": 15.109902381896973,
+            "build_s": 0.20856928825378418,
+            "decode_ms": 796.6551780700684
+          }
+        }
+      }
+    },
+    {
+      "idx": 26,
+      "q": "Who said the homeless in the area would have to leave?",
+      "aliases": [
+        "Ed Lee",
+        "mayor Ed Lee"
+      ],
+      "fact_id": 437,
+      "hit": false,
+      "passage": "His last sermon was delivered at Eisleben, his place of birth, on 15 February 1546, three days before his death. It was \"entirely devoted to the obdurate Jews, whom it was a matter of great urgency to expel from all German territory,\" according to L\u00e9on Poliakov. James Mackinnon writes that it concluded with a \"fiery summons to drive the Jews bag and baggage from their midst, unless they desisted from their calumny and their usury and became Christians.\" Luther said, \"we want to practice Christian love toward them and pray that they convert,\" but also that they are \"our public enemies ... and if they could kill us all, they would gladly do so. And so often they do.\"",
+      "snippet": "His last sermon was delivered at Eisleben, his place of birth, on 15 February 1546, three days before his death. It was \"entirely devoted to the obdurate Jews, whom it was a matter of great urgency to expel from all German territory,\" according to L\u00e9on ...",
+      "systems": {
+        "text": {
+          "gen": "L\u00e9on Poliakov.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The homeless in the area would have to leave was said by James Mackinnon.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 183,
+            "cache_mb": 20.031777381896973,
+            "build_s": 0.21565794944763184,
+            "decode_ms": 656.2051773071289
+          }
+        }
+      }
+    },
+    {
+      "idx": 27,
+      "q": "At what university is Bellomy Field located?",
+      "aliases": [
+        "Santa Clara University"
+      ],
+      "fact_id": 1351,
+      "hit": false,
+      "passage": "The University is organized into eleven separate academic units\u2014ten faculties and the Radcliffe Institute for Advanced Study\u2014with campuses throughout the Boston metropolitan area: its 209-acre (85 ha) main campus is centered on Harvard Yard in Cambridge, approximately 3 miles (5 km) northwest of Boston; the business school and athletics facilities, including Harvard Stadium, are located across the Charles River in the Allston neighborhood of Boston and the medical, dental, and public health schools are in the Longwood Medical Area. Harvard's $37.6 billion financial endowment is the largest of any academic institution.",
+      "snippet": "The University is organized into eleven separate academic units\u2014ten faculties and the Radcliffe Institute for Advanced Study\u2014with campuses throughout the Boston metropolitan area: its 209-acre (85 ha) main campus is centered on Harvard Yard in Cambridge, approximately 3 miles (5 km) northwest of Boston; the ...",
+      "systems": {
+        "text": {
+          "gen": "The University is organized into eleven separate academic units\u2014ten faculties and the Radcliffe Institute for Advanced Study\u2014with campuses throughout the",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The University is organized into eleven separate academic units\u2014ten faculties and the Radcliffe Institute for Advanced Study\u2014with campuses throughout the",
+          "ok": false,
+          "info": {
+            "doc_tokens": 144,
+            "cache_mb": 15.766152381896973,
+            "build_s": 0.2107243537902832,
+            "decode_ms": 909.0268611907959
+          }
+        }
+      }
+    },
+    {
+      "idx": 28,
+      "q": "What is the name of the property where the media event was held for Super Bowl 50?",
+      "aliases": [
+        "SAP Center"
+      ],
+      "fact_id": 0,
+      "hit": false,
+      "passage": "Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24\u201310 to earn their third Super Bowl title. The game was played on February 7, 2016, at Levi's Stadium in the San Francisco Bay Area at Santa Clara, California. As this was the 50th Super Bowl, the league emphasized the \"golden anniversary\" with various gold-themed initiatives, as well as temporarily suspending the tradition of naming each Super Bowl game with Roman numerals (under which the game would have been known as \"Super Bowl L\"), so that the logo could prominently feature the Arabic numerals 50.",
+      "snippet": "Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24\u201310 to earn their third Super ...",
+      "systems": {
+        "text": {
+          "gen": "Levi's Stadium",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The property where the media event was held for Super Bowl 50 is Levi's Stadium in the San Francisco Bay Area",
+          "ok": false,
+          "info": {
+            "doc_tokens": 194,
+            "cache_mb": 21.234902381896973,
+            "build_s": null,
+            "decode_ms": 904.8113822937012
+          }
+        }
+      }
+    },
+    {
+      "idx": 29,
+      "q": "What health company was a Super Bowl sponsor?",
+      "aliases": [
+        "Dignity",
+        "Dignity Health"
+      ],
+      "fact_id": 29,
+      "hit": true,
+      "passage": "For the first time, the Super Bowl 50 Host Committee and the NFL have openly sought disabled veteran and lesbian, gay, bisexual and transgender-owned businesses in Business Connect, the Super Bowl program that provides local companies with contracting opportunities in and around the Super Bowl. The host committee has already raised over $40 million through sponsors including Apple, Google, Yahoo!, Intel, Gap, Chevron, and Dignity Health.",
+      "snippet": "... The host committee has already raised over $40 million through sponsors including Apple, Google, Yahoo!, Intel, Gap, Chevron, and Dignity Health.",
+      "systems": {
+        "text": {
+          "gen": "Dignity Health.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Dignity Health",
+          "ok": true,
+          "info": {
+            "doc_tokens": 107,
+            "cache_mb": 11.719277381896973,
+            "build_s": 0.257612943649292,
+            "decode_ms": 184.71240997314453
+          }
+        }
+      }
+    },
+    {
+      "idx": 30,
+      "q": "What percentage of money raised by the Host Committee will be used for charitable causes?",
+      "aliases": [
+        "25",
+        "25 percent"
+      ],
+      "fact_id": 30,
+      "hit": true,
+      "passage": "The Super Bowl 50 Host Committee has vowed to be \"the most giving Super Bowl ever\", and will dedicate 25 percent of all money it raises for philanthropic causes in the Bay Area. The committee created the 50 fund as its philanthropic initiative and focuses on providing grants to aid with youth development, community investment and sustainable environments.",
+      "snippet": "The Super Bowl 50 Host Committee has vowed to be \"the most giving Super Bowl ever\", and will dedicate 25 percent of all money it raises for philanthropic causes in the Bay Area. ...",
+      "systems": {
+        "text": {
+          "gen": "25 percent.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "25 percent of all money it raises for philanthropic causes in the Bay Area.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 93,
+            "cache_mb": 10.188027381896973,
+            "build_s": 0.20110869407653809,
+            "decode_ms": 645.4193592071533
+          }
+        }
+      }
+    },
+    {
+      "idx": 31,
+      "q": "Who designed the \"50\"?",
+      "aliases": [
+        "Tiffany & Co",
+        "Tiffany & Co."
+      ],
+      "fact_id": 31,
+      "hit": true,
+      "passage": "In addition to the Vince Lombardi Trophy that all Super Bowl champions receive, the winner of Super Bowl 50 will also receive a large, 18-karat gold-plated \"50\". Each digit will weigh 33 lb (15 kg) for a total of 66 lb (30 kg). Like the Lombardi Trophy, the \"50\" will be designed by Tiffany & Co.",
+      "snippet": "... Like the Lombardi Trophy, the \"50\" will be designed by Tiffany & Co.",
+      "systems": {
+        "text": {
+          "gen": "Tiffany & Co.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Tiffany & Co.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 108,
+            "cache_mb": 11.828652381896973,
+            "build_s": 0.20949959754943848,
+            "decode_ms": 219.62952613830566
+          }
+        }
+      }
+    },
+    {
+      "idx": 32,
+      "q": "Which television network aired the Super Bowl?",
+      "aliases": [
+        "CBS"
+      ],
+      "fact_id": 32,
+      "hit": true,
+      "passage": "In the United States, the game was televised by CBS, as part of a cycle between the three main broadcast television partners of the NFL. The network's lead broadcast team of Jim Nantz and Phil Simms called the contest, with Tracy Wolfson and Evan Washburn on the sidelines. CBS introduced new features during the telecast, including pylon cameras and microphones along with EyeVision 360\u2014an array of 36 cameras along the upper deck that can be used to provide a 360-degree view of plays and \"bullet time\" effects. (An earlier version of EyeVision was last used in Super Bowl XXXV; for Super Bowl 50, the cameras were upgraded to 5K resolution.)",
+      "snippet": "In the United States, the game was televised by CBS, as part of a cycle between the three main broadcast television partners of the NFL. ...",
+      "systems": {
+        "text": {
+          "gen": "CBS.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The television network that aired the Super Bowl was CBS.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 170,
+            "cache_mb": 18.609902381896973,
+            "build_s": 0.21291089057922363,
+            "decode_ms": 438.94267082214355
+          }
+        }
+      }
+    },
+    {
+      "idx": 33,
+      "q": "Who was the ESPN Deportes sideline commentator for Super Bowl 50?",
+      "aliases": [
+        "John Sutcliffe",
+        "John Sutcliffe.",
+        "Sutcliffe"
+      ],
+      "fact_id": 33,
+      "hit": true,
+      "passage": "On December 28, 2015, ESPN Deportes announced that they had reached an agreement with CBS and the NFL to be the exclusive Spanish-language broadcaster of the game, marking the third dedicated Spanish-language broadcast of the Super Bowl. Unlike NBC and Fox, CBS does not have a Spanish-language outlet of its own that could broadcast the game (though per league policy, a separate Spanish play-by-play call was carried on CBS's second audio program channel for over-the-air viewers). The game was called by ESPN Deportes' Monday Night Football commentary crew of Alvaro Martin and Raul Allegre, and sideline reporter John Sutcliffe. ESPN Deportes broadcast pre-game and post-game coverage, while Martin, Allegre, and Sutcliffe contributed English-language reports for ESPN's SportsCenter and Mike & Mike.",
+      "snippet": "... The game was called by ESPN Deportes' Monday Night Football commentary crew of Alvaro Martin and Raul Allegre, and sideline reporter John Sutcliffe. ...",
+      "systems": {
+        "text": {
+          "gen": "ESPN Deportes sideline commentator for Super Bowl 50 was John Sutcliffe.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "John Sutcliffe",
+          "ok": true,
+          "info": {
+            "doc_tokens": 192,
+            "cache_mb": 21.016152381896973,
+            "build_s": 0.21516799926757812,
+            "decode_ms": 185.8961582183838
+          }
+        }
+      }
+    },
+    {
+      "idx": 34,
+      "q": "What did CBS provide of the Super Bowl 50 broadcast for its website, some apps and media players?",
+      "aliases": [
+        "digital streams",
+        "digital streams of the game"
+      ],
+      "fact_id": 32,
+      "hit": false,
+      "passage": "In the United States, the game was televised by CBS, as part of a cycle between the three main broadcast television partners of the NFL. The network's lead broadcast team of Jim Nantz and Phil Simms called the contest, with Tracy Wolfson and Evan Washburn on the sidelines. CBS introduced new features during the telecast, including pylon cameras and microphones along with EyeVision 360\u2014an array of 36 cameras along the upper deck that can be used to provide a 360-degree view of plays and \"bullet time\" effects. (An earlier version of EyeVision was last used in Super Bowl XXXV; for Super Bowl 50, the cameras were upgraded to 5K resolution.)",
+      "snippet": "In the United States, the game was televised by CBS, as part of a cycle between the three main broadcast television partners of the NFL. The network's lead broadcast team of Jim Nantz and Phil Simms called the contest, with Tracy Wolfson and Evan Washburn ...",
+      "systems": {
+        "text": {
+          "gen": "The context mentions that CBS introduced new features during the Super Bowl 50 broadcast, including EyeVision 360",
+          "ok": false
+        },
+        "cached": {
+          "gen": "CBS introduced new features during the telecast, including pylon cameras and microphones along with EyeVision 360",
+          "ok": false,
+          "info": {
+            "doc_tokens": 170,
+            "cache_mb": 18.609902381896973,
+            "build_s": null,
+            "decode_ms": 907.4263572692871
+          }
+        }
+      }
+    },
+    {
+      "idx": 35,
+      "q": "What other CBS talk show played, after the main one that began immediately after Super Bowl 50?",
+      "aliases": [
+        "Late Late Show with James Corden",
+        "The Late Late Show with James Corden"
+      ],
+      "fact_id": 35,
+      "hit": true,
+      "passage": "As opposed to broadcasts of primetime series, CBS broadcast special episodes of its late night talk shows as its lead-out programs for Super Bowl 50, beginning with a special episode of The Late Show with Stephen Colbert following the game. Following a break for late local programming, CBS also aired a special episode of The Late Late Show with James Corden.",
+      "snippet": "... Following a break for late local programming, CBS also aired a special episode of The Late Late Show with James Corden.",
+      "systems": {
+        "text": {
+          "gen": "The Late Late Show with James Corden.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The other CBS talk show that played after the main one that began immediately after Super Bowl 50 was The Late Late",
+          "ok": false,
+          "info": {
+            "doc_tokens": 93,
+            "cache_mb": 10.188027381896973,
+            "build_s": 0.20934009552001953,
+            "decode_ms": 900.1657962799072
+          }
+        },
+        "control": {
+          "gen": "The Late Late Show with James Corden.",
+          "ok": true
+        },
+        "sharer": {
+          "gen": "Assistant: The Late Late Show with James Corden",
+          "ok": true
+        }
+      }
+    },
+    {
+      "idx": 36,
+      "q": "Which company was given permission to air TV commercials during Super Bowl 50 at a discounted price?",
+      "aliases": [
+        "Anheuser-Busch InBev"
+      ],
+      "fact_id": 29,
+      "hit": false,
+      "passage": "For the first time, the Super Bowl 50 Host Committee and the NFL have openly sought disabled veteran and lesbian, gay, bisexual and transgender-owned businesses in Business Connect, the Super Bowl program that provides local companies with contracting opportunities in and around the Super Bowl. The host committee has already raised over $40 million through sponsors including Apple, Google, Yahoo!, Intel, Gap, Chevron, and Dignity Health.",
+      "snippet": "For the first time, the Super Bowl 50 Host Committee and the NFL have openly sought disabled veteran and lesbian, gay, bisexual and transgender-owned businesses in Business Connect, the Super Bowl program that provides local companies with contracting opportunities in and around the Super Bowl. ...",
+      "systems": {
+        "text": {
+          "gen": "Gap.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The company that was given permission to air TV commercials during Super Bowl 50 at a discounted price is Dignity",
+          "ok": false,
+          "info": {
+            "doc_tokens": 107,
+            "cache_mb": 11.719277381896973,
+            "build_s": null,
+            "decode_ms": 900.7654190063477
+          }
+        }
+      }
+    },
+    {
+      "idx": 37,
+      "q": "How long was the Death Wish Coffee commercial?",
+      "aliases": [
+        "30-second"
+      ],
+      "fact_id": 37,
+      "hit": true,
+      "passage": "QuickBooks sponsored a \"Small Business Big Game\" contest, in which Death Wish Coffee had a 30-second commercial aired free of charge courtesy of QuickBooks. Death Wish Coffee beat out nine other contenders from across the United States for the free advertisement.",
+      "snippet": "QuickBooks sponsored a \"Small Business Big Game\" contest, in which Death Wish Coffee had a 30-second commercial aired free of charge courtesy of QuickBooks. ...",
+      "systems": {
+        "text": {
+          "gen": "30 seconds.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Death Wish Coffee commercial aired for 30 seconds.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 73,
+            "cache_mb": 8.000527381896973,
+            "build_s": 0.20224237442016602,
+            "decode_ms": 464.27464485168457
+          }
+        }
+      }
+    },
+    {
+      "idx": 38,
+      "q": "What company paid for a Super Bowl 50 ad to show a trailer of X-Men: Apocalypse?",
+      "aliases": [
+        "Disney",
+        "Fox"
+      ],
+      "fact_id": 38,
+      "hit": true,
+      "passage": "20th Century Fox, Lionsgate, Paramount Pictures, Universal Studios and Walt Disney Studios paid for movie trailers to be aired during the Super Bowl. Fox paid for Deadpool, X-Men: Apocalypse, Independence Day: Resurgence and Eddie the Eagle, Lionsgate paid for Gods of Egypt, Paramount paid for Teenage Mutant Ninja Turtles: Out of the Shadows and 10 Cloverfield Lane, Universal paid for The Secret Life of Pets and the debut trailer for Jason Bourne and Disney paid for Captain America: Civil War, The Jungle Book and Alice Through the Looking Glass.[citation needed]",
+      "snippet": "20th Century Fox, Lionsgate, Paramount Pictures, Universal Studios and Walt Disney Studios paid for movie trailers to be aired during the Super Bowl. ...",
+      "systems": {
+        "text": {
+          "gen": "20th Century Fox.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "20th Century Fox paid for X-Men: Apocalypse.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 142,
+            "cache_mb": 15.547402381896973,
+            "build_s": 0.20996618270874023,
+            "decode_ms": 475.50225257873535
+          }
+        }
+      }
+    },
+    {
+      "idx": 39,
+      "q": "What area did the Westwood One broadcast cover?",
+      "aliases": [
+        "North America"
+      ],
+      "fact_id": 39,
+      "hit": true,
+      "passage": "Westwood One will carry the game throughout North America, with Kevin Harlan as play-by-play announcer, Boomer Esiason and Dan Fouts as color analysts, and James Lofton and Mark Malone as sideline reporters. Jim Gray will anchor the pre-game and halftime coverage.",
+      "snippet": "Westwood One will carry the game throughout North America, with Kevin Harlan as play-by-play announcer, Boomer Esiason and Dan Fouts as color analysts, and James Lofton and Mark Malone as sideline reporters. ...",
+      "systems": {
+        "text": {
+          "gen": "North America.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "North America",
+          "ok": true,
+          "info": {
+            "doc_tokens": 79,
+            "cache_mb": 8.656777381896973,
+            "build_s": 0.19955873489379883,
+            "decode_ms": 110.61453819274902
+          }
+        }
+      }
+    },
+    {
+      "idx": 40,
+      "q": "In what city is WBT-FM located?",
+      "aliases": [
+        "Chester",
+        "Chester, South Carolina"
+      ],
+      "fact_id": 1145,
+      "hit": false,
+      "passage": "The network has the unusual distinction of having separately owned and operated affiliates which serve the same market in Tampa, Florida (WFTS-TV and WWSB) and Grand Rapids, Michigan (WZZM and WOTV), with an analogous situation arising in Kansas City, Missouri (KMBC-TV and KQTV). KQTV is licensed to St. Joseph, Missouri, which is designated by Nielsen as a separate market from Kansas City despite being located within 55 miles (89 km) of one another, while WWSB and WOTV serve areas that do not receive an adequate signal from their market's primary ABC affiliate (in the case of WWSB, this dates back to when WTSP was Tampa's primary ABC affiliate prior to 1994, with the former being necessitated to serve the southern part of the Tampa market including the station's city of license, Sarasota, due to WTSP's transmitter being short-spaced to avoid interfering with the analog signal of Miami affiliate WPLG \u2013 which like WTSP, broadcast on VHF channel 10).",
+      "snippet": "The network has the unusual distinction of having separately owned and operated affiliates which serve the same market in Tampa, Florida (WFTS-TV and WWSB) and Grand Rapids, Michigan (WZZM and WOTV), with an analogous situation arising in Kansas City, Missouri (KMBC-TV and KQTV). KQTV is ...",
+      "systems": {
+        "text": {
+          "gen": "WBT-FM is located in Tampa, Florida.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "WBT-FM is located in Tampa, Florida.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 246,
+            "cache_mb": 26.922402381896973,
+            "build_s": 0.2259807586669922,
+            "decode_ms": 439.4407272338867
+          }
+        }
+      }
+    },
+    {
+      "idx": 41,
+      "q": "What BBC radio station will carry the game in the United Kingdom?",
+      "aliases": [
+        "BBC Radio 5",
+        "BBC Radio 5 Live",
+        "Radio 5 Live"
+      ],
+      "fact_id": 41,
+      "hit": true,
+      "passage": "In the United Kingdom, BBC Radio 5 Live and 5 Live Sports Extra will carry the contest. The BBC will carry its own British English broadcast, with Greg Brady, Darren Fletcher and Rocky Boiman on commentary.",
+      "snippet": "In the United Kingdom, BBC Radio 5 Live and 5 Live Sports Extra will carry the contest. ...",
+      "systems": {
+        "text": {
+          "gen": "BBC Radio 5 Live.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "BBC Radio 5 Live",
+          "ok": true,
+          "info": {
+            "doc_tokens": 66,
+            "cache_mb": 7.234902381896973,
+            "build_s": 0.20066571235656738,
+            "decode_ms": 217.9405689239502
+          }
+        }
+      }
+    },
+    {
+      "idx": 42,
+      "q": "Who was the MVP of Super Bowl XLI?",
+      "aliases": [
+        "Manning",
+        "Peyton Manning"
+      ],
+      "fact_id": 42,
+      "hit": true,
+      "passage": "In honor of the 50th Super Bowl, the pregame ceremony featured the on-field introduction of 39 of the 43 previous Super Bowl Most Valuable Players. Bart Starr (MVP of Super Bowls I and II) and Chuck Howley (MVP of Super Bowl V) appeared via video, while Peyton Manning (MVP of Super Bowl XLI and current Broncos quarterback) was shown in the locker room preparing for the game. No plans were announced regarding the recognition of Harvey Martin, co-MVP of Super Bowl XII, who died in 2001.",
+      "snippet": "... Bart Starr (MVP of Super Bowls I and II) and Chuck Howley (MVP of Super Bowl V) appeared via video, while Peyton Manning (MVP of Super Bowl XLI and current Broncos quarterback) was shown in the locker room preparing for the game. ...",
+      "systems": {
+        "text": {
+          "gen": "Peyton Manning.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Peyton Manning.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 143,
+            "cache_mb": 15.656777381896973,
+            "build_s": null,
+            "decode_ms": 220.14975547790527
+          }
+        }
+      }
+    },
+    {
+      "idx": 43,
+      "q": "Who sang the national anthem?",
+      "aliases": [
+        "Lady Gaga"
+      ],
+      "fact_id": 43,
+      "hit": true,
+      "passage": "Six-time Grammy winner and Academy Award nominee Lady Gaga performed the national anthem, while Academy Award winner Marlee Matlin provided American Sign Language (ASL) translation.",
+      "snippet": "Six-time Grammy winner and Academy Award nominee Lady Gaga performed the national anthem, while Academy Award winner Marlee Matlin provided American Sign Language (ASL) translation.",
+      "systems": {
+        "text": {
+          "gen": "Lady Gaga.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Lady Gaga.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 55,
+            "cache_mb": 6.031533241271973,
+            "build_s": 0.19674992561340332,
+            "decode_ms": 145.3232765197754
+          }
+        }
+      }
+    },
+    {
+      "idx": 44,
+      "q": "What company confirmed that Beyonc\u00e9 would participate in the Super Bowl 50 halftime show?",
+      "aliases": [
+        "Pepsi"
+      ],
+      "fact_id": 3,
+      "hit": false,
+      "passage": "CBS broadcast Super Bowl 50 in the U.S., and charged an average of $5 million for a 30-second commercial during the game. The Super Bowl 50 halftime show was headlined by the British rock group Coldplay with special guest performers Beyonc\u00e9 and Bruno Mars, who headlined the Super Bowl XLVII and Super Bowl XLVIII halftime shows, respectively. It was the third-most watched U.S. broadcast ever.",
+      "snippet": "CBS broadcast Super Bowl 50 in the U.S., and charged an average of $5 million for a 30-second commercial during the game. The Super Bowl 50 halftime show was headlined by the British rock group Coldplay with special guest performers Beyonc\u00e9 and Bruno Mars, who ...",
+      "systems": {
+        "text": {
+          "gen": "CBS.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The company that confirmed Beyonc\u00e9 would participate in the Super Bowl 50 halftime show is CBS.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 113,
+            "cache_mb": 12.375527381896973,
+            "build_s": 0.32536768913269043,
+            "decode_ms": 764.7457122802734
+          }
+        }
+      }
+    },
+    {
+      "idx": 45,
+      "q": "What did Carolina face in the opening drive that they had not faced the entire postseason?",
+      "aliases": [
+        "a deficit",
+        "a deficit.",
+        "deficit"
+      ],
+      "fact_id": 45,
+      "hit": true,
+      "passage": "Denver took the opening kickoff and started out strong with Peyton Manning completing an 18-yard pass to tight end Owen Daniels and a 22-yard throw to receiver Andre Caldwell. A pair of carries by C. J. Anderson moved the ball up 20 yards to the Panthers 14-yard line, but Carolina's defense dug in over the next three plays. First, linebacker Shaq Thompson tackled Ronnie Hillman for a 3-yard loss. Then after an incompletion, Thomas Davis tackled Anderson for a 1-yard gain on third down, forcing Denver to settle for a 3\u20130 lead on a Brandon McManus 34-yard field goal. The score marked the first time in the entire postseason that Carolina was facing a deficit.",
+      "snippet": "... The score marked the first time in the entire postseason that Carolina was facing a deficit.",
+      "systems": {
+        "text": {
+          "gen": "Carolina faced a deficit in the opening drive.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The context states that Carolina faced a deficit in the opening drive, which was the first time in the entire postseason that Carolina",
+          "ok": true,
+          "info": {
+            "doc_tokens": 175,
+            "cache_mb": 19.156777381896973,
+            "build_s": 0.22412919998168945,
+            "decode_ms": 906.4443111419678
+          }
+        }
+      }
+    },
+    {
+      "idx": 46,
+      "q": "Who sacked Newton a few plays after the challenge?",
+      "aliases": [
+        "Miller",
+        "Von Miller"
+      ],
+      "fact_id": 46,
+      "hit": true,
+      "passage": "After each team punted, Panthers quarterback Cam Newton appeared to complete a 24-yard pass Jerricho Cotchery, but the call was ruled an incompletion and upheld after a replay challenge. CBS analyst and retired referee Mike Carey stated he disagreed with the call and felt the review clearly showed the pass was complete. A few plays later, on 3rd-and-10 from the 15-yard line, linebacker Von Miller knocked the ball out of Newton's hands while sacking him, and Malik Jackson recovered it in the end zone for a Broncos touchdown, giving the team a 10\u20130 lead. This was the first fumble return touchdown in a Super Bowl since Super Bowl XXVIII at the end of the 1993 season.",
+      "snippet": "... A few plays later, on 3rd-and-10 from the 15-yard line, linebacker Von Miller knocked the ball out of Newton's hands while sacking him, and Malik Jackson recovered it in the end zone for a Broncos touchdown, giving the team a 10\u20130 lead. ...",
+      "systems": {
+        "text": {
+          "gen": "Malik Jackson.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Malik Jackson",
+          "ok": false,
+          "info": {
+            "doc_tokens": 179,
+            "cache_mb": 19.594277381896973,
+            "build_s": 0.2274472713470459,
+            "decode_ms": 147.98736572265625
+          }
+        }
+      }
+    },
+    {
+      "idx": 47,
+      "q": "How many yards did Jordan Norwood return a punt to set the Super Bowl record?",
+      "aliases": [
+        "61"
+      ],
+      "fact_id": 47,
+      "hit": true,
+      "passage": "After a punt from both teams, Carolina got on track with a 9-play, 73-yard scoring drive. Newton completed 4 of 4 passes for 51 yards and rushed twice for 25 yards, while Jonathan Stewart finished the drive with a 1-yard touchdown run, cutting the score to 10\u20137 with 11:28 left in the second quarter. Later on, Broncos receiver Jordan Norwood received Brad Nortman's short 28-yard punt surrounded by Panthers players, but none of them attempted to make a tackle, apparently thinking Norwood had called a fair catch. Norwood had not done so, and with no resistance around him, he took off for a Super Bowl record 61-yard return before Mario Addison dragged him down on the Panthers 14-yard line. Despite Denver's excellent field position, they could not get the ball into the end zone, so McManus kicked a 33-yard field goal that increased their lead to 13\u20137.",
+      "snippet": "... Norwood had not done so, and with no resistance around him, he took off for a Super Bowl record 61-yard return before Mario Addison dragged him down on the Panthers 14-yard line. ...",
+      "systems": {
+        "text": {
+          "gen": "61-yard return.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Jordan Norwood returned a punt for a Super Bowl record 61-yard return.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 232,
+            "cache_mb": 25.391152381896973,
+            "build_s": 0.23403286933898926,
+            "decode_ms": 654.0186405181885
+          }
+        }
+      }
+    },
+    {
+      "idx": 48,
+      "q": "How many yards did the interception gain when the ball was tipped away from Manning?",
+      "aliases": [
+        "19"
+      ],
+      "fact_id": 16,
+      "hit": false,
+      "passage": "The Broncos defeated the Pittsburgh Steelers in the divisional round, 23\u201316, by scoring 11 points in the final three minutes of the game. They then beat the defending Super Bowl XLIX champion New England Patriots in the AFC Championship Game, 20\u201318, by intercepting a pass on New England's 2-point conversion attempt with 17 seconds left on the clock. Despite Manning's problems with interceptions during the season, he didn't throw any in their two playoff games.",
+      "snippet": "The Broncos defeated the Pittsburgh Steelers in the divisional round, 23\u201316, by scoring 11 points in the final three minutes of the game. They then beat the defending Super Bowl XLIX champion New England Patriots in the AFC Championship Game, 20\u201318, by intercepting a pass ...",
+      "systems": {
+        "text": {
+          "gen": "20",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The interception gained 10 yards when the ball was tipped away from Manning.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 127,
+            "cache_mb": 13.906777381896973,
+            "build_s": null,
+            "decode_ms": 617.0437335968018
+          }
+        }
+      }
+    },
+    {
+      "idx": 49,
+      "q": "Who hit the goal post on a field goal attempt?",
+      "aliases": [
+        "Gano",
+        "Graham Gano"
+      ],
+      "fact_id": 21,
+      "hit": false,
+      "passage": "Concerns were raised over whether Levi's Stadium's field was of a high enough quality to host a Super Bowl; during the inaugural season, the field had to be re-sodded multiple times due to various issues, and during a week 6 game earlier in the 2015 season, a portion of the turf collapsed under Baltimore Ravens kicker Justin Tucker, causing him to slip and miss a field goal, although the field has not had any major issues since. As is customary for Super Bowl games played at natural grass stadiums, the NFL re-sodded the field with a new playing surface; a hybrid Bermuda 419 turf. NFL and Atlanta Braves field director Ed Mangan stated that the field was in \"great shape\" for gameday. However, the turf showed problem throughout the game, with a number of players needing to change their cleats during the game and player slipping during plays all throughout the game.",
+      "snippet": "Concerns were raised over whether Levi's Stadium's field was of a high enough quality to host a Super Bowl; during the inaugural season, the field had to be re-sodded multiple times due to various issues, and during a week 6 game earlier in the 2015 ...",
+      "systems": {
+        "text": {
+          "gen": "Justin Tucker.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Justin Tucker.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 211,
+            "cache_mb": 23.094277381896973,
+            "build_s": 0.23195290565490723,
+            "decode_ms": 149.27315711975098
+          }
+        }
+      }
+    },
+    {
+      "idx": 50,
+      "q": "What is the last name of the player who bumped the ball away from Manning in the fourth quarter of Super Bowl 50?",
+      "aliases": [
+        "Ealy"
+      ],
+      "fact_id": 0,
+      "hit": false,
+      "passage": "Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24\u201310 to earn their third Super Bowl title. The game was played on February 7, 2016, at Levi's Stadium in the San Francisco Bay Area at Santa Clara, California. As this was the 50th Super Bowl, the league emphasized the \"golden anniversary\" with various gold-themed initiatives, as well as temporarily suspending the tradition of naming each Super Bowl game with Roman numerals (under which the game would have been known as \"Super Bowl L\"), so that the logo could prominently feature the Arabic numerals 50.",
+      "snippet": "Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24\u201310 to earn their third Super ...",
+      "systems": {
+        "text": {
+          "gen": "The last name of the player who bumped the ball away from Manning in the fourth quarter of Super Bowl 50 is",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The last name of the player who bumped the ball away from Manning in the fourth quarter of Super Bowl 50 is",
+          "ok": false,
+          "info": {
+            "doc_tokens": 194,
+            "cache_mb": 21.234902381896973,
+            "build_s": null,
+            "decode_ms": 907.982349395752
+          }
+        }
+      }
+    },
+    {
+      "idx": 51,
+      "q": "What Panther defender was called for holding on third down?",
+      "aliases": [
+        "Josh Norman",
+        "Norman"
+      ],
+      "fact_id": 11,
+      "hit": false,
+      "passage": "The Panthers defense gave up just 308 points, ranking sixth in the league, while also leading the NFL in interceptions with 24 and boasting four Pro Bowl selections. Pro Bowl defensive tackle Kawann Short led the team in sacks with 11, while also forcing three fumbles and recovering two. Fellow lineman Mario Addison added 6\u00bd sacks. The Panthers line also featured veteran defensive end Jared Allen, a 5-time pro bowler who was the NFL's active career sack leader with 136, along with defensive end Kony Ealy, who had 5 sacks in just 9 starts. Behind them, two of the Panthers three starting linebackers were also selected to play in the Pro Bowl: Thomas Davis and Luke Kuechly. Davis compiled 5\u00bd sacks, four forced fumbles, and four interceptions, while Kuechly led the team in tackles (118) forced two fumbles, and intercepted four passes of his own. Carolina's secondary featured Pro Bowl safety Kurt Coleman, who led the team with a career high seven interceptions, while also racking up 88 tackles and Pro Bowl cornerback Josh Norman, who developed into a shutdown corner during the season and had four interceptions, two of which were returned for touchdowns.",
+      "snippet": "... Carolina's secondary featured Pro Bowl safety Kurt Coleman, who led the team with a career high seven interceptions, while also racking up 88 tackles and Pro Bowl cornerback Josh Norman, who developed into a shutdown corner during the season and had four interceptions, two of ...",
+      "systems": {
+        "text": {
+          "gen": "The Panther defender called for holding on third down was **Kawann Short**.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Panther defender who was called for holding on third down is Mario Addison.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 281,
+            "cache_mb": 30.750588417053223,
+            "build_s": null,
+            "decode_ms": 580.1150798797607
+          }
+        }
+      }
+    },
+    {
+      "idx": 52,
+      "q": "How many total tackles did Charles Johnson have in Super Bowl 50?",
+      "aliases": [
+        "four"
+      ],
+      "fact_id": 2,
+      "hit": false,
+      "passage": "The Broncos took an early lead in Super Bowl 50 and never trailed. Newton was limited by Denver's defense, which sacked him seven times and forced him into three turnovers, including a fumble which they recovered for a touchdown. Denver linebacker Von Miller was named Super Bowl MVP, recording five solo tackles, 2\u00bd sacks, and two forced fumbles.",
+      "snippet": "The Broncos took an early lead in Super Bowl 50 and never trailed. Newton was limited by Denver's defense, which sacked him seven times and forced him into three turnovers, including a fumble which they recovered for a touchdown. Denver linebacker Von Miller was named ...",
+      "systems": {
+        "text": {
+          "gen": "7",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Charles Johnson had 10 tackles in Super Bowl 50.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 95,
+            "cache_mb": 10.406777381896973,
+            "build_s": 0.21953368186950684,
+            "decode_ms": 542.4275398254395
+          }
+        }
+      }
+    },
+    {
+      "idx": 53,
+      "q": "How many first downs did the Panthers have in Super Bowl 50?",
+      "aliases": [
+        "21"
+      ],
+      "fact_id": 8,
+      "hit": false,
+      "passage": "For the third straight season, the number one seeds from both conferences met in the Super Bowl. The Carolina Panthers became one of only ten teams to have completed a regular season with only one loss, and one of only six teams to have acquired a 15\u20131 record, while the Denver Broncos became one of four teams to have made eight appearances in the Super Bowl. The Broncos made their second Super Bowl appearance in three years, having reached Super Bowl XLVIII, while the Panthers made their second Super Bowl appearance in franchise history, their other appearance being Super Bowl XXXVIII. Coincidentally, both teams were coached by John Fox in their last Super Bowl appearance prior to Super Bowl 50.",
+      "snippet": "For the third straight season, the number one seeds from both conferences met in the Super Bowl. The Carolina Panthers became one of only ten teams to have completed a regular season with only one loss, and one of only six teams to have acquired ...",
+      "systems": {
+        "text": {
+          "gen": "1",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Panthers had 12 first downs in Super Bowl 50.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 165,
+            "cache_mb": 18.063027381896973,
+            "build_s": 0.22532081604003906,
+            "decode_ms": 582.526445388794
+          }
+        }
+      }
+    },
+    {
+      "idx": 54,
+      "q": "Who was Fr\u00e9d\u00e9ric Chopin?",
+      "aliases": [
+        "Famous musicians",
+        "musicians"
+      ],
+      "fact_id": 54,
+      "hit": true,
+      "passage": "One of the most famous people born in Warsaw was Maria Sk\u0142odowska-Curie, who achieved international recognition for her research on radioactivity and was the first female recipient of the Nobel Prize. Famous musicians include W\u0142adys\u0142aw Szpilman and Fr\u00e9d\u00e9ric Chopin. Though Chopin was born in the village of \u017belazowa Wola, about 60 km (37 mi) from Warsaw, he moved to the city with his family when he was seven months old. Casimir Pulaski, a Polish general and hero of the American Revolutionary War, was born here in 1745.",
+      "snippet": "... Famous musicians include W\u0142adys\u0142aw Szpilman and Fr\u00e9d\u00e9ric Chopin. ...",
+      "systems": {
+        "text": {
+          "gen": "Fr\u00e9d\u00e9ric Chopin was a famous musician.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Fr\u00e9d\u00e9ric Chopin was a famous Polish pianist and virtuoso, born in the village of \u017belaz",
+          "ok": false,
+          "info": {
+            "doc_tokens": 152,
+            "cache_mb": 16.641152381896973,
+            "build_s": 0.23233437538146973,
+            "decode_ms": 904.4902324676514
+          }
+        }
+      }
+    },
+    {
+      "idx": 55,
+      "q": "Over how many species of trees can be found in the Saxon Garden?",
+      "aliases": [
+        "100",
+        "over 100"
+      ],
+      "fact_id": 55,
+      "hit": true,
+      "passage": "The Saxon Garden, covering the area of 15.5 ha, was formally a royal garden. There are over 100 different species of trees and the avenues are a place to sit and relax. At the east end of the park, the Tomb of the Unknown Soldier is situated. In the 19th century the Krasi\u0144ski Palace Garden was remodelled by Franciszek Szanior. Within the central area of the park one can still find old trees dating from that period: maidenhair tree, black walnut, Turkish hazel and Caucasian wingnut trees. With its benches, flower carpets, a pond with ducks on and a playground for kids, the Krasi\u0144ski Palace Garden is a popular strolling destination for the Varsovians. The Monument of the Warsaw Ghetto Uprising is also situated here. The \u0141azienki Park covers the area of 76 ha. The unique character and history of the park is reflected in its landscape architecture (pavilions, sculptures, bridges, cascades, ponds) and vegetation (domestic and foreign species of trees and bushes). What makes this park different from other green spaces in Warsaw is the presence of peacocks and pheasants, which can be seen here walking around freely, and royal carps in the pond. The Wilan\u00f3w Palace Park, dates back to the second half of the 17th century. It covers the area of 43 ha. Its central French-styled area corresponds to the ancient, baroque forms of the palace. The eastern section of the park, closest to the Palace, is the two-level garden with a terrace facing the pond. The park around the Kr\u00f3likarnia Palace is situated on the old escarpment of the Vistula. The park has lanes running on a few levels deep into the ravines on both sides of the palace.",
+      "snippet": "... There are over 100 different species of trees and the avenues are a place to sit and relax. ...",
+      "systems": {
+        "text": {
+          "gen": "15.5",
+          "ok": false
+        },
+        "cached": {
+          "gen": "100",
+          "ok": true,
+          "info": {
+            "doc_tokens": 407,
+            "cache_mb": 44.53183841705322,
+            "build_s": 0.2605249881744385,
+            "decode_ms": 148.99516105651855
+          }
+        }
+      }
+    },
+    {
+      "idx": 56,
+      "q": "How many natural reserves are in Warsaw?",
+      "aliases": [
+        "13"
+      ],
+      "fact_id": 56,
+      "hit": true,
+      "passage": "There are 13 natural reserves in Warsaw \u2013 among others, Bielany Forest, Kabaty Woods, Czerniak\u00f3w Lake. About 15 kilometres (9 miles) from Warsaw, the Vistula river's environment changes strikingly and features a perfectly preserved ecosystem, with a habitat of animals that includes the otter, beaver and hundreds of bird species. There are also several lakes in Warsaw \u2013 mainly the oxbow lakes, like Czerniak\u00f3w Lake, the lakes in the \u0141azienki or Wilan\u00f3w Parks, Kamionek Lake. There are lot of small lakes in the parks, but only a few are permanent \u2013 the majority are emptied before winter to clean them of plants and sediments.",
+      "snippet": "There are 13 natural reserves in Warsaw \u2013 among others, Bielany Forest, Kabaty Woods, Czerniak\u00f3w Lake. ...",
+      "systems": {
+        "text": {
+          "gen": "13 natural reserves.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "13",
+          "ok": true,
+          "info": {
+            "doc_tokens": 175,
+            "cache_mb": 19.156777381896973,
+            "build_s": 0.22530889511108398,
+            "decode_ms": 112.38312721252441
+          }
+        }
+      }
+    },
+    {
+      "idx": 57,
+      "q": "What is most of Warsaw's modern growth based on?",
+      "aliases": [
+        "internal migration and urbanisation",
+        "internal migration and urbanisation.",
+        "migration and urbanisation"
+      ],
+      "fact_id": 72,
+      "hit": false,
+      "passage": "In 2012 the Economist Intelligence Unit ranked Warsaw as the 32nd most liveable city in the world. It was also ranked as one of the most liveable cities in Central Europe. Today Warsaw is considered an \"Alpha\u2013\" global city, a major international tourist destination and a significant cultural, political and economic hub. Warsaw's economy, by a wide variety of industries, is characterised by FMCG manufacturing, metal processing, steel and electronic manufacturing and food processing. The city is a significant centre of research and development, BPO, ITO, as well as of the Polish media industry. The Warsaw Stock Exchange is one of the largest and most important in Central and Eastern Europe. Frontex, the European Union agency for external border security, has its headquarters in Warsaw. It has been said that Warsaw, together with Frankfurt, London, Paris and Barcelona is one of the cities with the highest number of skyscrapers in the European Union. Warsaw has also been called \"Eastern Europe\u2019s chic cultural capital with thriving art and club scenes and serious restaurants\".",
+      "snippet": "In 2012 the Economist Intelligence Unit ranked Warsaw as the 32nd most liveable city in the world. It was also ranked as one of the most liveable cities in Central Europe. Today Warsaw is considered an \"Alpha\u2013\" global city, a major international tourist destination and ...",
+      "systems": {
+        "text": {
+          "gen": "The modern growth of Warsaw is based on its economy, research and development, and its role as a global city.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The modern growth of Warsaw is based on its economy, which is characterised by FMCG manufacturing, metal processing, steel",
+          "ok": false,
+          "info": {
+            "doc_tokens": 239,
+            "cache_mb": 26.156777381896973,
+            "build_s": 0.23388051986694336,
+            "decode_ms": 906.9812297821045
+          }
+        }
+      }
+    },
+    {
+      "idx": 58,
+      "q": "What year was the University of Warsaw established?",
+      "aliases": [
+        "1816"
+      ],
+      "fact_id": 58,
+      "hit": true,
+      "passage": "The University of Warsaw was established in 1816, when the partitions of Poland separated Warsaw from the oldest and most influential Polish academic center, in Krak\u00f3w. Warsaw University of Technology is the second academic school of technology in the country, and one of the largest in East-Central Europe, employing 2,000 professors. Other institutions for higher education include the Medical University of Warsaw, the largest medical school in Poland and one of the most prestigious, the National Defence University, highest military academic institution in Poland, the Fryderyk Chopin University of Music the oldest and largest music school in Poland, and one of the largest in Europe, the Warsaw School of Economics, the oldest and most renowned economic university in the country, and the Warsaw University of Life Sciences the largest agricultural university founded in 1818.",
+      "snippet": "The University of Warsaw was established in 1816, when the partitions of Poland separated Warsaw from the oldest and most influential Polish academic center, in Krak\u00f3w. ...",
+      "systems": {
+        "text": {
+          "gen": "1816.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The University of Warsaw was established in 1816.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 191,
+            "cache_mb": 20.906777381896973,
+            "build_s": 0.22848892211914062,
+            "decode_ms": 509.5362663269043
+          }
+        }
+      }
+    },
+    {
+      "idx": 59,
+      "q": "What profession does Zbigniew Badowski have?",
+      "aliases": [
+        "architects"
+      ],
+      "fact_id": 54,
+      "hit": false,
+      "passage": "One of the most famous people born in Warsaw was Maria Sk\u0142odowska-Curie, who achieved international recognition for her research on radioactivity and was the first female recipient of the Nobel Prize. Famous musicians include W\u0142adys\u0142aw Szpilman and Fr\u00e9d\u00e9ric Chopin. Though Chopin was born in the village of \u017belazowa Wola, about 60 km (37 mi) from Warsaw, he moved to the city with his family when he was seven months old. Casimir Pulaski, a Polish general and hero of the American Revolutionary War, was born here in 1745.",
+      "snippet": "One of the most famous people born in Warsaw was Maria Sk\u0142odowska-Curie, who achieved international recognition for her research on radioactivity and was the first female recipient of the Nobel Prize. Famous musicians include W\u0142adys\u0142aw Szpilman and Fr\u00e9d\u00e9ric Chopin. Though Chopin was born in the ...",
+      "systems": {
+        "text": {
+          "gen": "Zbigniew Badowski has the profession of a teacher.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Zbigniew Badowski is a Polish politician and member of the Polish government.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 152,
+            "cache_mb": 16.641152381896973,
+            "build_s": null,
+            "decode_ms": 651.7674922943115
+          }
+        }
+      }
+    },
+    {
+      "idx": 60,
+      "q": "What suffered considerably for Warsaw when it had an Eastern Bloc economy?",
+      "aliases": [
+        "infrastructure"
+      ],
+      "fact_id": 60,
+      "hit": true,
+      "passage": "Like many cities in Central and Eastern Europe, infrastructure in Warsaw suffered considerably during its time as an Eastern Bloc economy \u2013 though it is worth mentioning that the initial Three-Year Plan to rebuild Poland (especially Warsaw) was a major success, but what followed was very much the opposite. However, over the past decade Warsaw has seen many improvements due to solid economic growth, an increase in foreign investment as well as funding from the European Union. In particular, the city's metro, roads, sidewalks, health care facilities and sanitation facilities have improved markedly.",
+      "snippet": "Like many cities in Central and Eastern Europe, infrastructure in Warsaw suffered considerably during its time as an Eastern Bloc economy \u2013 though it is worth mentioning that the initial Three-Year Plan to rebuild Poland (especially Warsaw) was a major success, but what followed was ... ...",
+      "systems": {
+        "text": {
+          "gen": "The city's infrastructure suffered considerably during its time as an Eastern Bloc economy.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The infrastructure in Warsaw suffered considerably during its time as an Eastern Bloc economy.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 130,
+            "cache_mb": 14.234902381896973,
+            "build_s": 0.2252488136291504,
+            "decode_ms": 580.6145668029785
+          }
+        }
+      }
+    },
+    {
+      "idx": 61,
+      "q": "What has the infrastructure done a lot of over the past years?",
+      "aliases": [
+        "developed"
+      ],
+      "fact_id": 60,
+      "hit": false,
+      "passage": "Like many cities in Central and Eastern Europe, infrastructure in Warsaw suffered considerably during its time as an Eastern Bloc economy \u2013 though it is worth mentioning that the initial Three-Year Plan to rebuild Poland (especially Warsaw) was a major success, but what followed was very much the opposite. However, over the past decade Warsaw has seen many improvements due to solid economic growth, an increase in foreign investment as well as funding from the European Union. In particular, the city's metro, roads, sidewalks, health care facilities and sanitation facilities have improved markedly.",
+      "snippet": "Like many cities in Central and Eastern Europe, infrastructure in Warsaw suffered considerably during its time as an Eastern Bloc economy \u2013 though it is worth mentioning that the initial Three-Year Plan to rebuild Poland (especially Warsaw) was a major success, but what followed was ...",
+      "systems": {
+        "text": {
+          "gen": "The infrastructure in Warsaw has improved significantly over the past years due to economic growth, foreign investment, and funding from the European",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The infrastructure in Warsaw has seen many improvements over the past decade due to solid economic growth, an increase in foreign investment,",
+          "ok": false,
+          "info": {
+            "doc_tokens": 130,
+            "cache_mb": 14.234902381896973,
+            "build_s": null,
+            "decode_ms": 904.5226573944092
+          }
+        }
+      }
+    },
+    {
+      "idx": 62,
+      "q": "What type of venue is the Teatr Wielki?",
+      "aliases": [
+        "musical"
+      ],
+      "fact_id": 62,
+      "hit": true,
+      "passage": "Thanks to numerous musical venues, including the Teatr Wielki, the Polish National Opera, the Chamber Opera, the National Philharmonic Hall and the National Theatre, as well as the Roma and Buffo music theatres and the Congress Hall in the Palace of Culture and Science, Warsaw hosts many events and festivals. Among the events worth particular attention are: the International Fr\u00e9d\u00e9ric Chopin Piano Competition, the International Contemporary Music Festival Warsaw Autumn, the Jazz Jamboree, Warsaw Summer Jazz Days, the International Stanis\u0142aw Moniuszko Vocal Competition, the Mozart Festival, and the Festival of Old Music.",
+      "snippet": "Thanks to numerous musical venues, including the Teatr Wielki, the Polish National Opera, the Chamber Opera, the National Philharmonic Hall and the National Theatre, as well as the Roma and Buffo music theatres and the Congress Hall in the Palace of Culture and Science, Warsaw ... ...",
+      "systems": {
+        "text": {
+          "gen": "The Teatr Wielki is a musical venue.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Teatr Wielki is a musical venue.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 147,
+            "cache_mb": 16.094277381896973,
+            "build_s": 0.22604894638061523,
+            "decode_ms": 438.10319900512695
+          }
+        }
+      }
+    },
+    {
+      "idx": 63,
+      "q": "What was Warsaw's first literary cabaret?",
+      "aliases": [
+        "Momus"
+      ],
+      "fact_id": 63,
+      "hit": true,
+      "passage": "Nearby, in Ogr\u00f3d Saski (the Saxon Garden), the Summer Theatre was in operation from 1870 to 1939, and in the inter-war period, the theatre complex also included Momus, Warsaw's first literary cabaret, and Leon Schiller's musical theatre Melodram. The Wojciech Bogus\u0142awski Theatre (1922\u201326), was the best example of \"Polish monumental theatre\". From the mid-1930s, the Great Theatre building housed the Upati Institute of Dramatic Arts \u2013 the first state-run academy of dramatic art, with an acting department and a stage directing department.",
+      "snippet": "Nearby, in Ogr\u00f3d Saski (the Saxon Garden), the Summer Theatre was in operation from 1870 to 1939, and in the inter-war period, the theatre complex also included Momus, Warsaw's first literary cabaret, and Leon Schiller's musical theatre Melodram. ...",
+      "systems": {
+        "text": {
+          "gen": "The Wojciech Bogus\u0142awski Theatre.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Wojciech Bogus\u0142awski Theatre (1922\u201326), was the best example of \"",
+          "ok": false,
+          "info": {
+            "doc_tokens": 161,
+            "cache_mb": 17.625527381896973,
+            "build_s": 0.2249908447265625,
+            "decode_ms": 906.7785739898682
+          }
+        }
+      }
+    },
+    {
+      "idx": 64,
+      "q": "What type of flower is sought on Midsummer's Eve?",
+      "aliases": [
+        "fern",
+        "the fern"
+      ],
+      "fact_id": 64,
+      "hit": true,
+      "passage": "Several commemorative events take place every year. Gatherings of thousands of people on the banks of the Vistula on Midsummer\u2019s Night for a festival called Wianki (Polish for Wreaths) have become a tradition and a yearly event in the programme of cultural events in Warsaw. The festival traces its roots to a peaceful pagan ritual where maidens would float their wreaths of herbs on the water to predict when they would be married, and to whom. By the 19th century this tradition had become a festive event, and it continues today. The city council organize concerts and other events. Each Midsummer\u2019s Eve, apart from the official floating of wreaths, jumping over fires, looking for the fern flower, there are musical performances, dignitaries' speeches, fairs and fireworks by the river bank.",
+      "snippet": "... Each Midsummer\u2019s Eve, apart from the official floating of wreaths, jumping over fires, looking for the fern flower, there are musical performances, dignitaries' speeches, fairs and fireworks by the river bank.",
+      "systems": {
+        "text": {
+          "gen": "The fern flower is sought on Midsummer's Eve.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The type of flower sought on Midsummer's Eve is the fern flower.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 191,
+            "cache_mb": 20.906777381896973,
+            "build_s": 0.22862815856933594,
+            "decode_ms": 580.5108547210693
+          }
+        }
+      }
+    },
+    {
+      "idx": 65,
+      "q": "What does the National Museum boast having from Adolf Hitler's private collection?",
+      "aliases": [
+        "paintings",
+        "some paintings"
+      ],
+      "fact_id": 65,
+      "hit": true,
+      "passage": "As interesting examples of expositions the most notable are: the world's first Museum of Posters boasting one of the largest collections of art posters in the world, Museum of Hunting and Riding and the Railway Museum. From among Warsaw's 60 museums, the most prestigious ones are National Museum with a collection of works whose origin ranges in time from antiquity till the present epoch as well as one of the best collections of paintings in the country including some paintings from Adolf Hitler's private collection, and Museum of the Polish Army whose set portrays the history of arms.",
+      "snippet": "... From among Warsaw's 60 museums, the most prestigious ones are National Museum with a collection of works whose origin ranges in time from antiquity till the present epoch as well as one of the best collections of paintings in the country including some paintings from ...",
+      "systems": {
+        "text": {
+          "gen": "The National Museum boasts a collection of works whose origin ranges from antiquity to the present, including some paintings from Adolf Hitler",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The National Museum boasts a collection of paintings from Adolf Hitler's private collection.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 134,
+            "cache_mb": 14.672402381896973,
+            "build_s": 0.22611713409423828,
+            "decode_ms": 579.8776149749756
+          }
+        }
+      }
+    },
+    {
+      "idx": 66,
+      "q": "Where can a tribute to the fall of Warsaw be found?",
+      "aliases": [
+        "Warsaw Uprising Museum"
+      ],
+      "fact_id": 91,
+      "hit": false,
+      "passage": "There are also many places commemorating the heroic history of Warsaw. Pawiak, an infamous German Gestapo prison now occupied by a Mausoleum of Memory of Martyrdom and the museum, is only the beginning of a walk in the traces of Heroic City. The Warsaw Citadel, an impressive 19th-century fortification built after the defeat of the November Uprising, was a place of martyr for the Poles. Another important monument, the statue of Little Insurgent located at the ramparts of the Old Town, commemorates the children who served as messengers and frontline troops in the Warsaw Uprising, while the impressive Warsaw Uprising Monument by Wincenty Ku\u0107ma was erected in memory of the largest insurrection of World War II.",
+      "snippet": "There are also many places commemorating the heroic history of Warsaw. Pawiak, an infamous German Gestapo prison now occupied by a Mausoleum of Memory of Martyrdom and the museum, is only the beginning of a walk in the traces of Heroic City. The Warsaw Citadel, ...",
+      "systems": {
+        "text": {
+          "gen": "The Warsaw Uprising Monument by Wincenty Ku\u0107ma.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The fall of Warsaw can be commemorated at the Pawiak, an infamous German Gestapo prison now occupied by a",
+          "ok": false,
+          "info": {
+            "doc_tokens": 177,
+            "cache_mb": 19.375527381896973,
+            "build_s": 0.2262892723083496,
+            "decode_ms": 902.1847248077393
+          }
+        }
+      }
+    },
+    {
+      "idx": 67,
+      "q": "When is the Warsaw Gallery Weekend held?",
+      "aliases": [
+        "last weekend of September"
+      ],
+      "fact_id": 67,
+      "hit": true,
+      "passage": "The 17th century Royal Ujazd\u00f3w Castle currently houses Centre for Contemporary Art, with some permanent and temporary exhibitions, concerts, shows and creative workshops. The Centre currently realizes about 500 projects a year. Zach\u0119ta National Gallery of Art, the oldest exhibition site in Warsaw, with a tradition stretching back to the mid-19th century organises exhibitions of modern art by Polish and international artists and promotes art in many other ways. Since 2011 Warsaw Gallery Weekend is held on last weekend of September.",
+      "snippet": "... Since 2011 Warsaw Gallery Weekend is held on last weekend of September.",
+      "systems": {
+        "text": {
+          "gen": "Last weekend of September.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Warsaw Gallery Weekend is held on last weekend of September.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 133,
+            "cache_mb": 14.563027381896973,
+            "build_s": 0.22018122673034668,
+            "decode_ms": 469.7003364562988
+          }
+        }
+      }
+    },
+    {
+      "idx": 68,
+      "q": "Why was Polonia relegated from the country's top flight in 2013?",
+      "aliases": [
+        "disastrous financial situation",
+        "disastrous financial situation.",
+        "their disastrous financial situation"
+      ],
+      "fact_id": 68,
+      "hit": true,
+      "passage": "Their local rivals, Polonia Warsaw, have significantly fewer supporters, yet they managed to win Ekstraklasa Championship in 2000. They also won the country\u2019s championship in 1946, and won the cup twice as well. Polonia's home venue is located at Konwiktorska Street, a ten-minute walk north from the Old Town. Polonia was relegated from the country's top flight in 2013 because of their disastrous financial situation. They are now playing in the 4th league (5th tier in Poland) -the bottom professional league in the National \u2013 Polish Football Association (PZPN) structure.",
+      "snippet": "... Polonia was relegated from the country's top flight in 2013 because of their disastrous financial situation. ...",
+      "systems": {
+        "text": {
+          "gen": "Polonia was relegated from the country's top flight in 2013 due to their disastrous financial situation.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Polonia was relegated from the country's top flight in 2013 due to their disastrous financial situation.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 159,
+            "cache_mb": 17.406777381896973,
+            "build_s": 0.24698281288146973,
+            "decode_ms": 872.4400997161865
+          }
+        }
+      }
+    },
+    {
+      "idx": 69,
+      "q": "What is polish for \"mermaid\"?",
+      "aliases": [
+        "syrenka"
+      ],
+      "fact_id": 75,
+      "hit": false,
+      "passage": "Warsaw's name in the Polish language is Warszawa, approximately /v\u0251\u02d0r\u02c8\u0283\u0251\u02d0v\u0259/ (also formerly spelled Warszewa and Warszowa), meaning \"belonging to Warsz\", Warsz being a shortened form of the masculine name of Slavic origin Warcis\u0142aw; see also etymology of Wroc\u0142aw. Folk etymology attributes the city name to a fisherman, Wars, and his wife, Sawa. According to legend, Sawa was a mermaid living in the Vistula River with whom Wars fell in love. In actuality, Warsz was a 12th/13th-century nobleman who owned a village located at the modern-day site of Mariensztat neighbourhood. See also the Vr\u0161ovci family which had escaped to Poland. The official city name in full is miasto sto\u0142eczne Warszawa (English: \"The Capital City of Warsaw\"). A native or resident of Warsaw is known as a Varsovian \u2013 in Polish warszawiak (male), warszawianka (female), warszawiacy (plural).",
+      "snippet": "Warsaw's name in the Polish language is Warszawa, approximately /v\u0251\u02d0r\u02c8\u0283\u0251\u02d0v\u0259/ (also formerly spelled Warszewa and Warszowa), meaning \"belonging to Warsz\", Warsz being a shortened form of the masculine name of Slavic origin Warcis\u0142aw; see also etymology of Wroc\u0142aw. Folk etymology attributes the city name to ...",
+      "systems": {
+        "text": {
+          "gen": "Warszawa.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Polish word for \"mermaid\" is \"mermaid\".",
+          "ok": false,
+          "info": {
+            "doc_tokens": 254,
+            "cache_mb": 27.797402381896973,
+            "build_s": 0.23653793334960938,
+            "decode_ms": 508.27693939208984
+          }
+        }
+      }
+    },
+    {
+      "idx": 70,
+      "q": "What did Artur Oppman give to the world?",
+      "aliases": [
+        "The best-known legend",
+        "legend"
+      ],
+      "fact_id": 70,
+      "hit": true,
+      "passage": "The origin of the legendary figure is not fully known. The best-known legend, by Artur Oppman, is that long ago two of Triton's daughters set out on a journey through the depths of the oceans and seas. One of them decided to stay on the coast of Denmark and can be seen sitting at the entrance to the port of Copenhagen. The second mermaid reached the mouth of the Vistula River and plunged into its waters. She stopped to rest on a sandy beach by the village of Warszowa, where fishermen came to admire her beauty and listen to her beautiful voice. A greedy merchant also heard her songs; he followed the fishermen and captured the mermaid.",
+      "snippet": "The origin of the legendary figure is not fully known. ...",
+      "systems": {
+        "text": {
+          "gen": "The best-known legend, by Artur Oppman, is that long ago two of Triton's daughters set out on",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Artur Oppman gave the world the legend of the two Triton's daughters and their journey through the ocean.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 160,
+            "cache_mb": 17.516152381896973,
+            "build_s": 0.22390198707580566,
+            "decode_ms": 866.934061050415
+          }
+        }
+      }
+    },
+    {
+      "idx": 71,
+      "q": "Where was the famous artist Tamara de Lempicka born?",
+      "aliases": [
+        "Warsaw"
+      ],
+      "fact_id": 71,
+      "hit": true,
+      "passage": "Tamara de Lempicka was a famous artist born in Warsaw. She was born Maria G\u00f3rska in Warsaw to wealthy parents and in 1916 married a Polish lawyer Tadeusz \u0141empicki. Better than anyone else she represented the Art Deco style in painting and art. Nathan Alterman, the Israeli poet, was born in Warsaw, as was Moshe Vilenski, the Israeli composer, lyricist, and pianist, who studied music at the Warsaw Conservatory. Warsaw was the beloved city of Isaac Bashevis Singer, which he described in many of his novels: Warsaw has just now been destroyed. No one will ever see the Warsaw I knew. Let me just write about it. Let this Warsaw not disappear forever, he commented.",
+      "snippet": "Tamara de Lempicka was a famous artist born in Warsaw. ...",
+      "systems": {
+        "text": {
+          "gen": "Warsaw.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Warsaw",
+          "ok": true,
+          "info": {
+            "doc_tokens": 181,
+            "cache_mb": 19.813027381896973,
+            "build_s": 0.233994722366333,
+            "decode_ms": 111.7086410522461
+          }
+        }
+      }
+    },
+    {
+      "idx": 72,
+      "q": "What exchange in Warsaw is one of the most important for Central and Eastern Europe?",
+      "aliases": [
+        "Stock",
+        "Warsaw Stock Exchange"
+      ],
+      "fact_id": 72,
+      "hit": true,
+      "passage": "In 2012 the Economist Intelligence Unit ranked Warsaw as the 32nd most liveable city in the world. It was also ranked as one of the most liveable cities in Central Europe. Today Warsaw is considered an \"Alpha\u2013\" global city, a major international tourist destination and a significant cultural, political and economic hub. Warsaw's economy, by a wide variety of industries, is characterised by FMCG manufacturing, metal processing, steel and electronic manufacturing and food processing. The city is a significant centre of research and development, BPO, ITO, as well as of the Polish media industry. The Warsaw Stock Exchange is one of the largest and most important in Central and Eastern Europe. Frontex, the European Union agency for external border security, has its headquarters in Warsaw. It has been said that Warsaw, together with Frankfurt, London, Paris and Barcelona is one of the cities with the highest number of skyscrapers in the European Union. Warsaw has also been called \"Eastern Europe\u2019s chic cultural capital with thriving art and club scenes and serious restaurants\".",
+      "snippet": "... The Warsaw Stock Exchange is one of the largest and most important in Central and Eastern Europe. ...",
+      "systems": {
+        "text": {
+          "gen": "Warsaw Stock Exchange.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Warsaw Stock Exchange is one of the largest and most important in Central and Eastern Europe.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 239,
+            "cache_mb": 26.156777381896973,
+            "build_s": null,
+            "decode_ms": 685.5502128601074
+          }
+        }
+      }
+    },
+    {
+      "idx": 73,
+      "q": "Why did Warsaw gain the title of the \"Phoenix City\"?",
+      "aliases": [
+        "because it has survived many wars, conflicts and invasions throughout its long history",
+        "it has survived many wars, conflicts and invasions",
+        "survived many wars, conflicts and invasions"
+      ],
+      "fact_id": 73,
+      "hit": true,
+      "passage": "The first historical reference to Warsaw dates back to the year 1313, at a time when Krak\u00f3w served as the Polish capital city. Due to its central location between the Polish\u2013Lithuanian Commonwealth's capitals of Krak\u00f3w and Vilnius, Warsaw became the capital of the Commonwealth and of the Crown of the Kingdom of Poland when King Sigismund III Vasa moved his court from Krak\u00f3w to Warsaw in 1596. After the Third Partition of Poland in 1795, Warsaw was incorporated into the Kingdom of Prussia. In 1806 during the Napoleonic Wars, the city became the official capital of the Grand Duchy of Warsaw, a puppet state of the First French Empire established by Napoleon Bonaparte. In accordance with the decisions of the Congress of Vienna, the Russian Empire annexed Warsaw in 1815 and it became part of the \"Congress Kingdom\". Only in 1918 did it regain independence from the foreign rule and emerge as a new capital of the independent Republic of Poland. The German invasion in 1939, the massacre of the Jewish population and deportations to concentration camps led to the uprising in the Warsaw ghetto in 1943 and to the major and devastating Warsaw Uprising between August and October 1944. Warsaw gained the title of the \"Phoenix City\" because it has survived many wars, conflicts and invasions throughout its long history. Most notably, the city required painstaking rebuilding after the extensive damage it suffered in World War II, which destroyed 85% of its buildings. On 9 November 1940, the city was awarded Poland's highest military decoration for heroism, the Virtuti Militari, during the Siege of Warsaw (1939).",
+      "snippet": "... Warsaw gained the title of the \"Phoenix City\" because it has survived many wars, conflicts and invasions throughout its long history. ...",
+      "systems": {
+        "text": {
+          "gen": "The city gained the title of the \"Phoenix City\" because it has survived many wars, conflicts, and invasions throughout",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Warsaw gained the title of the \"Phoenix City\" because it has survived many wars, conflicts, and invasions throughout",
+          "ok": true,
+          "info": {
+            "doc_tokens": 391,
+            "cache_mb": 42.78183841705322,
+            "build_s": 0.2514190673828125,
+            "decode_ms": 911.4985466003418
+          }
+        }
+      }
+    },
+    {
+      "idx": 74,
+      "q": "What was Warsaw's Old Town listed as in 1980?",
+      "aliases": [
+        "UNESCO World Heritage Site",
+        "a UNESCO World Heritage Site"
+      ],
+      "fact_id": 82,
+      "hit": false,
+      "passage": "After World War II, under a Communist regime set up by the conquering Soviets, the \"Bricks for Warsaw\" campaign was initiated, and large prefabricated housing projects were erected in Warsaw to address the housing shortage, along with other typical buildings of an Eastern Bloc city, such as the Palace of Culture and Science, a gift from the Soviet Union. The city resumed its role as the capital of Poland and the country's centre of political and economic life. Many of the historic streets, buildings, and churches were restored to their original form. In 1980, Warsaw's historic Old Town was inscribed onto UNESCO's World Heritage list.",
+      "snippet": "After World War II, under a Communist regime set up by the conquering Soviets, the \"Bricks for Warsaw\" campaign was initiated, and large prefabricated housing projects were erected in Warsaw to address the housing shortage, along with other typical buildings of an Eastern Bloc city, ...",
+      "systems": {
+        "text": {
+          "gen": "UNESCO World Heritage list.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "UNESCO World Heritage List.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 154,
+            "cache_mb": 16.859902381896973,
+            "build_s": 0.24734878540039062,
+            "decode_ms": 255.84769248962402
+          }
+        }
+      }
+    },
+    {
+      "idx": 75,
+      "q": "What does Warszawa mean in Polish?",
+      "aliases": [
+        "belonging to Warsz"
+      ],
+      "fact_id": 75,
+      "hit": true,
+      "passage": "Warsaw's name in the Polish language is Warszawa, approximately /v\u0251\u02d0r\u02c8\u0283\u0251\u02d0v\u0259/ (also formerly spelled Warszewa and Warszowa), meaning \"belonging to Warsz\", Warsz being a shortened form of the masculine name of Slavic origin Warcis\u0142aw; see also etymology of Wroc\u0142aw. Folk etymology attributes the city name to a fisherman, Wars, and his wife, Sawa. According to legend, Sawa was a mermaid living in the Vistula River with whom Wars fell in love. In actuality, Warsz was a 12th/13th-century nobleman who owned a village located at the modern-day site of Mariensztat neighbourhood. See also the Vr\u0161ovci family which had escaped to Poland. The official city name in full is miasto sto\u0142eczne Warszawa (English: \"The Capital City of Warsaw\"). A native or resident of Warsaw is known as a Varsovian \u2013 in Polish warszawiak (male), warszawianka (female), warszawiacy (plural).",
+      "snippet": "Warsaw's name in the Polish language is Warszawa, approximately /v\u0251\u02d0r\u02c8\u0283\u0251\u02d0v\u0259/ (also formerly spelled Warszewa and Warszowa), meaning \"belonging to Warsz\", Warsz being a shortened form of the masculine name of Slavic origin Warcis\u0142aw; see also etymology of Wroc\u0142aw. ...",
+      "systems": {
+        "text": {
+          "gen": "Warszawa.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Warszawa is a 12th/13th-century nobleman who owned a village located at the modern",
+          "ok": false,
+          "info": {
+            "doc_tokens": 254,
+            "cache_mb": 27.797402381896973,
+            "build_s": null,
+            "decode_ms": 905.8692455291748
+          }
+        }
+      }
+    },
+    {
+      "idx": 76,
+      "q": "When was the settlement which would become Warsaw established?",
+      "aliases": [
+        "1300"
+      ],
+      "fact_id": 73,
+      "hit": false,
+      "passage": "The first historical reference to Warsaw dates back to the year 1313, at a time when Krak\u00f3w served as the Polish capital city. Due to its central location between the Polish\u2013Lithuanian Commonwealth's capitals of Krak\u00f3w and Vilnius, Warsaw became the capital of the Commonwealth and of the Crown of the Kingdom of Poland when King Sigismund III Vasa moved his court from Krak\u00f3w to Warsaw in 1596. After the Third Partition of Poland in 1795, Warsaw was incorporated into the Kingdom of Prussia. In 1806 during the Napoleonic Wars, the city became the official capital of the Grand Duchy of Warsaw, a puppet state of the First French Empire established by Napoleon Bonaparte. In accordance with the decisions of the Congress of Vienna, the Russian Empire annexed Warsaw in 1815 and it became part of the \"Congress Kingdom\". Only in 1918 did it regain independence from the foreign rule and emerge as a new capital of the independent Republic of Poland. The German invasion in 1939, the massacre of the Jewish population and deportations to concentration camps led to the uprising in the Warsaw ghetto in 1943 and to the major and devastating Warsaw Uprising between August and October 1944. Warsaw gained the title of the \"Phoenix City\" because it has survived many wars, conflicts and invasions throughout its long history. Most notably, the city required painstaking rebuilding after the extensive damage it suffered in World War II, which destroyed 85% of its buildings. On 9 November 1940, the city was awarded Poland's highest military decoration for heroism, the Virtuti Militari, during the Siege of Warsaw (1939).",
+      "snippet": "The first historical reference to Warsaw dates back to the year 1313, at a time when Krak\u00f3w served as the Polish capital city. Due to its central location between the Polish\u2013Lithuanian Commonwealth's capitals of Krak\u00f3w and Vilnius, Warsaw became the capital of the Commonwealth and ...",
+      "systems": {
+        "text": {
+          "gen": "1313",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The settlement which would become Warsaw was established in 1313.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 391,
+            "cache_mb": 42.78183841705322,
+            "build_s": null,
+            "decode_ms": 576.460599899292
+          }
+        }
+      }
+    },
+    {
+      "idx": 77,
+      "q": "When did the General Sejm make Warsaw it's permanent seat?",
+      "aliases": [
+        "1569"
+      ],
+      "fact_id": 77,
+      "hit": true,
+      "passage": "In 1529, Warsaw for the first time became the seat of the General Sejm, permanent from 1569. In 1573 the city gave its name to the Warsaw Confederation, formally establishing religious freedom in the Polish\u2013Lithuanian Commonwealth. Due to its central location between the Commonwealth's capitals of Krak\u00f3w and Vilnius, Warsaw became the capital of the Commonwealth and the Crown of the Kingdom of Poland when King Sigismund III Vasa moved his court from Krak\u00f3w to Warsaw in 1596. In the following years the town expanded towards the suburbs. Several private independent districts were established, the property of aristocrats and the gentry, which were ruled by their own laws. Three times between 1655\u20131658 the city was under siege and three times it was taken and pillaged by the Swedish, Brandenburgian and Transylvanian forces.",
+      "snippet": "In 1529, Warsaw for the first time became the seat of the General Sejm, permanent from 1569. ...",
+      "systems": {
+        "text": {
+          "gen": "1569.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The General Sejm made Warsaw its permanent seat in 1569.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 214,
+            "cache_mb": 23.422402381896973,
+            "build_s": 0.23575282096862793,
+            "decode_ms": 617.1202659606934
+          }
+        }
+      }
+    },
+    {
+      "idx": 78,
+      "q": "What kingdom annexed Warsaw in 1796?",
+      "aliases": [
+        "Kingdom of Prussia",
+        "Prussia"
+      ],
+      "fact_id": 78,
+      "hit": true,
+      "passage": "Warsaw remained the capital of the Polish\u2013Lithuanian Commonwealth until 1796, when it was annexed by the Kingdom of Prussia to become the capital of the province of South Prussia. Liberated by Napoleon's army in 1806, Warsaw was made the capital of the newly created Duchy of Warsaw. Following the Congress of Vienna of 1815, Warsaw became the centre of the Congress Poland, a constitutional monarchy under a personal union with Imperial Russia. The Royal University of Warsaw was established in 1816.",
+      "snippet": "Warsaw remained the capital of the Polish\u2013Lithuanian Commonwealth until 1796, when it was annexed by the Kingdom of Prussia to become the capital of the province of South Prussia. ...",
+      "systems": {
+        "text": {
+          "gen": "Prussia.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The kingdom annexed Warsaw in 1796 was the Kingdom of Prussia.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 139,
+            "cache_mb": 15.219277381896973,
+            "build_s": 0.20807647705078125,
+            "decode_ms": 686.9194507598877
+          }
+        }
+      }
+    },
+    {
+      "idx": 79,
+      "q": "What army did Warsaw successfully defend itself against?",
+      "aliases": [
+        "Red Army",
+        "the Red Army"
+      ],
+      "fact_id": 79,
+      "hit": true,
+      "passage": "Warsaw was occupied by Germany from 4 August 1915 until November 1918. The Allied Armistice terms required in Article 12 that Germany withdraw from areas controlled by Russia in 1914, which included Warsaw. Germany did so, and underground leader Pi\u0142sudski returned to Warsaw on 11 November and set up what became the Second Polish Republic, with Warsaw the capital. In the course of the Polish-Bolshevik War of 1920, the huge Battle of Warsaw was fought on the eastern outskirts of the city in which the capital was successfully defended and the Red Army defeated. Poland stopped by itself the full brunt of the Red Army and defeated an idea of the \"export of the revolution\".",
+      "snippet": "... In the course of the Polish-Bolshevik War of 1920, the huge Battle of Warsaw was fought on the eastern outskirts of the city in which the capital was successfully defended and the Red Army defeated. ...",
+      "systems": {
+        "text": {
+          "gen": "The army that Warsaw successfully defended itself against was the Red Army.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The army that Warsaw successfully defended itself against was the Polish-Bolshevik War of 1920.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 179,
+            "cache_mb": 19.594277381896973,
+            "build_s": 0.2149033546447754,
+            "decode_ms": 829.9973011016846
+          }
+        }
+      }
+    },
+    {
+      "idx": 80,
+      "q": "When did Germany invade Poland and in doing so start World War II?",
+      "aliases": [
+        "1 September 1939",
+        "September 1939"
+      ],
+      "fact_id": 80,
+      "hit": true,
+      "passage": "After the German Invasion of Poland on 1 September 1939 began the Second World War, Warsaw was defended till September 27. Central Poland, including Warsaw, came under the rule of the General Government, a German Nazi colonial administration. All higher education institutions were immediately closed and Warsaw's entire Jewish population \u2013 several hundred thousand, some 30% of the city \u2013 herded into the Warsaw Ghetto. The city would become the centre of urban resistance to Nazi rule in occupied Europe. When the order came to annihilate the ghetto as part of Hitler's \"Final Solution\" on 19 April 1943, Jewish fighters launched the Warsaw Ghetto Uprising. Despite being heavily outgunned and outnumbered, the Ghetto held out for almost a month. When the fighting ended, almost all survivors were massacred, with only a few managing to escape or hide.",
+      "snippet": "After the German Invasion of Poland on 1 September 1939 began the Second World War, Warsaw was defended till September 27. ...",
+      "systems": {
+        "text": {
+          "gen": "19 September 1939.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "1939",
+          "ok": false,
+          "info": {
+            "doc_tokens": 205,
+            "cache_mb": 22.438027381896973,
+            "build_s": 0.21775317192077637,
+            "decode_ms": 184.3099594116211
+          }
+        }
+      }
+    },
+    {
+      "idx": 81,
+      "q": "What army was pushing deep into Polish territory to pursue the Germans in 1944?",
+      "aliases": [
+        "Red Army",
+        "e Red Army",
+        "the Red Army"
+      ],
+      "fact_id": 81,
+      "hit": true,
+      "passage": "By July 1944, the Red Army was deep into Polish territory and pursuing the Germans toward Warsaw. Knowing that Stalin was hostile to the idea of an independent Poland, the Polish government-in-exile in London gave orders to the underground Home Army (AK) to try to seize control of Warsaw from the Germans before the Red Army arrived. Thus, on 1 August 1944, as the Red Army was nearing the city, the Warsaw Uprising began. The armed struggle, planned to last 48 hours, was partially successful, however it went on for 63 days. Eventually the Home Army fighters and civilians assisting them were forced to capitulate. They were transported to PoW camps in Germany, while the entire civilian population was expelled. Polish civilian deaths are estimated at between 150,000 and 200,000.",
+      "snippet": "By July 1944, the Red Army was deep into Polish territory and pursuing the Germans toward Warsaw. ...",
+      "systems": {
+        "text": {
+          "gen": "The Red Army.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Red Army.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 203,
+            "cache_mb": 22.219277381896973,
+            "build_s": 0.2139129638671875,
+            "decode_ms": 184.27324295043945
+          }
+        }
+      }
+    },
+    {
+      "idx": 82,
+      "q": "What were the structures built by the Soviets typical of?",
+      "aliases": [
+        "an Eastern Bloc city"
+      ],
+      "fact_id": 87,
+      "hit": false,
+      "passage": "Warsaw's mixture of architectural styles reflects the turbulent history of the city and country. During the Second World War, Warsaw was razed to the ground by bombing raids and planned destruction. After liberation, rebuilding began as in other cities of the communist-ruled PRL. Most of the historical buildings were thoroughly reconstructed. However, some of the buildings from the 19th century that had been preserved in reasonably reconstructible form were nonetheless eradicated in the 1950s and 1960s (e.g. Leopold Kronenberg Palace). Mass residential blocks were erected, with basic design typical of Eastern bloc countries.",
+      "snippet": "Warsaw's mixture of architectural styles reflects the turbulent history of the city and country. During the Second World War, Warsaw was razed to the ground by bombing raids and planned destruction. After liberation, rebuilding began as in other cities of the communist-ruled PRL. Most of ...",
+      "systems": {
+        "text": {
+          "gen": "The structures built by the Soviets were typical of Eastern bloc countries.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The structures built by the Soviets were typical of Eastern bloc countries.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 153,
+            "cache_mb": 16.750527381896973,
+            "build_s": 0.2096090316772461,
+            "decode_ms": 505.84888458251953
+          }
+        }
+      }
+    },
+    {
+      "idx": 83,
+      "q": "What did John Paul II's visits in 1979 and 1983 encourage?",
+      "aliases": [
+        "anti-communist fervor",
+        "growing anti-communist fervor"
+      ],
+      "fact_id": 83,
+      "hit": true,
+      "passage": "John Paul II's visits to his native country in 1979 and 1983 brought support to the budding solidarity movement and encouraged the growing anti-communist fervor there. In 1979, less than a year after becoming pope, John Paul celebrated Mass in Victory Square in Warsaw and ended his sermon with a call to \"renew the face\" of Poland: Let Thy Spirit descend! Let Thy Spirit descend and renew the face of the land! This land! These words were very meaningful for the Polish citizens who understood them as the incentive for the democratic changes.",
+      "snippet": "John Paul II's visits to his native country in 1979 and 1983 brought support to the budding solidarity movement and encouraged the growing anti-communist fervor there. ...",
+      "systems": {
+        "text": {
+          "gen": "The context mentions that John Paul II's visits in 1979 and 1983 encouraged the growing",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The context indicates that John Paul II's visits in 1979 and 1983 brought support to",
+          "ok": false,
+          "info": {
+            "doc_tokens": 142,
+            "cache_mb": 15.547402381896973,
+            "build_s": 0.2154395580291748,
+            "decode_ms": 906.1460494995117
+          }
+        }
+      }
+    },
+    {
+      "idx": 84,
+      "q": "How many kilometers is Warsaw from the Carpathian Mountains?",
+      "aliases": [
+        "300",
+        "about 300"
+      ],
+      "fact_id": 102,
+      "hit": false,
+      "passage": "Warsaw (Polish: Warszawa [var\u02c8\u0282ava] ( listen); see also other names) is the capital and largest city of Poland. It stands on the Vistula River in east-central Poland, roughly 260 kilometres (160 mi) from the Baltic Sea and 300 kilometres (190 mi) from the Carpathian Mountains. Its population is estimated at 1.740 million residents within a greater metropolitan area of 2.666 million residents, which makes Warsaw the 9th most-populous capital city in the European Union. The city limits cover 516.9 square kilometres (199.6 sq mi), while the metropolitan area covers 6,100.43 square kilometres (2,355.39 sq mi).",
+      "snippet": "... It stands on the Vistula River in east-central Poland, roughly 260 kilometres (160 mi) from the Baltic Sea and 300 kilometres (190 mi) from the Carpathian Mountains. ...",
+      "systems": {
+        "text": {
+          "gen": "260.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Warsaw is approximately 300 kilometres (190 mi) from the Carpathian Mountains.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 196,
+            "cache_mb": 21.453652381896973,
+            "build_s": 0.21677422523498535,
+            "decode_ms": 829.9310207366943
+          }
+        }
+      }
+    },
+    {
+      "idx": 85,
+      "q": "Which plateau is the left part of Warsaw on?",
+      "aliases": [
+        "moraine"
+      ],
+      "fact_id": 85,
+      "hit": true,
+      "passage": "Warsaw is located on two main geomorphologic formations: the plain moraine plateau and the Vistula Valley with its asymmetrical pattern of different terraces. The Vistula River is the specific axis of Warsaw, which divides the city into two parts, left and right. The left one is situated both on the moraine plateau (10 to 25 m (32.8 to 82.0 ft) above Vistula level) and on the Vistula terraces (max. 6.5 m (21.3 ft) above Vistula level). The significant element of the relief, in this part of Warsaw, is the edge of moraine plateau called Warsaw Escarpment. It is 20 to 25 m (65.6 to 82.0 ft) high in the Old Town and Central district and about 10 m (32.8 ft) in the north and south of Warsaw. It goes through the city and plays an important role as a landmark.",
+      "snippet": "Warsaw is located on two main geomorphologic formations: the plain moraine plateau and the Vistula Valley with its asymmetrical pattern of different terraces. ...",
+      "systems": {
+        "text": {
+          "gen": "The left part of Warsaw is on the moraine plateau.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The left part of Warsaw is situated on the moraine plateau.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 238,
+            "cache_mb": 26.047402381896973,
+            "build_s": 0.21984362602233887,
+            "decode_ms": 507.0996284484863
+          }
+        }
+      }
+    },
+    {
+      "idx": 86,
+      "q": "What type of forested areas can be found on the highest terrace?",
+      "aliases": [
+        "pine"
+      ],
+      "fact_id": 86,
+      "hit": true,
+      "passage": "The plain moraine plateau has only a few natural and artificial ponds and also groups of clay pits. The pattern of the Vistula terraces is asymmetrical. The left side consist mainly of two levels: the highest one contains former flooded terraces and the lowest one the flood plain terrace. The contemporary flooded terrace still has visible valleys and ground depressions with water systems coming from the Vistula old \u2013 riverbed. They consist of still quite natural streams and lakes as well as the pattern of drainage ditches. The right side of Warsaw has a different pattern of geomorphological forms. There are several levels of the plain Vistula terraces (flooded as well as former flooded once) and only small part and not so visible moraine escarpment. Aeolian sand with a number of dunes parted by peat swamps or small ponds cover the highest terrace. These are mainly forested areas (pine forest).",
+      "snippet": "... These are mainly forested areas (pine forest).",
+      "systems": {
+        "text": {
+          "gen": "The highest terrace has forested areas, specifically pine forests.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The highest terrace on the plain Vistula terraces is forested, consisting of pine forest.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 211,
+            "cache_mb": 23.094277381896973,
+            "build_s": 0.21532154083251953,
+            "decode_ms": 761.4853382110596
+          }
+        }
+      }
+    },
+    {
+      "idx": 87,
+      "q": "When was Warsaw completely razed to the ground by bombing raids?",
+      "aliases": [
+        "During the Second World War",
+        "Second World War"
+      ],
+      "fact_id": 80,
+      "hit": false,
+      "passage": "After the German Invasion of Poland on 1 September 1939 began the Second World War, Warsaw was defended till September 27. Central Poland, including Warsaw, came under the rule of the General Government, a German Nazi colonial administration. All higher education institutions were immediately closed and Warsaw's entire Jewish population \u2013 several hundred thousand, some 30% of the city \u2013 herded into the Warsaw Ghetto. The city would become the centre of urban resistance to Nazi rule in occupied Europe. When the order came to annihilate the ghetto as part of Hitler's \"Final Solution\" on 19 April 1943, Jewish fighters launched the Warsaw Ghetto Uprising. Despite being heavily outgunned and outnumbered, the Ghetto held out for almost a month. When the fighting ended, almost all survivors were massacred, with only a few managing to escape or hide.",
+      "snippet": "After the German Invasion of Poland on 1 September 1939 began the Second World War, Warsaw was defended till September 27. ...",
+      "systems": {
+        "text": {
+          "gen": "19 April 1943.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The answer is 1943.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 205,
+            "cache_mb": 22.438027381896973,
+            "build_s": null,
+            "decode_ms": 364.5317554473877
+          }
+        }
+      }
+    },
+    {
+      "idx": 88,
+      "q": "What is the Royal Castle the most interesting example of?",
+      "aliases": [
+        "mannerist",
+        "mannerist architecture"
+      ],
+      "fact_id": 88,
+      "hit": true,
+      "passage": "Gothic architecture is represented in the majestic churches but also at the burgher houses and fortifications. The most significant buildings are St. John's Cathedral (14th century), the temple is a typical example of the so-called Masovian gothic style, St. Mary's Church (1411), a town house of Burbach family (14th century), Gunpowder Tower (after 1379) and the Royal Castle Curia Maior (1407\u20131410). The most notable examples of Renaissance architecture in the city are the house of Baryczko merchant family (1562), building called \"The Negro\" (early 17th century) and Salwator tenement (1632). The most interesting examples of mannerist architecture are the Royal Castle (1596\u20131619) and the Jesuit Church (1609\u20131626) at Old Town. Among the first structures of the early baroque the most important are St. Hyacinth's Church (1603\u20131639) and Sigismund's Column (1644).",
+      "snippet": "... The most interesting examples of mannerist architecture are the Royal Castle (1596\u20131619) and the Jesuit Church (1609\u20131626) at Old Town. ...",
+      "systems": {
+        "text": {
+          "gen": "The Royal Castle is the most interesting example of mannerist architecture.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Royal Castle is the most interesting example of mannerist architecture.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 270,
+            "cache_mb": 29.547463417053223,
+            "build_s": 0.22409701347351074,
+            "decode_ms": 507.74693489074707
+          }
+        }
+      }
+    },
+    {
+      "idx": 89,
+      "q": "When was the Palace on the Water rebuilt?",
+      "aliases": [
+        "1696",
+        "1775\u20131795"
+      ],
+      "fact_id": 82,
+      "hit": false,
+      "passage": "After World War II, under a Communist regime set up by the conquering Soviets, the \"Bricks for Warsaw\" campaign was initiated, and large prefabricated housing projects were erected in Warsaw to address the housing shortage, along with other typical buildings of an Eastern Bloc city, such as the Palace of Culture and Science, a gift from the Soviet Union. The city resumed its role as the capital of Poland and the country's centre of political and economic life. Many of the historic streets, buildings, and churches were restored to their original form. In 1980, Warsaw's historic Old Town was inscribed onto UNESCO's World Heritage list.",
+      "snippet": "After World War II, under a Communist regime set up by the conquering Soviets, the \"Bricks for Warsaw\" campaign was initiated, and large prefabricated housing projects were erected in Warsaw to address the housing shortage, along with other typical buildings of an Eastern Bloc city, ...",
+      "systems": {
+        "text": {
+          "gen": "1980.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Palace of Culture and Science was rebuilt in 1980.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 154,
+            "cache_mb": 16.859902381896973,
+            "build_s": null,
+            "decode_ms": 580.5552005767822
+          }
+        }
+      }
+    },
+    {
+      "idx": 90,
+      "q": "The Kronenberg Palace had been an exceptional example of what type of architecture?",
+      "aliases": [
+        "bourgeois"
+      ],
+      "fact_id": 90,
+      "hit": true,
+      "passage": "Exceptional examples of the bourgeois architecture of the later periods were not restored by the communist authorities after the war (like mentioned Kronenberg Palace and Insurance Company Rosja building) or they were rebuilt in socialist realism style (like Warsaw Philharmony edifice originally inspired by Palais Garnier in Paris). Despite that the Warsaw University of Technology building (1899\u20131902) is the most interesting of the late 19th-century architecture. Some 19th-century buildings in the Praga district (the Vistula\u2019s right bank) have been restored although many have been poorly maintained. Warsaw\u2019s municipal government authorities have decided to rebuild the Saxon Palace and the Br\u00fchl Palace, the most distinctive buildings in prewar Warsaw.",
+      "snippet": "Exceptional examples of the bourgeois architecture of the later periods were not restored by the communist authorities after the war (like mentioned Kronenberg Palace and Insurance Company Rosja building) or they were rebuilt in socialist realism style (like Warsaw Philharmony edifice originally inspired by Palais ... ...",
+      "systems": {
+        "text": {
+          "gen": "Bourgeois architecture.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Kronenberg Palace had been an exceptional example of bourgeois architecture.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 174,
+            "cache_mb": 19.047402381896973,
+            "build_s": 0.2145400047302246,
+            "decode_ms": 509.14907455444336
+          }
+        }
+      }
+    },
+    {
+      "idx": 91,
+      "q": "What monument is in memory of the largest insurrection of WWII?",
+      "aliases": [
+        "Warsaw Uprising Monument"
+      ],
+      "fact_id": 91,
+      "hit": true,
+      "passage": "There are also many places commemorating the heroic history of Warsaw. Pawiak, an infamous German Gestapo prison now occupied by a Mausoleum of Memory of Martyrdom and the museum, is only the beginning of a walk in the traces of Heroic City. The Warsaw Citadel, an impressive 19th-century fortification built after the defeat of the November Uprising, was a place of martyr for the Poles. Another important monument, the statue of Little Insurgent located at the ramparts of the Old Town, commemorates the children who served as messengers and frontline troops in the Warsaw Uprising, while the impressive Warsaw Uprising Monument by Wincenty Ku\u0107ma was erected in memory of the largest insurrection of World War II.",
+      "snippet": "... Another important monument, the statue of Little Insurgent located at the ramparts of the Old Town, commemorates the children who served as messengers and frontline troops in the Warsaw Uprising, while the impressive Warsaw Uprising Monument by Wincenty Ku\u0107ma was erected in memory of the ...",
+      "systems": {
+        "text": {
+          "gen": "Warsaw Uprising Monument by Wincenty Ku\u0107ma.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The Warsaw Uprising Monument by Wincenty Ku\u0107ma.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 177,
+            "cache_mb": 19.375527381896973,
+            "build_s": null,
+            "decode_ms": 507.4291229248047
+          }
+        }
+      }
+    },
+    {
+      "idx": 92,
+      "q": "What type of space in Warsaw are the Botanic Garden and University Library garden?",
+      "aliases": [
+        "green"
+      ],
+      "fact_id": 59,
+      "hit": false,
+      "passage": "Another important library \u2013 the University Library, founded in 1816, is home to over two million items. The building was designed by architects Marek Budzy\u0144ski and Zbigniew Badowski and opened on 15 December 1999. It is surrounded by green. The University Library garden, designed by Irena Bajerska, was opened on 12 June 2002. It is one of the largest and most beautiful roof gardens in Europe with an area of more than 10,000 m2 (107,639.10 sq ft), and plants covering 5,111 m2 (55,014.35 sq ft). As the university garden it is open to the public every day.",
+      "snippet": "... It is surrounded by green. ...",
+      "systems": {
+        "text": {
+          "gen": "The Botanic Garden and University Library garden are both open to the public.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Botanic Garden and University Library garden are both located in the University Library building in Warsaw.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 189,
+            "cache_mb": 20.688027381896973,
+            "build_s": 0.3004930019378662,
+            "decode_ms": 724.4751453399658
+          }
+        }
+      }
+    },
+    {
+      "idx": 93,
+      "q": "Why is Warsaw's flora very rich in species?",
+      "aliases": [
+        "location",
+        "location of Warsaw"
+      ],
+      "fact_id": 93,
+      "hit": true,
+      "passage": "The flora of the city may be considered very rich in species. The species richness is mainly due to the location of Warsaw within the border region of several big floral regions comprising substantial proportions of close-to-wilderness areas (natural forests, wetlands along the Vistula) as well as arable land, meadows and forests. Bielany Forest, located within the borders of Warsaw, is the remaining part of the Masovian Primeval Forest. Bielany Forest nature reserve is connected with Kampinos Forest. It is home to rich fauna and flora. Within the forest there are three cycling and walking trails. Other big forest area is Kabaty Forest by the southern city border. Warsaw has also two botanic gardens: by the \u0141azienki park (a didactic-research unit of the University of Warsaw) as well as by the Park of Culture and Rest in Powsin (a unit of the Polish Academy of Science).",
+      "snippet": "... The species richness is mainly due to the location of Warsaw within the border region of several big floral regions comprising substantial proportions of close-to-wilderness areas (natural forests, wetlands along the Vistula) as well as arable land, meadows and forests. ...",
+      "systems": {
+        "text": {
+          "gen": "The flora of Warsaw is very rich in species due to its location in a border region with several big floral regions, including",
+          "ok": true
+        },
+        "cached": {
+          "gen": "Warsaw's flora is very rich in species due to its location within the border region of several big floral regions comprising substantial",
+          "ok": true,
+          "info": {
+            "doc_tokens": 213,
+            "cache_mb": 23.313027381896973,
+            "build_s": 0.2190694808959961,
+            "decode_ms": 907.5000286102295
+          }
+        }
+      }
+    },
+    {
+      "idx": 94,
+      "q": "What had the number of people living in Warsaw declined to by 1945?",
+      "aliases": [
+        "420,000"
+      ],
+      "fact_id": 94,
+      "hit": true,
+      "passage": "In 1939, c. 1,300,000 people lived in Warsaw, but in 1945 \u2013 only 420,000. During the first years after the war, the population growth was c. 6%, so shortly the city started to suffer from the lack of flats and of areas for new houses. The first remedial measure was the Warsaw area enlargement (1951) \u2013 but the city authorities were still forced to introduce residency registration limitations: only the spouses and children of the permanent residents as well as some persons of public importance (like renowned specialists) were allowed to get the registration, hence halving the population growth in the following years. It also bolstered some kind of conviction among Poles that Varsovians thought of themselves as better only because they lived in the capital. Unfortunately this belief still lives on in Poland (although not as much as it used to be) \u2013 even though since 1990 there are no limitations to residency registration anymore.",
+      "snippet": "... 1,300,000 people lived in Warsaw, but in 1945 \u2013 only 420,000. ...",
+      "systems": {
+        "text": {
+          "gen": "1,300,000.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The number of people living in Warsaw declined to 420,000 by 1945.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 235,
+            "cache_mb": 25.719277381896973,
+            "build_s": 0.23120784759521484,
+            "decode_ms": 907.5489044189453
+          }
+        }
+      }
+    },
+    {
+      "idx": 95,
+      "q": "When were most of the places of religious worship destroyed in Warsaw?",
+      "aliases": [
+        "1944"
+      ],
+      "fact_id": 95,
+      "hit": true,
+      "passage": "Throughout its existence, Warsaw has been a multi-cultural city. According to the 1901 census, out of 711,988 inhabitants 56.2% were Catholics, 35.7% Jews, 5% Greek orthodox Christians and 2.8% Protestants. Eight years later, in 1909, there were 281,754 Jews (36.9%), 18,189 Protestants (2.4%) and 2,818 Mariavites (0.4%). This led to construction of hundreds of places of religious worship in all parts of the town. Most of them were destroyed in the aftermath of the Warsaw Uprising of 1944. After the war, the new communist authorities of Poland discouraged church construction and only a small number were rebuilt.",
+      "snippet": "... Most of them were destroyed in the aftermath of the Warsaw Uprising of 1944. ...",
+      "systems": {
+        "text": {
+          "gen": "1944",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The most of the places of religious worship in Warsaw were destroyed in the aftermath of the Warsaw Uprising of 19",
+          "ok": false,
+          "info": {
+            "doc_tokens": 203,
+            "cache_mb": 22.219277381896973,
+            "build_s": 0.23708176612854004,
+            "decode_ms": 905.9624671936035
+          }
+        }
+      }
+    },
+    {
+      "idx": 96,
+      "q": "What is the second level of territorial division in Poland?",
+      "aliases": [
+        "counties or powiats"
+      ],
+      "fact_id": 96,
+      "hit": true,
+      "passage": "The basic unit of territorial division in Poland is a commune (gmina). A city is also a commune \u2013 but with the city charter. Both cities and communes are governed by a mayor \u2013 but in the communes the mayor is vogt (w\u00f3jt in Polish), however in the cities \u2013 burmistrz. Some bigger cities obtain the entitlements, i.e. tasks and privileges, which are possessed by the units of the second level of the territorial division \u2013 counties or powiats. An example of such entitlement is a car registration: a gmina cannot register cars, this is a powiat's task (i.e. a registration number depends on what powiat a car had been registered, not gmina). In this case we say about city county or powiat grodzki. Such cities are for example Lublin, Krak\u00f3w, Gda\u0144sk, Pozna\u0144. In Warsaw, its districts additionally have some of powiat's entitlements \u2013 like already mentioned car registration. For example, the district Wola has its own evidence and the district Ursyn\u00f3w \u2013 its own (and the cars from Wola have another type of registration number than these from Ursyn\u00f3w). But for instance the districts in Krak\u00f3w do not have entitlements of powiat, so the registration numbers in Krak\u00f3w are of the same type for all districts.",
+      "snippet": "... tasks and privileges, which are possessed by the units of the second level of the territorial division \u2013 counties or powiats. ...",
+      "systems": {
+        "text": {
+          "gen": "gmina",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The second level of territorial division in Poland is a commune (gmina).",
+          "ok": false,
+          "info": {
+            "doc_tokens": 296,
+            "cache_mb": 32.39121341705322,
+            "build_s": 0.2442941665649414,
+            "decode_ms": 582.9496383666992
+          }
+        }
+      }
+    },
+    {
+      "idx": 97,
+      "q": "Who in Warsaw has the power of legislative action?",
+      "aliases": [
+        "Warsaw City Council"
+      ],
+      "fact_id": 97,
+      "hit": true,
+      "passage": "Legislative power in Warsaw is vested in a unicameral Warsaw City Council (Rada Miasta), which comprises 60 members. Council members are elected directly every four years. Like most legislative bodies, the City Council divides itself into committees which have the oversight of various functions of the city government. Bills passed by a simple majority are sent to the mayor (the President of Warsaw), who may sign them into law. If the mayor vetoes a bill, the Council has 30 days to override the veto by a two-thirds majority vote.",
+      "snippet": "Legislative power in Warsaw is vested in a unicameral Warsaw City Council (Rada Miasta), which comprises 60 members. ...",
+      "systems": {
+        "text": {
+          "gen": "Warsaw City Council.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The legislative action power in Warsaw is vested in the Warsaw City Council (Rada Miasta).",
+          "ok": true,
+          "info": {
+            "doc_tokens": 134,
+            "cache_mb": 14.672402381896973,
+            "build_s": 0.22247838973999023,
+            "decode_ms": 721.280574798584
+          }
+        }
+      }
+    },
+    {
+      "idx": 98,
+      "q": "When did Menich serve as President?",
+      "aliases": [
+        "1695\u20131696"
+      ],
+      "fact_id": 687,
+      "hit": false,
+      "passage": "The Apollo program, also known as Project Apollo, was the third United States human spaceflight program carried out by the National Aeronautics and Space Administration (NASA), which accomplished landing the first humans on the Moon from 1969 to 1972. First conceived during Dwight D. Eisenhower's administration as a three-man spacecraft to follow the one-man Project Mercury which put the first Americans in space, Apollo was later dedicated to President John F. Kennedy's national goal of \"landing a man on the Moon and returning him safely to the Earth\" by the end of the 1960s, which he proposed in a May 25, 1961, address to Congress. Project Mercury was followed by the two-man Project Gemini (1962\u201366). The first manned flight of Apollo was in 1968.",
+      "snippet": "The Apollo program, also known as Project Apollo, was the third United States human spaceflight program carried out by the National Aeronautics and Space Administration (NASA), which accomplished landing the first humans on the Moon from 1969 to 1972. First conceived during Dwight D. Eisenhower's ...",
+      "systems": {
+        "text": {
+          "gen": "1961",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The context states that \"Project Mercury was followed by the two-man Project Gemini (1962\u201366).",
+          "ok": false,
+          "info": {
+            "doc_tokens": 201,
+            "cache_mb": 22.000527381896973,
+            "build_s": 0.22789645195007324,
+            "decode_ms": 902.592658996582
+          }
+        }
+      }
+    },
+    {
+      "idx": 99,
+      "q": "How many companies were registered in Warsaw in 2006?",
+      "aliases": [
+        "304,016"
+      ],
+      "fact_id": 99,
+      "hit": true,
+      "passage": "Warsaw, especially its city centre (\u015ar\u00f3dmie\u015bcie), is home not only to many national institutions and government agencies, but also to many domestic and international companies. In 2006, 304,016 companies were registered in the city. Warsaw's ever-growing business community has been noticed globally, regionally, and nationally. MasterCard Emerging Market Index has noted Warsaw's economic strength and commercial center. Moreover, Warsaw was ranked as the 7th greatest emerging market. Foreign investors' financial participation in the city's development was estimated in 2002 at over 650 million euro. Warsaw produces 12% of Poland's national income, which in 2008 was 305.1% of the Polish average, per capita (or 160% of the European Union average). The GDP per capita in Warsaw amounted to PLN 94 000 in 2008 (c. EUR 23 800, USD 33 000). Total nominal GDP of the city in 2010 amounted to 191.766 billion PLN, 111696 PLN per capita, which was 301,1 % of Polish average. Warsaw leads the region of East-Central Europe in foreign investment and in 2006, GDP growth met expectations with a level of 6.1%. It also has one of the fastest growing economies, with GDP growth at 6.5 percent in 2007 and 6.1 percent in the first quarter of 2008.",
+      "snippet": "... In 2006, 304,016 companies were registered in the city. ...",
+      "systems": {
+        "text": {
+          "gen": "304,016 companies.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "304,016 companies.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 369,
+            "cache_mb": 40.37558841705322,
+            "build_s": 0.2563357353210449,
+            "decode_ms": 365.375280380249
+          }
+        }
+      }
+    }
+  ]
+}

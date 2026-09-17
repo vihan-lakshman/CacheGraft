@@ -1,0 +1,46 @@
+% Consolidated results table (replaces tab:squad and tab:cross). Generated from
+% scripts/readme_reference.json; deltas and significance from the README's paired table.
+% Ceiling cells AdvQA-retrieved (phi-4), CovidQA/QASPER-retrieved and TriviaQA-oracle were run
+% 2026-09-16 (report_table.py), after re-running published ceiling cells reproduced exactly.
+% CovidQA/QASPER ceilings (both settings) are scored over all 800/583 questions after the
+% question-keying fix; their base/CacheGraft cells and significance are still the published
+% values, which counted repeated question texts once (792/554 questions).
+% Needs booktabs + multirow (both already loaded).
+\begin{table*}[t]
+\centering\footnotesize
+\setlength{\tabcolsep}{2.4pt}
+\caption{Five benchmarks. \emph{base}: the receiver reading the passage as text (the
+architecturally-matched baseline). \emph{\sys{}}: doc-only fusion, single-pass. \emph{ceil}: the
+4B sharer reading the passage as text. $\Delta$ is \sys{} $-$ base, paired over questions;
+$19/20$ judge deltas are positive. The receiver-own-KV control (the identical two-phase cache
+pipeline with fusion off) stays within $0.9$ points of base in every cell. \emph{hit}: top-1 retrieval hit rate. On SQuAD the
+persisted-cache configuration scores $60.0/63.1/56.2$ (retrieved) and $79.6/82.1/77.4$ (oracle).
+Retrieval is bge-small top-1; CovidQA and QASPER retrieve within the source document.}
+\label{tab:cross}
+\begin{tabular}{llcc cccc cccc cccc}
+\toprule
+& & & & \multicolumn{4}{c}{\textbf{phi-4}} & \multicolumn{4}{c}{\textbf{Gemma}} & \multicolumn{4}{c}{\textbf{contains}} \\
+\cmidrule(lr){5-8}\cmidrule(lr){9-12}\cmidrule(lr){13-16}
+Dataset & Setting & $n$ & hit
+& base & \sys{} & ceil & $\Delta$
+& base & \sys{} & ceil & $\Delta$
+& base & \sys{} & ceil & $\Delta$ \\
+\midrule
+\multirow{2}{*}{AdversarialQA} & retrieved & \multirow{2}{*}{416} & 59.4 & 30.8 & 36.8 & 41.8 & $+6.0^{*}$ & 34.9 & 38.9 & 48.3 & $+4.1$ & 24.5 & 30.3 & 33.7 & $+5.8^{*}$ \\
+ & oracle &  & --- & 42.1 & 49.3 & 59.1 & $+7.2^{*}$ & 44.2 & 51.4 & 63.9 & $+7.2^{*}$ & 33.9 & 42.5 & 48.3 & $+8.7^{*}$ \\
+\midrule
+\multirow{2}{*}{SQuAD} & retrieved & \multirow{2}{*}{800} & 68.1 & 51.8 & 59.6 & 66.4 & $+7.9^{*}$ & 59.2 & 62.5 & 70.8 & $+3.2^{*}$ & 48.6 & 55.5 & 61.1 & $+6.9^{*}$ \\
+ & oracle &  & --- & 73.0 & 79.4 & 86.5 & $+6.4^{*}$ & 78.6 & 81.8 & 89.4 & $+3.1$ & 69.9 & 76.9 & 81.2 & $+7.0^{*}$ \\
+\midrule
+\multirow{2}{*}{CovidQA} & retrieved & \multirow{2}{*}{800} & 53.2 & 33.1 & 36.9 & 41.9 & $+3.8^{*}$ & 50.8 & 53.8 & 59.8 & $+3.0$ & 21.0 & 22.6 & 24.4 & $+1.6$ \\
+ & oracle &  & --- & 53.7 & 59.1 & 61.1 & $+5.4^{*}$ & 71.7 & 76.9 & 80.0 & $+5.2^{*}$ & 32.6 & 35.4 & 37.2 & $+2.8$ \\
+\midrule
+\multirow{2}{*}{TriviaQA} & retrieved & \multirow{2}{*}{800} & 54.3 & 38.1 & 41.6 & 57.8 & $+3.5^{*}$ & 49.2 & 52.4 & 74.1 & $+3.1^{*}$ & 45.9 & 48.9 & 65.5 & $+3.0^{*}$ \\
+ & oracle &  & --- & 50.8 & 54.0 & 70.1 & $+3.2$ & 62.9 & 63.4 & 85.0 & $+0.5$ & 61.0 & 62.8 & 81.5 & $+1.8$ \\
+\midrule
+\multirow{2}{*}{QASPER} & retrieved & \multirow{2}{*}{583} & 36.2 & 15.3 & 15.7 & 17.2 & $+0.4$ & 35.9 & 33.9 & 35.5 & $-2.0$ & 17.7 & 18.8 & 18.2 & $+1.1$ \\
+ & oracle &  & --- & 34.7 & 37.5 & 37.9 & $+2.9$ & 57.4 & 60.8 & 59.2 & $+3.4$ & 32.7 & 39.0 & 34.8 & $+6.3^{*}$ \\
+\bottomrule
+\end{tabular}\\[2pt]
+\footnotesize{$^{*}$ $p<0.05$, exact two-sided paired McNemar over questions.}
+\end{table*}

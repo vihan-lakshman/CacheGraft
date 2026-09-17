@@ -79,8 +79,7 @@ def kappa(a, b, keys):
 
 
 def load_cells(data, results, tags):
-    q2al = {q["q"]: [a for a in q["norm_aliases"] if a]
-            for q in json.load(open(C.paths(data)["data"]))["questions"]}
+    data_qs = json.load(open(C.paths(data)["data"]))["questions"]
     cells = {}
     for tag in tags:
         f = os.path.join(results, f"{tag}.json")
@@ -90,17 +89,19 @@ def load_cells(data, results, tags):
         S = json.load(open(f))["samples"]
         rec = {"n": len(S), "words": float(np.mean([len(s["gen"].split()) for s in S])),
                "judges": {}}
-        rec["contains"] = {s["q"]: any(a in normalize(s["gen"]) for a in q2al.get(s["q"], []))
-                           for s in S}
-        rec["em"] = {s["q"]: s["pred"] in q2al.get(s["q"], []) for s in S}
-        rec["f1"] = float(np.mean([f1(s["pred"], q2al.get(s["q"], [])) for s in S]))
+        gold = C.gold_aliases(data_qs, S)
+        keys = [C.item_key(i, s["q"]) for i, s in enumerate(S)]
+        rec["contains"] = {k: any(a in normalize(s["gen"]) for a in al)
+                           for k, s, al in zip(keys, S, gold)}
+        rec["em"] = {k: s["pred"] in al for k, s, al in zip(keys, S, gold)}
+        rec["f1"] = float(np.mean([f1(s["pred"], al) for s, al in zip(S, gold)]))
         bs = os.path.join(results, f"{tag}.bertscore.json")
         if os.path.exists(bs):
-            rec["bertscore"] = {k: float(v) for k, v in json.load(open(bs)).items()}
+            rec["bertscore"] = {k: float(v) for k, v in C.load_scores(bs, S).items()}
         for jf in glob.glob(os.path.join(results, f"{tag}.judge*.json")):
             name = os.path.basename(jf)[len(tag) + 1:-5]        # judge | judge_<short>
             name = "haiku" if name == "judge" else name.replace("judge_", "")
-            rec["judges"][name] = {k: bool(v) for k, v in json.load(open(jf)).items()}
+            rec["judges"][name] = {k: bool(v) for k, v in C.load_scores(jf, S).items()}
         cells[tag] = rec
     return cells
 

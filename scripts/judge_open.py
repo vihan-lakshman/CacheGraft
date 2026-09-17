@@ -12,8 +12,9 @@ produced the answer, and cells are scored with identical prompts.
 
   python judge_open.py --data squadpx_r text_rag_retrieved c2c_retrieved_doc_only
 
-Writes `<tag>.judge_<short>.json` ({question: correct_bool}), the same schema as
-judge_trivia.py's `<tag>.judge.json`, so downstream stats read either interchangeably.
+Writes `<tag>.judge_<short>.json` ({"<index>\\t<question>": correct_bool}, see
+common.item_key), the same schema as judge_trivia.py's `<tag>.judge.json`, so downstream stats
+read either interchangeably.
 """
 import os, json, re, argparse
 os.environ.setdefault("USE_TF", "0")
@@ -58,6 +59,7 @@ def main():
     # reductions are not bitwise-stable across processes.
     C.set_determinism()
     RESULTS = C.paths(args.data)["results"]
+    data_qs = json.load(open(C.paths(args.data)["data"]))["questions"]
 
     tok = AutoTokenizer.from_pretrained(args.model); tok.padding_side = "left"
     if tok.pad_token is None: tok.pad_token = tok.eos_token
@@ -84,19 +86,16 @@ def main():
                     verdicts.append(True)
                 else:                       # unparsable -> count as incorrect, but report it
                     verdicts.append(False); unparsed += 1
-        jud = {S[j]["q"]: bool(verdicts[j]) for j in range(len(S))}
-        cont = {}
-        for s in S:
-            al = [normalize(a) for a in s["aliases"]]
-            p = normalize(s["gen"])
-            cont[s["q"]] = any(a and a in p for a in al)
+        jud = [bool(v) for v in verdicts]
+        cont = [any(a in normalize(s["gen"]) for a in al)
+                for s, al in zip(S, C.gold_aliases(data_qs, S))]
         n = len(S)
-        j_acc = sum(jud.values()) / n
-        c_acc = sum(cont.values()) / n
-        j_not_c = sum(1 for q in jud if jud[q] and not cont[q])
-        c_not_j = sum(1 for q in jud if cont[q] and not jud[q])
-        agree = sum(1 for q in jud if jud[q] == cont[q]) / n
-        json.dump(jud, open(os.path.join(RESULTS, f"{tag}.judge_{short}.json"), "w"))
+        j_acc = sum(jud) / n
+        c_acc = sum(cont) / n
+        j_not_c = sum(1 for j, c in zip(jud, cont) if j and not c)
+        c_not_j = sum(1 for j, c in zip(jud, cont) if c and not j)
+        agree = sum(1 for j, c in zip(jud, cont) if j == c) / n
+        C.write_scores(os.path.join(RESULTS, f"{tag}.judge_{short}.json"), S, jud)
         print(f"{tag:<40}{j_acc*100:>7.1f}%{c_acc*100:>9.1f}%{j_not_c:>7}{c_not_j:>7}"
               f"{agree*100:>7.1f}%{unparsed:>9}")
 

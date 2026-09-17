@@ -66,6 +66,50 @@ def set_determinism(seed: int = SEED):
     torch.use_deterministic_algorithms(True, warn_only=True)
 
 
+# ------------------------------------------------------------------------------------------
+# Per-question keys. Question TEXT is not unique (CovidQA and QASPER repeat generic questions
+# across papers), so every per-question score file is keyed by "<index>\t<question>", the
+# sample's position in <data>_data.json plus its text. Every runner writes samples in data order
+# (questions[:n_test]), so index i is questions[i].
+# ------------------------------------------------------------------------------------------
+def item_key(i, q):
+    return f"{i}\t{q}"
+
+
+def gold_aliases(data_questions, samples, field="norm_aliases"):
+    """Full alias list for each sample, by position. Fails loudly if the samples are not in
+    data order, which would silently pair generations with the wrong gold answers."""
+    out = []
+    for i, s in enumerate(samples):
+        if i >= len(data_questions) or data_questions[i]["q"] != s["q"]:
+            raise SystemExit(f"sample {i} ({s['q'][:60]!r}) is not question {i} of the eval set; "
+                             f"the results file does not match <data>_data.json")
+        out.append([a for a in data_questions[i][field] if a and a.strip()])
+    return out
+
+
+def write_scores(path, samples, values):
+    """Per-question scores (judge verdicts, BERTScore) keyed by item_key."""
+    import json
+    json.dump({item_key(i, s["q"]): v for i, s, v in zip(range(len(samples)), samples, values)},
+              open(path, "w"))
+
+
+def load_scores(path, samples):
+    """Read a per-question score file as {item_key: value}. Files written before the index key
+    was introduced are keyed by question text alone; they are converted when the text is unique,
+    and rejected when it is not, since such a file kept only the LAST verdict per text."""
+    import json
+    d = json.load(open(path))
+    if all("\t" in k for k in d):
+        return d
+    texts = [s["q"] for s in samples]
+    if len(set(texts)) != len(texts):
+        raise SystemExit(f"{path} is keyed by question text, but this eval set repeats question "
+                         f"texts, so verdicts for the repeats were lost. Re-run the judge/scorer.")
+    return {item_key(i, q): d[q] for i, q in enumerate(texts) if q in d}
+
+
 def top1(qemb, cemb, questions):
     """Top-1 retrieval. If a question carries `pool_ids` (built by prep.py --scope document),
     retrieval is restricted to the chunks of its own source document -- the realistic setting

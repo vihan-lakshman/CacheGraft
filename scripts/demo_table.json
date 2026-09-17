@@ -1,0 +1,197 @@
+{
+  "data": "squad",
+  "fact": "retrieved",
+  "terse": false,
+  "counts": null,
+  "examples": [
+    {
+      "idx": 55,
+      "q": "Over how many species of trees can be found in the Saxon Garden?",
+      "aliases": [
+        "100",
+        "over 100"
+      ],
+      "fact_id": 55,
+      "hit": true,
+      "passage": "The Saxon Garden, covering the area of 15.5 ha, was formally a royal garden. There are over 100 different species of trees and the avenues are a place to sit and relax. At the east end of the park, the Tomb of the Unknown Soldier is situated. In the 19th century the Krasi\u0144ski Palace Garden was remodelled by Franciszek Szanior. Within the central area of the park one can still find old trees dating from that period: maidenhair tree, black walnut, Turkish hazel and Caucasian wingnut trees. With its benches, flower carpets, a pond with ducks on and a playground for kids, the Krasi\u0144ski Palace Garden is a popular strolling destination for the Varsovians. The Monument of the Warsaw Ghetto Uprising is also situated here. The \u0141azienki Park covers the area of 76 ha. The unique character and history of the park is reflected in its landscape architecture (pavilions, sculptures, bridges, cascades, ponds) and vegetation (domestic and foreign species of trees and bushes). What makes this park different from other green spaces in Warsaw is the presence of peacocks and pheasants, which can be seen here walking around freely, and royal carps in the pond. The Wilan\u00f3w Palace Park, dates back to the second half of the 17th century. It covers the area of 43 ha. Its central French-styled area corresponds to the ancient, baroque forms of the palace. The eastern section of the park, closest to the Palace, is the two-level garden with a terrace facing the pond. The park around the Kr\u00f3likarnia Palace is situated on the old escarpment of the Vistula. The park has lanes running on a few levels deep into the ravines on both sides of the palace.",
+      "snippet": "... There are over 100 different species of trees and the avenues are a place to sit and relax. ...",
+      "systems": {
+        "text": {
+          "gen": "15.5",
+          "ok": false
+        },
+        "cached": {
+          "gen": "100",
+          "ok": true,
+          "info": {
+            "doc_tokens": 407,
+            "cache_mb": 44.53183841705322,
+            "build_s": null,
+            "decode_ms": 163.64312171936035
+          }
+        },
+        "control": {
+          "gen": "15.5",
+          "ok": false
+        }
+      }
+    },
+    {
+      "idx": 106,
+      "q": "Who did Rollo sign the treaty of Saint-Clair-sur-Epte with?",
+      "aliases": [
+        "King Charles III"
+      ],
+      "fact_id": 106,
+      "hit": true,
+      "passage": "In the course of the 10th century, the initially destructive incursions of Norse war bands into the rivers of France evolved into more permanent encampments that included local women and personal property. The Duchy of Normandy, which began in 911 as a fiefdom, was established by the treaty of Saint-Clair-sur-Epte between King Charles III of West Francia and the famed Viking ruler Rollo, and was situated in the former Frankish kingdom of Neustria. The treaty offered Rollo and his men the French lands between the river Epte and the Atlantic coast in exchange for their protection against further Viking incursions. The area corresponded to the northern part of present-day Upper Normandy down to the river Seine, but the Duchy would eventually extend west beyond the Seine. The territory was roughly equivalent to the old province of Rouen, and reproduced the Roman administrative structure of Gallia Lugdunensis II (part of the former Gallia Lugdunensis).",
+      "snippet": "... The Duchy of Normandy, which began in 911 as a fiefdom, was established by the treaty of Saint-Clair-sur-Epte between King Charles III of West Francia and the famed Viking ruler Rollo, and was situated in the former Frankish kingdom of Neustria. ...",
+      "systems": {
+        "text": {
+          "gen": "Rollo.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "Rollo signed the treaty of Saint-Clair-sur-Epte with King Charles III of West Francia.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 228,
+            "cache_mb": 24.953652381896973,
+            "build_s": null,
+            "decode_ms": 825.8943557739258
+          }
+        },
+        "control": {
+          "gen": "Rollo.",
+          "ok": false
+        }
+      }
+    },
+    {
+      "idx": 162,
+      "q": "Where was the Continental Edison Company located? ",
+      "aliases": [
+        "France",
+        "in France"
+      ],
+      "fact_id": 162,
+      "hit": true,
+      "passage": "In 1882, Tesla began working for the Continental Edison Company in France, designing and making improvements to electrical equipment. In June 1884, he relocated to New York City:57\u201360 where he was hired by Thomas Edison to work at his Edison Machine Works on Manhattan's lower east side. Tesla's work for Edison began with simple electrical engineering and quickly progressed to solving more difficult problems.",
+      "snippet": "In 1882, Tesla began working for the Continental Edison Company in France, designing and making improvements to electrical equipment. ...",
+      "systems": {
+        "text": {
+          "gen": "New York City.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The Continental Edison Company was located in France.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 108,
+            "cache_mb": 11.828652381896973,
+            "build_s": null,
+            "decode_ms": 359.47704315185547
+          }
+        },
+        "control": {
+          "gen": "New York City.",
+          "ok": false
+        }
+      }
+    },
+    {
+      "idx": 571,
+      "q": "What London neighborhood attracted Huguenot refugees?",
+      "aliases": [
+        "Shoreditch"
+      ],
+      "fact_id": 571,
+      "hit": true,
+      "passage": "The French Protestant Church of London was established by Royal Charter in 1550. It is now located at Soho Square. Huguenot refugees flocked to Shoreditch, London. They established a major weaving industry in and around Spitalfields (see Petticoat Lane and the Tenterground) in East London. In Wandsworth, their gardening skills benefited the Battersea market gardens. The Old Truman Brewery, then known as the Black Eagle Brewery, was founded in 1724. The flight of Huguenot refugees from Tours, France drew off most of the workers of its great silk mills which they had built.[citation needed] Some of these immigrants moved to Norwich, which had accommodated an earlier settlement of Walloon weavers. The French added to the existing immigrant population, then comprising about a third of the population of the city.",
+      "snippet": "... Huguenot refugees flocked to Shoreditch, London. ...",
+      "systems": {
+        "text": {
+          "gen": "Soho Square.",
+          "ok": false
+        },
+        "cached": {
+          "gen": "The London neighborhood that attracted Huguenot refugees was Shoreditch.",
+          "ok": true,
+          "info": {
+            "doc_tokens": 200,
+            "cache_mb": 21.891152381896973,
+            "build_s": null,
+            "decode_ms": 576.6391754150391
+          }
+        },
+        "control": {
+          "gen": "Soho Square.",
+          "ok": false
+        }
+      }
+    },
+    {
+      "idx": 35,
+      "q": "What other CBS talk show played, after the main one that began immediately after Super Bowl 50?",
+      "aliases": [
+        "Late Late Show with James Corden",
+        "The Late Late Show with James Corden"
+      ],
+      "fact_id": 35,
+      "hit": true,
+      "passage": "As opposed to broadcasts of primetime series, CBS broadcast special episodes of its late night talk shows as its lead-out programs for Super Bowl 50, beginning with a special episode of The Late Show with Stephen Colbert following the game. Following a break for late local programming, CBS also aired a special episode of The Late Late Show with James Corden.",
+      "snippet": "... Following a break for late local programming, CBS also aired a special episode of The Late Late Show with James Corden.",
+      "systems": {
+        "text": {
+          "gen": "The Late Late Show with James Corden.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The other CBS talk show that played after the main one that began immediately after Super Bowl 50 was The Late Late",
+          "ok": false,
+          "info": {
+            "doc_tokens": 93,
+            "cache_mb": 10.188027381896973,
+            "build_s": null,
+            "decode_ms": 893.7380313873291
+          }
+        },
+        "control": {
+          "gen": "The Late Late Show with James Corden.",
+          "ok": true
+        }
+      }
+    },
+    {
+      "idx": 429,
+      "q": "Whose writings were widely quoted by the Third Reich?",
+      "aliases": [
+        "Luther"
+      ],
+      "fact_id": 429,
+      "hit": true,
+      "passage": "Luther was the most widely read author of his generation, and within Germany he acquired the status of a prophet. According to the prevailing view among historians, his anti-Jewish rhetoric contributed significantly to the development of antisemitism in Germany, and in the 1930s and 1940s provided an \"ideal underpinning\" for the Nazis' attacks on Jews. Reinhold Lewin writes that anybody who \"wrote against the Jews for whatever reason believed he had the right to justify himself by triumphantly referring to Luther.\" According to Michael, just about every anti-Jewish book printed in the Third Reich contained references to and quotations from Luther. Heinrich Himmler wrote admiringly of his writings and sermons on the Jews in 1940. The city of Nuremberg presented a first edition of On the Jews and their Lies to Julius Streicher, editor of the Nazi newspaper Der St\u00fcrmer, on his birthday in 1937; the newspaper described it as the most radically anti-Semitic tract ever published. It was publicly exhibited in a glass case at the Nuremberg rallies and quoted in a 54-page explanation of the Aryan Law by Dr. E.H. Schulz and Dr. R. Frercks.",
+      "snippet": "Luther was the most widely read author of his generation, and within Germany he acquired the status of a prophet. ...",
+      "systems": {
+        "text": {
+          "gen": "Luther's writings were widely quoted by the Third Reich.",
+          "ok": true
+        },
+        "cached": {
+          "gen": "The writings of Heinrich Himmler were widely quoted by the Third Reich.",
+          "ok": false,
+          "info": {
+            "doc_tokens": 286,
+            "cache_mb": 31.297463417053223,
+            "build_s": null,
+            "decode_ms": 612.5380992889404
+          }
+        },
+        "control": {
+          "gen": "Luther's writings were widely quoted by the Third Reich.",
+          "ok": true
+        }
+      }
+    }
+  ]
+}

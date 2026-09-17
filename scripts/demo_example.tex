@@ -1,0 +1,77 @@
+% requires: \usepackage{pifont} \newcommand{\cmark}{\ding{51}} \newcommand{\xmark}{\ding{55}}
+\begin{figure}[t]
+\centering\scriptsize
+\begin{tabular}{@{}p{0.2\linewidth}p{0.66\linewidth}c@{}}
+\toprule
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Passage:} ... The South Florida/Miami area has previously hosted the event 10 times (tied for most with New Orleans), with the most recent one being Super Bowl XLIV in 2010. ...} \\
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Q:} How many times prios has the Sun Life Stadium had Super Bowls? \quad \emph{Gold:} 10} \\
+\midrule
+Text-RAG & 1 & \xmark \\
+\sys{} & The Sun Life Stadium has hosted Super Bowls 10 times, tied for most with New Orleans. & \cmark \\
+Own-KV & 1 & \xmark \\
+4B text & Assistant: The Sun Life Stadium has hosted Super Bowls 10 times. & \cmark \\
+\bottomrule
+\end{tabular}
+\par\medskip
+\begin{tabular}{@{}p{0.2\linewidth}p{0.66\linewidth}c@{}}
+\toprule
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Passage:} The Panthers offense, which led the NFL in scoring (500 points), was loaded with talent, boasting six Pro Bowl selections. ...} \\
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Q:} How many Offensive players from the Panthers were selected to play in the Pro Bowl? \quad \emph{Gold:} six} \\
+\midrule
+Text-RAG & 5 & \xmark \\
+\sys{} & The Panthers offense had six Pro Bowl selections, including Cam Newton, Greg Olsen, Ted Ginn, Jr., Jerr & \cmark \\
+Own-KV & 5 & \xmark \\
+4B text & Assistant: 6 & \xmark \\
+\bottomrule
+\end{tabular}
+\par\medskip
+\begin{tabular}{@{}p{0.2\linewidth}p{0.66\linewidth}c@{}}
+\toprule
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Passage:} ... Despite Manning's problems with interceptions during the season, he didn't throw any in their two playoff games.} \\
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Q:} During the Bronco's playoff games, who did not throw at all? \quad \emph{Gold:} Manning} \\
+\midrule
+Text-RAG & The Broncos did not throw at all during their playoff games. & \xmark \\
+\sys{} & During the Bronco's playoff games, Manning did not throw at all. & \cmark \\
+Own-KV & The Broncos did not throw at all during their playoff games. & \xmark \\
+4B text & Assistant: Manning & \cmark \\
+\bottomrule
+\end{tabular}
+\par\medskip
+\begin{tabular}{@{}p{0.2\linewidth}p{0.66\linewidth}c@{}}
+\toprule
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Passage:} The league announced on October 16, 2012, that the two finalists were Sun Life Stadium and Levi's Stadium. ...} \\
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Q:} What is the name of the stadium in San Francisco Bay Area? \quad \emph{Gold:} Levi's Stadium} \\
+\midrule
+Text-RAG & Levi's Stadium. & \cmark \\
+\sys{} & Stanford Stadium. & \xmark \\
+Own-KV & Levi's Stadium. & \cmark \\
+4B text & Assistant: Levi's Stadium & \cmark \\
+\bottomrule
+\end{tabular}
+\par\medskip
+\begin{tabular}{@{}p{0.2\linewidth}p{0.66\linewidth}c@{}}
+\toprule
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Passage:} ... Manning and Newton also set the record for the largest age difference between opposing Super Bowl quarterbacks at 13 years and 48 days (Manning was 39, Newton was 26).} \\
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Q:} How much older was Manning than Newton during Super Bowl 50? \quad \emph{Gold:} 13 years} \\
+\midrule
+Text-RAG & 13 years and 48 days. & \cmark \\
+\sys{} & During Super Bowl 50, Manning was 39 years old while Newton was 26 years old. & \xmark \\
+Own-KV & 13 years and 48 days. & \cmark \\
+4B text & Assistant: 13 years and 48 days & \cmark \\
+\bottomrule
+\end{tabular}
+\par\medskip
+\begin{tabular}{@{}p{0.2\linewidth}p{0.66\linewidth}c@{}}
+\toprule
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Passage:} ... Following a break for late local programming, CBS also aired a special episode of The Late Late Show with James Corden.} \\
+\multicolumn{3}{@{}p{0.95\linewidth}@{}}{\emph{Q:} What other CBS talk show played, after the main one that began immediately after Super Bowl 50? \quad \emph{Gold:} Late Late Show with James Corden} \\
+\midrule
+Text-RAG & The Late Late Show with James Corden. & \cmark \\
+\sys{} & The other CBS talk show that played after the main one that began immediately after Super Bowl 50 was The Late Late & \xmark \\
+Own-KV & The Late Late Show with James Corden. & \cmark \\
+4B text & Assistant: The Late Late Show with James Corden & \cmark \\
+\bottomrule
+\end{tabular}
+\caption{The same receiver and the same prompt tokens; only the document-section KV differs. \sys{} output is from the persisted cache, decoded with no sharer on the query path. Correctness is gold-alias containment. Over the first 100 questions, \sys{} is correct where text-RAG is not on 7 and the reverse on 6.}
+\label{fig:example}
+\end{figure}

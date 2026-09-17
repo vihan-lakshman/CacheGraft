@@ -48,8 +48,7 @@ def main():
     print(f"BERTScore model: {scorer._model_type}  (un-rescaled F1, max over gold aliases)")
 
     P = C.paths(args.data)
-    q2al = {q["q"]: [a for a in q["aliases"] if a and a.strip()]
-            for q in json.load(open(P["data"]))["questions"]}
+    data_qs = json.load(open(P["data"]))["questions"]
     RESULTS = P["results"]
 
     print(f"{'cell':<40}{'n':>6}{'BERTScore F1':>14}{'words':>8}")
@@ -60,8 +59,8 @@ def main():
         S = json.load(open(f))["samples"]
         # one (candidate, reference) pair per gold alias; max over aliases per question
         cands, refs, owner = [], [], []
-        for i, s in enumerate(S):
-            for a in q2al.get(s["q"], []) or [""]:
+        for i, (s, al) in enumerate(zip(S, C.gold_aliases(data_qs, S, field="aliases"))):
+            for a in al or [""]:
                 cands.append(s["gen"] if args.on == "gen" else s["pred"])
                 refs.append(a); owner.append(i)
         Pr, Rc, F = scorer.score(cands, refs, verbose=False)
@@ -69,8 +68,8 @@ def main():
         best = np.full(len(S), -1.0)
         for j, i in enumerate(owner):
             best[i] = max(best[i], float(f1[j]))
-        out = {S[i]["q"]: float(best[i]) for i in range(len(S))}
-        json.dump(out, open(os.path.join(RESULTS, f"{tag}.bertscore{args.tag_suffix}.json"), "w"))
+        C.write_scores(os.path.join(RESULTS, f"{tag}.bertscore{args.tag_suffix}.json"), S,
+                       [float(b) for b in best])
         words = np.mean([len(s["gen"].split()) for s in S])
         print(f"{tag:<40}{len(S):>6}{best.mean():>14.4f}{words:>8.1f}")
 

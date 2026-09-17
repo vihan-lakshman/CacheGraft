@@ -8,7 +8,7 @@ ORIGINAL (non-terse) high-`contains` generations directly. Applied identically t
   python judge_trivia.py c2c_retrieved_doc_only text_rag_retrieved \
                          c2c_oracle_doc_only   text_rag_oracle --model haiku
 
-Writes trivia_results/<tag>.judge.json ({question: correct_bool}) and prints judged accuracy +
+Writes trivia_results/<tag>.judge.json ({"<index>\\t<question>": correct_bool}) and prints judged accuracy +
 agreement with `contains` (a validation check: the judge should mostly agree, fixing only the
 verbosity false-negatives and the alias-incidental false-positives).
 """
@@ -53,6 +53,7 @@ def main():
     ap.add_argument("--data", default="trivia")
     args = ap.parse_args()
     RESULTS = C.paths(args.data)["results"]
+    data_qs = json.load(open(C.paths(args.data)["data"]))["questions"]
 
     print(f"{'cell':<30}{'judged':>8}{'contains':>10}{'J&!C':>7}{'C&!J':>7}{'agree':>8}")
     total_cost = 0.0
@@ -70,19 +71,16 @@ def main():
                 chunk = [c for c in chunk if c[0] not in vd]  # retry the missing ones
             verdicts.update(vd)
         # metrics + validation against `contains`
-        jud = {S[j]["q"]: (verdicts.get(j) == "correct") for j in range(len(S))}
-        cont = {}
-        for s in S:
-            al = [normalize(a) for a in s["aliases"]]
-            p = normalize(s["gen"])
-            cont[s["q"]] = any(a and a in p for a in al)
+        jud = [verdicts.get(j) == "correct" for j in range(len(S))]
+        cont = [any(a in normalize(s["gen"]) for a in al)
+                for s, al in zip(S, C.gold_aliases(data_qs, S))]
         n = len(S)
-        j_acc = sum(jud.values()) / n
-        c_acc = sum(cont.values()) / n
-        j_not_c = sum(1 for q in jud if jud[q] and not cont[q])   # judge fixes verbosity FN
-        c_not_j = sum(1 for q in jud if cont[q] and not jud[q])   # judge rejects spurious hit
-        agree = sum(1 for q in jud if jud[q] == cont[q]) / n
-        json.dump(jud, open(os.path.join(RESULTS, f"{tag}.judge.json"), "w"))
+        j_acc = sum(jud) / n
+        c_acc = sum(cont) / n
+        j_not_c = sum(1 for j, c in zip(jud, cont) if j and not c)   # judge fixes verbosity FN
+        c_not_j = sum(1 for j, c in zip(jud, cont) if c and not j)   # judge rejects spurious hit
+        agree = sum(1 for j, c in zip(jud, cont) if j == c) / n
+        C.write_scores(os.path.join(RESULTS, f"{tag}.judge.json"), S, jud)
         print(f"{tag:<30}{j_acc*100:>7.1f}%{c_acc*100:>9.1f}%{j_not_c:>7}{c_not_j:>7}{agree*100:>7.1f}%")
     print(f"\njudge={args.model}  total_cost_usd={total_cost:.2f}")
 

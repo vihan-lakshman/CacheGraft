@@ -1,0 +1,38 @@
+% SQuAD examples (retrieved setting; in all six the retrieved passage is the gold passage).
+% Outputs are verbatim from scripts/demo_squad.py except the one [\ldots] elision, marked in the caption.
+% Needs booktabs (already loaded) and amssymb for \checkmark (acmart loads it by default).
+\begin{table*}[t]
+\centering\small
+\caption{SQuAD examples. The receiver and the prompt tokens are identical in both columns; only
+the key/value cache over the document differs. \sys{} output is decoded from the persisted cache
+with no sharer on the query path. In all six examples the receiver-own-KV control reproduces the
+text-RAG output verbatim. The bottom two rows are failures: a restated question that exhausts the
+$24$-token budget ([\ldots] marks our elision), and a wrong entity taken from the passage. Over all
+$800$ questions, \sys{} is correct where text-RAG is not on $100$, and the reverse on $39$
+(gold-alias containment).}
+\label{tab:examples}
+\begin{tabular}{@{}p{0.27\textwidth}p{0.11\textwidth}p{0.22\textwidth}p{0.33\textwidth}@{}}
+\toprule
+Question & Gold & Receiver text-RAG & \sys{} \\
+\midrule
+Over how many species of trees can be found in the Saxon Garden?
+  & 100 & 15.5 \hfill $\times$ & 100 \hfill $\checkmark$ \\
+Who did Rollo sign the treaty of Saint-Clair-sur-Epte with?
+  & King Charles III & Rollo. \hfill $\times$
+  & Rollo signed the treaty of Saint-Clair-sur-Epte with King Charles III of West Francia. \hfill $\checkmark$ \\
+Where was the Continental Edison Company located?
+  & France & New York City. \hfill $\times$
+  & The Continental Edison Company was located in France. \hfill $\checkmark$ \\
+What London neighborhood attracted Huguenot refugees?
+  & Shoreditch & Soho Square. \hfill $\times$
+  & The London neighborhood that attracted Huguenot refugees was Shoreditch. \hfill $\checkmark$ \\
+\midrule
+What other CBS talk show played, after the main one that began immediately after Super Bowl 50?
+  & The Late Late Show with James Corden & The Late Late Show with James Corden. \hfill $\checkmark$
+  & The other CBS talk show that played after [\ldots] Super Bowl 50 was The Late Late \hfill $\times$ \\
+Whose writings were widely quoted by the Third Reich?
+  & Luther & Luther's writings were widely quoted by the Third Reich. \hfill $\checkmark$
+  & The writings of Heinrich Himmler were widely quoted by the Third Reich. \hfill $\times$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
